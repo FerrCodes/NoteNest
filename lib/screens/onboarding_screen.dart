@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'reflect_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/slide_route.dart';
+import '../theme/app_colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -15,11 +16,6 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _currentPage = 0;
-
-  final Color bgColor = const Color(0xFF121212);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-  final Color cardColor = const Color(0xFF1E1E1E);
 
   List<Map<String, dynamic>> _getPages(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -63,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final isLastPage = _currentPage == pages.length - 1;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColors.bgDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -76,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Text(
                     AppLocalizations.of(context)!.skip,
                     style: TextStyle(
-                      color: textSecondary,
+                      color: AppColors.textSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -103,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Container(
                           padding: const EdgeInsets.all(32),
                           decoration: BoxDecoration(
-                            color: cardColor,
+                            color: AppColors.cardDark,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
@@ -116,7 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: Icon(
                             page['icon'],
                             size: 64,
-                            color: textPrimary,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 48),
@@ -126,7 +122,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
-                            color: textPrimary,
+                            color: AppColors.textPrimary,
                             height: 1.3,
                           ),
                         ),
@@ -136,7 +132,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
-                            color: textSecondary,
+                            color: AppColors.textSecondary,
                             height: 1.6,
                           ),
                         ),
@@ -156,8 +152,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 8,
                   decoration: BoxDecoration(
                     color: _currentPage == index
-                        ? textPrimary
-                        : textSecondary.withValues(alpha: 0.3),
+                        ? AppColors.textPrimary
+                        : AppColors.textSecondary.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 );
@@ -183,7 +179,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     decoration: BoxDecoration(
-                      color: textPrimary,
+                      color: AppColors.textPrimary,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Center(
@@ -192,7 +188,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ? AppLocalizations.of(context)!.getStarted
                             : AppLocalizations.of(context)!.next,
                         style: TextStyle(
-                          color: bgColor,
+                          color: AppColors.bgDark,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),

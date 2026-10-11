@@ -3,6 +3,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'onboarding_screen.dart';
 import 'reflect_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/app_colors.dart';
+import '../utils/slide_route.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,12 +35,12 @@ class _SplashScreenState extends State<SplashScreen> {
     if (hasSeenOnboarding) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const ReflectScreen()),
+        SlideRoute(page: const ReflectScreen()),
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        SlideRoute(page: const OnboardingScreen()),
       );
     }
   }
@@ -46,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.bgDark,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E1E1E),
+                color: AppColors.cardDark,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -67,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: const Icon(
                 Icons.auto_stories_outlined,
                 size: 48,
-                color: Color(0xFFF2F2F7),
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 24),
@@ -76,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFFF2F2F7),
+                color: AppColors.textPrimary,
                 letterSpacing: 0.5,
               ),
             ),
@@ -85,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
               'Reflect. Write. Grow.',
               style: const TextStyle(
                 fontSize: 13,
-                color: Color(0xFF8E8E93),
+                color: AppColors.textSecondary,
                 letterSpacing: 1.5,
               ),
             ),

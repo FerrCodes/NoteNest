@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/app_colors.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -14,12 +15,6 @@ class StatsScreen extends StatefulWidget {
 }
 
 class _StatsScreenState extends State<StatsScreen> {
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-  final Color accentYellow = const Color(0xFFFFD60A);
-
   final List<Map<String, dynamic>> _moods = [
     {'label': 'Calm', 'icon': Icons.wb_sunny_outlined},
     {'label': 'Grateful', 'icon': Icons.favorite_border},
@@ -32,7 +27,7 @@ class _StatsScreenState extends State<StatsScreen> {
     final box = Hive.box<JournalEntry>('journalBox');
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColors.bgDark,
       body: SafeArea(
         child: Stack(
           children: [
@@ -50,7 +45,7 @@ class _StatsScreenState extends State<StatsScreen> {
                         Icon(
                           Icons.bar_chart_outlined,
                           size: 64,
-                          color: textSecondary.withValues(alpha: 0.4),
+                          color: AppColors.textSecondary.withValues(alpha: 0.4),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -58,7 +53,7 @@ class _StatsScreenState extends State<StatsScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: textPrimary,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -67,7 +62,7 @@ class _StatsScreenState extends State<StatsScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 13,
-                            color: textSecondary,
+                            color: AppColors.textSecondary,
                             height: 1.5,
                           ),
                         ),
@@ -123,15 +118,17 @@ class _StatsScreenState extends State<StatsScreen> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              accentYellow.withValues(alpha: 0.2),
-                              cardColor,
+                              AppColors.systemYellow.withValues(alpha: 0.2),
+                              AppColors.cardDark,
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: accentYellow.withValues(alpha: 0.3),
+                            color: AppColors.systemYellow.withValues(
+                              alpha: 0.3,
+                            ),
                             width: 1,
                           ),
                         ),
@@ -140,7 +137,9 @@ class _StatsScreenState extends State<StatsScreen> {
                             Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                color: accentYellow.withValues(alpha: 0.2),
+                                color: AppColors.systemYellow.withValues(
+                                  alpha: 0.2,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: const Text(
@@ -157,7 +156,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                   style: TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.w700,
-                                    color: textPrimary,
+                                    color: AppColors.textPrimary,
                                     height: 1,
                                   ),
                                 ),
@@ -172,7 +171,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                         )!.streakDesc,
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: textSecondary,
+                                    color: AppColors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -212,14 +211,14 @@ class _StatsScreenState extends State<StatsScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: cardColor,
+                          color: AppColors.cardDark,
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: Row(
@@ -227,14 +226,16 @@ class _StatsScreenState extends State<StatsScreen> {
                             Container(
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
-                                color: textPrimary.withValues(alpha: 0.1),
+                                color: AppColors.textPrimary.withValues(
+                                  alpha: 0.1,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 _moods.firstWhere(
                                   (m) => m['label'] == topMood,
                                 )['icon'],
-                                color: textPrimary,
+                                color: AppColors.textPrimary,
                                 size: 28,
                               ),
                             ),
@@ -247,7 +248,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
-                                    color: textPrimary,
+                                    color: AppColors.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -257,7 +258,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                   )!.journalsWithMood(topCount),
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: textSecondary,
+                                    color: AppColors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -273,14 +274,14 @@ class _StatsScreenState extends State<StatsScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: cardColor,
+                          color: AppColors.cardDark,
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: _buildMiniCalendar(context, entriesThisMonth),
@@ -293,14 +294,14 @@ class _StatsScreenState extends State<StatsScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: cardColor,
+                          color: AppColors.cardDark,
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: SizedBox(
@@ -316,14 +317,14 @@ class _StatsScreenState extends State<StatsScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: cardColor,
+                          color: AppColors.cardDark,
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: SizedBox(
@@ -353,7 +354,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                           child: Text(
                                             _moods[index]['label'],
                                             style: TextStyle(
-                                              color: textSecondary,
+                                              color: AppColors.textSecondary,
                                               fontSize: 10,
                                             ),
                                           ),
@@ -383,7 +384,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                   barRods: [
                                     BarChartRodData(
                                       toY: count.toDouble(),
-                                      color: textPrimary,
+                                      color: AppColors.textPrimary,
                                       width: 24,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
@@ -423,7 +424,7 @@ class _StatsScreenState extends State<StatsScreen> {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: cardColor.withValues(alpha: 0.9),
+                    color: AppColors.cardDark.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -436,7 +437,7 @@ class _StatsScreenState extends State<StatsScreen> {
                   child: Text(
                     AppLocalizations.of(context)!.stats,
                     style: TextStyle(
-                      color: textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -463,7 +464,7 @@ class _StatsScreenState extends State<StatsScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: cardColor.withValues(alpha: 0.9),
+          color: AppColors.cardDark.withValues(alpha: 0.9),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -473,7 +474,7 @@ class _StatsScreenState extends State<StatsScreen> {
             ),
           ],
         ),
-        child: Icon(icon, color: textPrimary, size: 20),
+        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }
@@ -560,7 +561,7 @@ class _StatsScreenState extends State<StatsScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: textPrimary,
+              color: AppColors.textPrimary,
             ),
           ),
         ),
@@ -575,7 +576,7 @@ class _StatsScreenState extends State<StatsScreen> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: textSecondary,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ),
@@ -603,11 +604,11 @@ class _StatsScreenState extends State<StatsScreen> {
 
             return Container(
               decoration: BoxDecoration(
-                color: hasEntry ? textPrimary : Colors.transparent,
+                color: hasEntry ? AppColors.textPrimary : Colors.transparent,
                 shape: BoxShape.circle,
                 border: isToday && !hasEntry
                     ? Border.all(
-                        color: textPrimary.withValues(alpha: 0.5),
+                        color: AppColors.textPrimary.withValues(alpha: 0.5),
                         width: 1,
                       )
                     : null,
@@ -621,8 +622,10 @@ class _StatsScreenState extends State<StatsScreen> {
                         ? FontWeight.w600
                         : FontWeight.normal,
                     color: hasEntry
-                        ? bgColor
-                        : (isToday ? textPrimary : textSecondary),
+                        ? AppColors.bgDark
+                        : (isToday
+                              ? AppColors.textPrimary
+                              : AppColors.textSecondary),
                   ),
                 ),
               ),
@@ -667,7 +670,10 @@ class _StatsScreenState extends State<StatsScreen> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       dayNames[last7Days[index].weekday - 1],
-                      style: TextStyle(color: textSecondary, fontSize: 10),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 10,
+                      ),
                     ),
                   );
                 }
@@ -694,8 +700,8 @@ class _StatsScreenState extends State<StatsScreen> {
               BarChartRodData(
                 toY: counts[index].toDouble(),
                 color: counts[index] > 0
-                    ? textPrimary
-                    : textSecondary.withValues(alpha: 0.3),
+                    ? AppColors.textPrimary
+                    : AppColors.textSecondary.withValues(alpha: 0.3),
                 width: 20,
                 borderRadius: BorderRadius.circular(6),
               ),
@@ -714,25 +720,28 @@ class _StatsScreenState extends State<StatsScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: AppColors.cardDark,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: textSecondary, size: 24),
+          Icon(icon, color: AppColors.textSecondary, size: 24),
           const SizedBox(height: 16),
           Text(
             value,
             style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w700,
-              color: textPrimary,
+              color: AppColors.textPrimary,
               height: 1,
             ),
           ),
           const SizedBox(height: 6),
-          Text(label, style: TextStyle(fontSize: 13, color: textSecondary)),
+          Text(
+            label,
+            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+          ),
         ],
       ),
     );

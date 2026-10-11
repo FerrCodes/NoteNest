@@ -11,6 +11,7 @@ import '../widgets/top_banner.dart';
 import '../services/export_service.dart';
 import '../widgets/section_title.dart';
 import '../widgets/setting_item.dart';
+import '../theme/app_colors.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,10 +21,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
   bool _isSocialMediaExpanded = false;
   // State Reminder
   bool _reminderEnabled = false;
@@ -41,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
@@ -51,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Text(
                 AppLocalizations.of(context)!.resetSettingsTitle,
                 style: TextStyle(
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
@@ -61,14 +58,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         content: Text(
           AppLocalizations.of(context)!.resetSettingsConfirm,
-          style: TextStyle(color: textSecondary, height: 1.5),
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: TextStyle(color: textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -129,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColors.bgDark,
       body: SafeArea(
         child: Stack(
           children: [
@@ -239,7 +236,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Text(
                     AppLocalizations.of(context)!.dangerZoneDesc,
-                    style: TextStyle(fontSize: 11, color: textSecondary),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -274,7 +274,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
-                      color: textSecondary.withValues(alpha: 0.5),
+                      color: AppColors.textSecondary.withValues(alpha: 0.5),
                       height: 1.6,
                     ),
                   ),
@@ -304,7 +304,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: cardColor.withValues(alpha: 0.9),
+                    color: AppColors.cardDark.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -317,7 +317,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Text(
                     AppLocalizations.of(context)!.settings,
                     style: TextStyle(
-                      color: textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -344,7 +344,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: cardColor.withValues(alpha: 0.9),
+          color: AppColors.cardDark.withValues(alpha: 0.9),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -354,7 +354,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-        child: Icon(icon, color: textPrimary, size: 20),
+        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }
@@ -371,7 +371,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: cardColor,
+            color: AppColors.cardDark,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -388,7 +388,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Text(
             AppLocalizations.of(context)!.languageDesc,
-            style: TextStyle(fontSize: 12, color: textSecondary, height: 1.5),
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+              height: 1.5,
+            ),
           ),
         ),
       ],
@@ -406,14 +410,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? textPrimary : Colors.transparent,
+          color: isSelected ? AppColors.textPrimary : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? bgColor : textPrimary,
+              color: isSelected ? AppColors.bgDark : AppColors.textPrimary,
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
             ),
@@ -454,22 +458,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           AppLocalizations.of(context)!.deleteAllTitle,
-          style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         content: Text(
           AppLocalizations.of(context)!.deleteAllDesc,
-          style: TextStyle(color: textSecondary, height: 1.5),
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: TextStyle(color: textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -500,7 +507,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => AlertDialog(
-          backgroundColor: cardColor,
+          backgroundColor: AppColors.cardDark,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -517,12 +524,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: textPrimary.withValues(alpha: 0.1),
+                          color: AppColors.textPrimary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.auto_stories_outlined,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                           size: 36,
                         ),
                       ),
@@ -530,7 +537,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Text(
                         AppLocalizations.of(context)!.appName,
                         style: TextStyle(
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
                         ),
@@ -538,7 +545,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       const SizedBox(height: 4),
                       Text(
                         AppLocalizations.of(context)!.version,
-                        style: TextStyle(color: textSecondary, fontSize: 13),
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
@@ -549,7 +559,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(
                   AppLocalizations.of(context)!.appDescription,
                   style: TextStyle(
-                    color: textSecondary,
+                    color: AppColors.textSecondary,
                     height: 1.6,
                     fontSize: 13,
                   ),
@@ -560,7 +570,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: bgColor,
+                    color: AppColors.bgDark,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -586,7 +596,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Text(
                             AppLocalizations.of(context)!.aboutDeveloper,
                             style: TextStyle(
-                              color: textSecondary,
+                              color: AppColors.textSecondary,
                               fontSize: 11,
                             ),
                           ),
@@ -594,7 +604,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Text(
                             AppLocalizations.of(context)!.aboutDeveloperName,
                             style: TextStyle(
-                              color: textPrimary,
+                              color: AppColors.textPrimary,
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
@@ -617,7 +627,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: bgColor,
+                      color: AppColors.bgDark,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -627,12 +637,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: textPrimary.withValues(alpha: 0.1),
+                                color: AppColors.textPrimary.withValues(
+                                  alpha: 0.1,
+                                ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
                                 Icons.public_outlined,
-                                color: textPrimary,
+                                color: AppColors.textPrimary,
                                 size: 20,
                               ),
                             ),
@@ -644,7 +656,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Text(
                                     AppLocalizations.of(context)!.socialMedia,
                                     style: TextStyle(
-                                      color: textPrimary,
+                                      color: AppColors.textPrimary,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -655,7 +667,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       context,
                                     )!.socialMediaDesc,
                                     style: TextStyle(
-                                      color: textSecondary,
+                                      color: AppColors.textSecondary,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -667,7 +679,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               duration: const Duration(milliseconds: 200),
                               child: Icon(
                                 Icons.keyboard_arrow_down,
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                                 size: 22,
                               ),
                             ),
@@ -737,9 +749,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Icon(
                                         Icons.arrow_forward_ios,
                                         size: 12,
-                                        color: textSecondary.withValues(
-                                          alpha: 0.5,
-                                        ),
+                                        color: AppColors.textSecondary
+                                            .withValues(alpha: 0.5),
                                       ),
                                     ],
                                   ),
@@ -795,9 +806,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       Icon(
                                         Icons.arrow_forward_ios,
                                         size: 12,
-                                        color: textSecondary.withValues(
-                                          alpha: 0.5,
-                                        ),
+                                        color: AppColors.textSecondary
+                                            .withValues(alpha: 0.5),
                                       ),
                                     ],
                                   ),
@@ -837,7 +847,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: AppColors.cardDark,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -845,12 +855,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: textPrimary.withValues(alpha: 0.1),
+              color: AppColors.textPrimary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.notifications_outlined,
-              color: textPrimary,
+              color: AppColors.textPrimary,
               size: 20,
             ),
           ),
@@ -864,13 +874,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: textPrimary,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   AppLocalizations.of(context)!.dailyReminderDesc,
-                  style: TextStyle(fontSize: 12, color: textSecondary),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -938,13 +951,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             return Theme(
               data: Theme.of(context).copyWith(
                 timePickerTheme: TimePickerThemeData(
-                  backgroundColor: cardColor,
-                  hourMinuteColor: textPrimary.withValues(alpha: 0.1),
-                  hourMinuteTextColor: textPrimary,
-                  dialBackgroundColor: bgColor,
-                  dialHandColor: textPrimary,
-                  dialTextColor: textSecondary,
-                  entryModeIconColor: textPrimary,
+                  backgroundColor: AppColors.cardDark,
+                  hourMinuteColor: AppColors.textPrimary.withValues(alpha: 0.1),
+                  hourMinuteTextColor: AppColors.textPrimary,
+                  dialBackgroundColor: AppColors.bgDark,
+                  dialHandColor: AppColors.textPrimary,
+                  dialTextColor: AppColors.textSecondary,
+                  entryModeIconColor: AppColors.textPrimary,
                 ),
               ),
               child: child!,
@@ -976,7 +989,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: cardColor,
+          color: AppColors.cardDark,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -984,10 +997,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: textPrimary.withValues(alpha: 0.1),
+                color: AppColors.textPrimary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(Icons.access_time, color: textPrimary, size: 20),
+              child: Icon(
+                Icons.access_time,
+                color: AppColors.textPrimary,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -996,7 +1013,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ),
@@ -1012,7 +1029,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Icon(
               Icons.arrow_forward_ios,
               size: 14,
-              color: textSecondary.withValues(alpha: 0.5),
+              color: AppColors.textSecondary.withValues(alpha: 0.5),
             ),
           ],
         ),
@@ -1025,7 +1042,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: AppColors.cardDark,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -1036,12 +1053,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: textPrimary.withValues(alpha: 0.1),
+                  color: AppColors.textPrimary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.message_outlined,
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   size: 20,
                 ),
               ),
@@ -1051,7 +1068,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -1059,16 +1076,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 12),
           TextField(
             controller: _reminderMessageController,
-            style: TextStyle(color: textPrimary, fontSize: 14),
+            style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
             maxLines: 2,
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.reminderMessageHint,
               hintStyle: TextStyle(
-                color: textSecondary.withValues(alpha: 0.5),
+                color: AppColors.textSecondary.withValues(alpha: 0.5),
                 fontSize: 14,
               ),
               filled: true,
-              fillColor: bgColor,
+              fillColor: AppColors.bgDark,
               contentPadding: const EdgeInsets.all(12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -1112,7 +1129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: cardColor,
+          color: AppColors.cardDark,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -1145,7 +1162,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 4),
                   Text(
                     AppLocalizations.of(context)!.testNotificationDesc,
-                    style: TextStyle(fontSize: 12, color: textSecondary),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -1166,12 +1186,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           AppLocalizations.of(context)!.sendFeedback,
           style: TextStyle(
-            color: textPrimary,
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
@@ -1182,7 +1202,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             Text(
               AppLocalizations.of(context)!.sendFeedbackOptions,
-              style: TextStyle(color: textSecondary, fontSize: 13, height: 1.5),
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             const SizedBox(height: 20),
             // Tombol Email
@@ -1222,7 +1246,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: TextStyle(color: textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
         ],
@@ -1246,7 +1270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: bgColor,
+          color: AppColors.bgDark,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
         ),
@@ -1265,7 +1289,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1274,7 +1298,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Icon(
               Icons.arrow_forward_ios,
               size: 14,
-              color: textSecondary.withValues(alpha: 0.5),
+              color: AppColors.textSecondary.withValues(alpha: 0.5),
             ),
           ],
         ),

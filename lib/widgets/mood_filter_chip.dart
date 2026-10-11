@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../theme/app_colors.dart';
 
 class MoodFilterChip extends StatelessWidget {
   final String label;
@@ -13,12 +14,6 @@ class MoodFilterChip extends StatelessWidget {
     required this.onTap,
   });
 
-  // === WARNA ===
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -29,19 +24,19 @@ class MoodFilterChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? textPrimary : cardColor,
+          color: isSelected ? AppColors.textPrimary : AppColors.cardDark,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-                ? textPrimary
-                : textSecondary.withValues(alpha: 0.3),
+                ? AppColors.textPrimary
+                : AppColors.textSecondary.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? bgColor : textSecondary,
+            color: isSelected ? AppColors.bgDark : AppColors.textSecondary,
             fontSize: 13,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),

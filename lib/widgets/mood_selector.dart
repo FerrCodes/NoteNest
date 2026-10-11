@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/app_colors.dart';
 
 class MoodSelector extends StatelessWidget {
   final String selectedMood;
@@ -11,11 +12,6 @@ class MoodSelector extends StatelessWidget {
     required this.selectedMood,
     required this.onMoodSelected,
   });
-
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
 
   static final List<Map<String, dynamic>> _moods = [
     {'icon': Icons.wb_sunny_outlined, 'label': 'Calm'},
@@ -56,12 +52,14 @@ class MoodSelector extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isSelected ? textPrimary : cardColor,
+                  color: isSelected
+                      ? AppColors.textPrimary
+                      : AppColors.cardDark,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   mood['icon'],
-                  color: isSelected ? bgColor : textPrimary,
+                  color: isSelected ? AppColors.bgDark : AppColors.textPrimary,
                   size: 22,
                 ),
               ),
@@ -70,7 +68,9 @@ class MoodSelector extends StatelessWidget {
                 _getLocalizedMood(context, mood['label']),
                 style: TextStyle(
                   fontSize: 11,
-                  color: isSelected ? textPrimary : textSecondary,
+                  color: isSelected
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),

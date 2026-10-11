@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import '../utils/preset_images.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/app_colors.dart';
 
 class ImagePickerSection extends StatelessWidget {
   final String selectedImage;
@@ -18,11 +19,6 @@ class ImagePickerSection extends StatelessWidget {
     required this.onImageSelected,
   });
 
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,7 +29,7 @@ class ImagePickerSection extends StatelessWidget {
           AppLocalizations.of(context)!.selectImage,
           style: TextStyle(
             fontSize: 14,
-            color: textSecondary,
+            color: AppColors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -57,7 +53,9 @@ class ImagePickerSection extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected ? textPrimary : Colors.transparent,
+                      color: isSelected
+                          ? AppColors.textPrimary
+                          : Colors.transparent,
                       width: 3,
                     ),
                   ),
@@ -93,7 +91,7 @@ class ImagePickerSection extends StatelessWidget {
               AppLocalizations.of(context)!.uploadPhoto,
               style: TextStyle(
                 fontSize: 14,
-                color: textSecondary,
+                color: AppColors.textSecondary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -103,7 +101,11 @@ class ImagePickerSection extends StatelessWidget {
                 HapticFeedback.selectionClick();
                 _showPhotoTipsDialog(context);
               },
-              child: Icon(Icons.info_outline, size: 16, color: textSecondary),
+              child: Icon(
+                Icons.info_outline,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
         ),
@@ -119,11 +121,11 @@ class ImagePickerSection extends StatelessWidget {
                     horizontal: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: cardColor,
+                    color: AppColors.cardDark,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: !selectedImage.startsWith('assets/')
-                          ? textPrimary
+                          ? AppColors.textPrimary
                           : Colors.transparent,
                       width: 2,
                     ),
@@ -132,7 +134,7 @@ class ImagePickerSection extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.photo_library_outlined,
-                        color: textPrimary,
+                        color: AppColors.textPrimary,
                         size: 28,
                       ),
                       const SizedBox(height: 8),
@@ -141,13 +143,16 @@ class ImagePickerSection extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         AppLocalizations.of(context)!.galleryOptionDesc,
-                        style: TextStyle(fontSize: 11, color: textSecondary),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -164,14 +169,14 @@ class ImagePickerSection extends StatelessWidget {
                     horizontal: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: cardColor,
+                    color: AppColors.cardDark,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
                     children: [
                       Icon(
                         Icons.camera_alt_outlined,
-                        color: textPrimary,
+                        color: AppColors.textPrimary,
                         size: 28,
                       ),
                       const SizedBox(height: 8),
@@ -180,13 +185,16 @@ class ImagePickerSection extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         AppLocalizations.of(context)!.cameraOptionDesc,
-                        style: TextStyle(fontSize: 11, color: textSecondary),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -252,7 +260,7 @@ class ImagePickerSection extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
@@ -266,7 +274,7 @@ class ImagePickerSection extends StatelessWidget {
               child: Text(
                 AppLocalizations.of(context)!.photoTipsTitle,
                 style: TextStyle(
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
@@ -280,7 +288,11 @@ class ImagePickerSection extends StatelessWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.photoTipsDesc,
-              style: TextStyle(color: textSecondary, height: 1.6, fontSize: 14),
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                height: 1.6,
+                fontSize: 14,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -316,11 +328,11 @@ class ImagePickerSection extends StatelessWidget {
           width: w,
           height: h,
           decoration: BoxDecoration(
-            color: cardColor,
+            color: AppColors.cardDark,
             border: Border.all(
               color: mark == '✓'
-                  ? Colors.green.withValues(alpha: 0.6)
-                  : Colors.red.withValues(alpha: 0.6),
+                  ? AppColors.systemGreen.withValues(alpha: 0.6)
+                  : AppColors.systemRed.withValues(alpha: 0.6),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -329,7 +341,9 @@ class ImagePickerSection extends StatelessWidget {
             child: Text(
               mark,
               style: TextStyle(
-                color: mark == '✓' ? Colors.green : Colors.red,
+                color: mark == '✓'
+                    ? AppColors.systemGreen
+                    : AppColors.systemRed,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -340,7 +354,7 @@ class ImagePickerSection extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: textSecondary,
+            color: AppColors.textSecondary,
             fontSize: 11,
             fontWeight: FontWeight.w500,
           ),

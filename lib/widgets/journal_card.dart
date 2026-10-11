@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/app_colors.dart';
 
 class JournalCard extends StatelessWidget {
   final JournalEntry entry;
@@ -15,11 +16,6 @@ class JournalCard extends StatelessWidget {
     required this.onTap,
     required this.onToggleFavorite,
   });
-
-  // === WARNA (sementara disalin dulu, nanti kita sentralisasi) ===
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
 
   String _getLocalizedMood(BuildContext context, String mood) {
     final l10n = AppLocalizations.of(context)!;
@@ -44,7 +40,7 @@ class JournalCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: cardColor,
+          color: AppColors.cardDark,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -76,7 +72,7 @@ class JournalCard extends StatelessWidget {
                           Text(
                             entry.date,
                             style: TextStyle(
-                              color: textSecondary,
+                              color: AppColors.textSecondary,
                               fontSize: 12,
                             ),
                           ),
@@ -87,13 +83,15 @@ class JournalCard extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: textSecondary.withValues(alpha: 0.2),
+                              color: AppColors.textSecondary.withValues(
+                                alpha: 0.2,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               _getLocalizedMood(context, entry.mood),
                               style: TextStyle(
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -113,7 +111,7 @@ class JournalCard extends StatelessWidget {
                           size: 20,
                           color: entry.isFavorite
                               ? const Color(0xFFFFD60A)
-                              : textSecondary,
+                              : AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -124,7 +122,7 @@ class JournalCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: textPrimary,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -134,7 +132,7 @@ class JournalCard extends StatelessWidget {
                         : entry.content,
                     style: TextStyle(
                       fontSize: 14,
-                      color: textPrimary.withValues(alpha: 0.6),
+                      color: AppColors.textPrimary.withValues(alpha: 0.6),
                       height: 1.4,
                     ),
                   ),
@@ -162,11 +160,11 @@ class JournalCard extends StatelessWidget {
           if (loadingProgress == null) return child;
           return Container(
             height: height,
-            color: cardColor,
+            color: AppColors.cardDark,
             child: Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: textSecondary,
+                color: AppColors.textSecondary,
               ),
             ),
           );
@@ -174,11 +172,11 @@ class JournalCard extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             height: height,
-            color: cardColor,
+            color: AppColors.cardDark,
             child: Center(
               child: Icon(
                 Icons.broken_image_outlined,
-                color: textSecondary,
+                color: AppColors.textSecondary,
                 size: 40,
               ),
             ),

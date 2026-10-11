@@ -12,6 +12,7 @@ import '../widgets/journal_card.dart';
 import '../widgets/mood_filter_chip.dart';
 import '../repositories/journal_repository.dart';
 import '../utils/slide_route.dart';
+import '../theme/app_colors.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -47,17 +48,10 @@ class _ReflectScreenState extends State<ReflectScreen> {
     super.dispose();
   }
 
-  // Warna untuk dark mode
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-  final Color accentColor = const Color(0xFFF2F2F7);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColors.bgDark,
       body: Stack(
         children: [
           SizedBox(
@@ -77,7 +71,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
-                        color: textPrimary,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -86,12 +80,16 @@ class _ReflectScreenState extends State<ReflectScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: cardColor,
+                        color: AppColors.cardDark,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.search, color: textSecondary, size: 22),
+                          Icon(
+                            Icons.search,
+                            color: AppColors.textSecondary,
+                            size: 22,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: TextField(
@@ -99,7 +97,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                               autofocus: false,
                               textInputAction: TextInputAction.search,
                               style: TextStyle(
-                                color: textPrimary,
+                                color: AppColors.textPrimary,
                                 fontSize: 15,
                               ),
                               decoration: InputDecoration(
@@ -107,7 +105,9 @@ class _ReflectScreenState extends State<ReflectScreen> {
                                   context,
                                 )!.searchHint,
                                 hintStyle: TextStyle(
-                                  color: textSecondary.withValues(alpha: 0.5),
+                                  color: AppColors.textSecondary.withValues(
+                                    alpha: 0.5,
+                                  ),
                                   fontSize: 15,
                                 ),
                                 border: InputBorder.none,
@@ -129,7 +129,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                               },
                               child: Icon(
                                 Icons.close,
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                                 size: 20,
                               ),
                             ),
@@ -215,7 +215,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                         height: 1.5,
-                        color: textPrimary.withValues(alpha: 0.8),
+                        color: AppColors.textPrimary.withValues(alpha: 0.8),
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -226,7 +226,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: textSecondary,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -250,7 +250,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: cardColor.withValues(
+                  color: AppColors.cardDark.withValues(
                     alpha: 0.95,
                   ), // Card color transparan
                   borderRadius: BorderRadius.circular(40),
@@ -275,7 +275,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       },
                       icon: Icon(
                         Icons.bar_chart_outlined,
-                        color: textSecondary,
+                        color: AppColors.textSecondary,
                         size: 26,
                       ),
                     ),
@@ -291,12 +291,12 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: accentColor,
+                          color: AppColors.textPrimary,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.add,
-                          color: bgColor,
+                          color: AppColors.bgDark,
                           size: 26,
                         ), // Ikon hitam di tombol putih
                       ),
@@ -312,7 +312,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       },
                       icon: Icon(
                         Icons.settings_outlined,
-                        color: textSecondary,
+                        color: AppColors.textSecondary,
                         size: 26,
                       ),
                     ),
@@ -335,7 +335,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             decoration: BoxDecoration(
-              color: cardColor,
+              color: AppColors.cardDark,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
@@ -346,7 +346,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: textPrimary,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -355,7 +355,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    color: textSecondary,
+                    color: AppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),
@@ -377,7 +377,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             decoration: BoxDecoration(
-              color: cardColor,
+              color: AppColors.cardDark,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
@@ -389,7 +389,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: textPrimary,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -400,7 +400,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    color: textSecondary,
+                    color: AppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),
@@ -421,7 +421,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 24),
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.8),
+                    color: AppColors.systemRed.withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: const Icon(
@@ -435,27 +435,27 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   return await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      backgroundColor: cardColor,
+                      backgroundColor: AppColors.cardDark,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       title: Text(
                         AppLocalizations.of(context)!.deleteConfirmTitle,
                         style: TextStyle(
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       content: Text(
                         AppLocalizations.of(context)!.deleteConfirmDesc,
-                        style: TextStyle(color: textSecondary),
+                        style: TextStyle(color: AppColors.textSecondary),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
                           child: Text(
                             AppLocalizations.of(context)!.cancel,
-                            style: TextStyle(color: textSecondary),
+                            style: TextStyle(color: AppColors.textSecondary),
                           ),
                         ),
                         TextButton(

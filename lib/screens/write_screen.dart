@@ -10,6 +10,7 @@ import '../widgets/top_banner.dart';
 import '../repositories/journal_repository.dart';
 import '../widgets/mood_selector.dart';
 import '../widgets/image_picker_section.dart';
+import '../theme/app_colors.dart';
 
 class WriteScreen extends StatefulWidget {
   final JournalEntry? entry;
@@ -33,13 +34,13 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
             const Icon(
               Icons.warning_amber_rounded,
-              color: Color(0xFFFFD60A),
+              color: AppColors.systemYellow,
               size: 24,
             ),
             const SizedBox(width: 10),
@@ -47,7 +48,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
               child: Text(
                 AppLocalizations.of(context)!.incompleteTitle,
                 style: TextStyle(
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
@@ -61,7 +62,11 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
           children: [
             Text(
               AppLocalizations.of(context)!.incompleteDesc,
-              style: TextStyle(color: textSecondary, fontSize: 13, height: 1.5),
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             const SizedBox(height: 16),
             ...missingFields.map(
@@ -75,7 +80,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       width: 6,
                       height: 6,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFFF3B30),
+                        color: AppColors.systemRed,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -84,7 +89,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       child: Text(
                         field,
                         style: TextStyle(
-                          color: textPrimary,
+                          color: AppColors.textPrimary,
                           fontSize: 14,
                           height: 1.4,
                         ),
@@ -105,7 +110,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             child: Text(
               AppLocalizations.of(context)!.ok,
               style: const TextStyle(
-                color: Color(0xFF0A84FF),
+                color: AppColors.systemBlue,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -114,11 +119,6 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
       ),
     );
   }
-
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
 
   @override
   void initState() {
@@ -203,17 +203,17 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
-            const Icon(Icons.edit_note, color: Color(0xFF0A84FF), size: 24),
+            const Icon(Icons.edit_note, color: AppColors.systemBlue, size: 24),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 AppLocalizations.of(context)!.draftFoundTitle,
                 style: TextStyle(
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
@@ -223,7 +223,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
         ),
         content: Text(
           AppLocalizations.of(context)!.draftFoundDesc,
-          style: TextStyle(color: textSecondary, height: 1.5),
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
         ),
         actions: [
           TextButton(
@@ -235,7 +235,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             },
             child: Text(
               AppLocalizations.of(context)!.discardDraft,
-              style: TextStyle(color: textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -266,7 +266,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             child: Text(
               AppLocalizations.of(context)!.continueDraft,
               style: const TextStyle(
-                color: Color(0xFF0A84FF),
+                color: AppColors.systemBlue,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -280,19 +280,19 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: cardColor,
+        backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           AppLocalizations.of(context)!.draftFoundTitle,
           style: TextStyle(
-            color: textPrimary,
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 16,
           ),
         ),
         content: Text(
           AppLocalizations.of(context)!.draftFoundDesc,
-          style: TextStyle(color: textSecondary, height: 1.5),
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
         ),
         actions: [
           TextButton(
@@ -302,7 +302,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             },
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: TextStyle(color: textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
           TextButton(
@@ -334,7 +334,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             child: Text(
               AppLocalizations.of(context)!.save,
               style: const TextStyle(
-                color: Color(0xFF0A84FF),
+                color: AppColors.systemBlue,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -389,7 +389,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Gagal membuka kamera'),
-          backgroundColor: const Color(0xFF1E1E1E),
+          backgroundColor: AppColors.cardDark,
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.only(top: 90, left: 20, right: 20),
           shape: RoundedRectangleBorder(
@@ -405,7 +405,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     final isEditing = widget.entry != null;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColors.bgDark,
       body: SafeArea(
         child: Stack(
           children: [
@@ -435,7 +435,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       AppLocalizations.of(context)!.howFeeling,
                       style: TextStyle(
                         fontSize: 14,
-                        color: textSecondary,
+                        color: AppColors.textSecondary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -456,14 +456,14 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: textPrimary,
+                        color: AppColors.textPrimary,
                       ),
                       decoration: InputDecoration(
                         hintText: AppLocalizations.of(context)!.titleHint,
                         hintStyle: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: textSecondary.withValues(alpha: 0.5),
+                          color: AppColors.textSecondary.withValues(alpha: 0.5),
                         ),
                         border: InputBorder.none,
                       ),
@@ -479,14 +479,16 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
                           fontSize: 16,
-                          color: textPrimary.withValues(alpha: 0.8),
+                          color: AppColors.textPrimary.withValues(alpha: 0.8),
                           height: 1.6,
                         ),
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.contentHint,
                           hintStyle: TextStyle(
                             fontSize: 16,
-                            color: textSecondary.withValues(alpha: 0.5),
+                            color: AppColors.textSecondary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           border: InputBorder.none,
                         ),
@@ -522,7 +524,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                 label: isEditing
                     ? AppLocalizations.of(context)!.update
                     : AppLocalizations.of(context)!.save,
-                labelColor: const Color(0xFF0A84FF),
+                labelColor: AppColors.systemBlue,
                 onTap: () async {
                   HapticFeedback.mediumImpact();
 
@@ -591,7 +593,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: cardColor.withValues(alpha: 0.9),
+                    color: AppColors.cardDark.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -606,7 +608,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         ? AppLocalizations.of(context)!.editEntry
                         : AppLocalizations.of(context)!.newEntry,
                     style: TextStyle(
-                      color: textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -638,7 +640,9 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             ? const EdgeInsets.symmetric(horizontal: 18, vertical: 10)
             : const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isPrimary ? textPrimary : cardColor.withValues(alpha: 0.9),
+          color: isPrimary
+              ? AppColors.textPrimary
+              : AppColors.cardDark.withValues(alpha: 0.9),
           shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
           borderRadius: isLabeled ? BorderRadius.circular(20) : null,
           boxShadow: [
@@ -653,12 +657,12 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             ? Text(
                 label,
                 style: TextStyle(
-                  color: labelColor ?? textPrimary,
+                  color: labelColor ?? AppColors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               )
-            : Icon(icon, color: textPrimary, size: 20),
+            : Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }

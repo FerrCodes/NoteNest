@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../theme/app_colors.dart';
 
 class SettingItem extends StatelessWidget {
   final IconData? icon;
@@ -19,10 +20,6 @@ class SettingItem extends StatelessWidget {
     this.isDestructive = false,
   });
 
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -33,7 +30,7 @@ class SettingItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: cardColor,
+          color: AppColors.cardDark,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -42,15 +39,17 @@ class SettingItem extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: isDestructive
-                    ? Colors.red.withValues(alpha: 0.15)
-                    : textPrimary.withValues(alpha: 0.1),
+                    ? AppColors.systemRed.withValues(alpha: 0.15)
+                    : AppColors.textPrimary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child:
                   customIcon ??
                   Icon(
                     icon,
-                    color: isDestructive ? Colors.red : textPrimary,
+                    color: isDestructive
+                        ? AppColors.systemRed
+                        : AppColors.textPrimary,
                     size: 20,
                   ),
             ),
@@ -64,13 +63,18 @@ class SettingItem extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: isDestructive ? Colors.red : textPrimary,
+                      color: isDestructive
+                          ? AppColors.systemRed
+                          : AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 12, color: textSecondary),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -78,7 +82,7 @@ class SettingItem extends StatelessWidget {
             Icon(
               Icons.arrow_forward_ios,
               size: 14,
-              color: textSecondary.withValues(alpha: 0.5),
+              color: AppColors.textSecondary.withValues(alpha: 0.5),
             ),
           ],
         ),

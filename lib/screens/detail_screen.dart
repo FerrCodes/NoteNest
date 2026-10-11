@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'dart:io';
 import 'photo_viewer_screen.dart';
 import '../utils/slide_route.dart';
+import '../theme/app_colors.dart';
 
 class DetailScreen extends StatefulWidget {
   final JournalEntry entry;
@@ -18,11 +19,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  final Color bgColor = const Color(0xFF121212);
-  final Color textPrimary = const Color(0xFFF2F2F7);
-  final Color textSecondary = const Color(0xFF8E8E93);
-  final Color cardColor = const Color(0xFF1E1E1E);
-
   String _getLocalizedMood(BuildContext context, String mood) {
     final l10n = AppLocalizations.of(context)!;
     switch (mood) {
@@ -87,7 +83,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final entry = widget.entry;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: AppColors.bgDark,
       body: SafeArea(
         child: Stack(
           children: [
@@ -109,7 +105,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               _formatFullDate(entry.date),
                               style: TextStyle(
                                 fontSize: 14,
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -120,13 +116,15 @@ class _DetailScreenState extends State<DetailScreen> {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: textSecondary.withValues(alpha: 0.2),
+                                color: AppColors.textSecondary.withValues(
+                                  alpha: 0.2,
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 _getLocalizedMood(context, entry.mood),
                                 style: TextStyle(
-                                  color: textSecondary,
+                                  color: AppColors.textSecondary,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -141,7 +139,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
-                            color: textPrimary,
+                            color: AppColors.textPrimary,
                             height: 1.3,
                           ),
                         ),
@@ -153,7 +151,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             Icon(
                               Icons.schedule,
                               size: 14,
-                              color: textSecondary,
+                              color: AppColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -162,7 +160,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               ),
                               style: TextStyle(
                                 fontSize: 12,
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -170,14 +168,14 @@ class _DetailScreenState extends State<DetailScreen> {
                               '·',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                               ),
                             ),
                             const SizedBox(width: 8),
                             Icon(
                               Icons.text_fields,
                               size: 14,
-                              color: textSecondary,
+                              color: AppColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -186,7 +184,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               )!.wordCount(_getWordCount(entry.content)),
                               style: TextStyle(
                                 fontSize: 12,
-                                color: textSecondary,
+                                color: AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -249,7 +247,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           entry.content,
                           style: TextStyle(
                             fontSize: 16,
-                            color: textPrimary.withValues(alpha: 0.8),
+                            color: AppColors.textPrimary.withValues(alpha: 0.8),
                             height: 1.6,
                           ),
                         ),
@@ -262,7 +260,9 @@ class _DetailScreenState extends State<DetailScreen> {
                               Icon(
                                 Icons.edit_outlined,
                                 size: 12,
-                                color: textSecondary.withValues(alpha: 0.6),
+                                color: AppColors.textSecondary.withValues(
+                                  alpha: 0.6,
+                                ),
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -274,7 +274,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                 ),
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: textSecondary.withValues(alpha: 0.6),
+                                  color: AppColors.textSecondary.withValues(
+                                    alpha: 0.6,
+                                  ),
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
@@ -327,7 +329,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: cardColor.withValues(alpha: 0.9),
+                    color: AppColors.cardDark.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -340,7 +342,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: Text(
                     AppLocalizations.of(context)!.journalDetail,
                     style: TextStyle(
-                      color: textPrimary,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -370,7 +372,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
             : const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: cardColor.withValues(alpha: 0.9),
+          color: AppColors.cardDark.withValues(alpha: 0.9),
           shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
           borderRadius: isLabeled ? BorderRadius.circular(20) : null,
           boxShadow: [
@@ -385,12 +387,12 @@ class _DetailScreenState extends State<DetailScreen> {
             ? Text(
                 label,
                 style: TextStyle(
-                  color: textPrimary,
+                  color: AppColors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               )
-            : Icon(icon, color: textPrimary, size: 20),
+            : Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }
@@ -411,11 +413,11 @@ class _DetailScreenState extends State<DetailScreen> {
           if (loadingProgress == null) return child;
           return Container(
             height: height,
-            color: cardColor,
+            color: AppColors.cardDark,
             child: Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: textSecondary,
+                color: AppColors.textSecondary,
               ),
             ),
           );
@@ -423,11 +425,11 @@ class _DetailScreenState extends State<DetailScreen> {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             height: height,
-            color: cardColor,
+            color: AppColors.cardDark,
             child: Center(
               child: Icon(
                 Icons.broken_image_outlined,
-                color: textSecondary,
+                color: AppColors.textSecondary,
                 size: 40,
               ),
             ),
