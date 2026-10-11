@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'photo_viewer_screen.dart';
+import '../utils/slide_route.dart';
 
 class DetailScreen extends StatefulWidget {
   final JournalEntry entry;
@@ -305,25 +306,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   // Buka halaman edit
                   await Navigator.push(
                     context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          WriteScreen(entry: entry),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(1.0, 0.0);
-                            const end = Offset.zero;
-                            const curve = Curves.easeInOutCubic;
-                            var tween = Tween(
-                              begin: begin,
-                              end: end,
-                            ).chain(CurveTween(curve: curve));
-                            return SlideTransition(
-                              position: animation.drive(tween),
-                              child: child,
-                            );
-                          },
-                      transitionDuration: const Duration(milliseconds: 350),
-                    ),
+                    SlideRoute(page: WriteScreen(entry: entry)),
                   );
                   // Setelah edit selesai, refresh halaman detail
                   if (mounted) {

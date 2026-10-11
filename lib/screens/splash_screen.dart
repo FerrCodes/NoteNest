@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'onboarding_screen.dart';
-import '../main.dart';
+import 'reflect_screen.dart';
 import '../l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {

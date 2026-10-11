@@ -283,7 +283,7 @@ class _StatsScreenState extends State<StatsScreen> {
                           color: cardColor,
                           borderRadius: BorderRadius.circular(24),
                         ),
-                        child: _buildMiniCalendar(entriesThisMonth),
+                        child: _buildMiniCalendar(context, entriesThisMonth),
                       ),
                       const SizedBox(height: 32),
 
@@ -529,7 +529,10 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   // === HELPER: KALENDER MINI ===
-  Widget _buildMiniCalendar(List<JournalEntry> entriesThisMonth) {
+  Widget _buildMiniCalendar(
+    BuildContext context,
+    List<JournalEntry> entriesThisMonth,
+  ) {
     final now = DateTime.now();
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
     final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
@@ -544,7 +547,8 @@ class _StatsScreenState extends State<StatsScreen> {
     final dayLabelsOrdered = ['S', 'S', 'R', 'K', 'J', 'S', 'M'];
 
     // Nama bulan ini (contoh: "September 2026")
-    final monthName = DateFormat('MMMM yyyy', 'id_ID').format(now);
+    final currentLocale = Localizations.localeOf(context).toString();
+    final monthName = DateFormat('MMMM yyyy', currentLocale).format(now);
 
     return Column(
       children: [

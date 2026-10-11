@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../services/notification_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/top_banner.dart';
+import '../services/export_service.dart';
+import '../widgets/section_title.dart';
+import '../widgets/setting_item.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -138,7 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
               children: [
                 // === SECTION REMINDER ===
-                _buildSectionTitle(AppLocalizations.of(context)!.reminder),
+                SectionTitle(title: AppLocalizations.of(context)!.reminder),
                 const SizedBox(height: 12),
                 _buildReminderToggle(),
                 if (_reminderEnabled) ...[
@@ -151,15 +151,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
                 const SizedBox(height: 32),
                 // === SECTION BAHASA ===
-                _buildSectionTitle(AppLocalizations.of(context)!.language),
+                SectionTitle(title: AppLocalizations.of(context)!.language),
                 const SizedBox(height: 12),
                 _buildLanguageSelector(),
                 const SizedBox(height: 32),
 
                 // === SECTION DATA ===
-                _buildSectionTitle(AppLocalizations.of(context)!.data),
+                SectionTitle(title: AppLocalizations.of(context)!.data),
                 const SizedBox(height: 12),
-                _buildSettingItem(
+                SettingItem(
                   icon: Icons.ios_share,
                   title: AppLocalizations.of(context)!.exportJournals,
                   subtitle: AppLocalizations.of(context)!.exportJournalsDesc,
@@ -168,16 +168,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 32),
 
                 // === SECTION 2: TENTANG ===
-                _buildSectionTitle(AppLocalizations.of(context)!.about),
+                SectionTitle(title: AppLocalizations.of(context)!.about),
                 const SizedBox(height: 12),
-                _buildSettingItem(
+                SettingItem(
                   icon: Icons.info_outline,
                   title: AppLocalizations.of(context)!.aboutApp,
                   subtitle: AppLocalizations.of(context)!.version,
                   onTap: _showAboutDialog,
                 ),
                 const SizedBox(height: 8),
-                _buildSettingItem(
+                SettingItem(
                   icon: Icons.mail_outline,
                   title: AppLocalizations.of(context)!.sendFeedback,
                   subtitle: AppLocalizations.of(context)!.feedbackDesc,
@@ -188,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 const SizedBox(height: 8),
                 // === SOURCE CODE (dengan ikon GitHub asli) ===
-                _buildSettingItem(
+                SettingItem(
                   customIcon: const FaIcon(
                     FontAwesomeIcons.github,
                     color: Color(0xFFF2F2F7),
@@ -245,7 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 12),
 
                 // Reset Settings
-                _buildSettingItem(
+                SettingItem(
                   icon: Icons.restore_outlined,
                   title: AppLocalizations.of(context)!.resetSettings,
                   subtitle: AppLocalizations.of(context)!.resetSettingsDesc,
@@ -255,7 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 8),
 
                 // Delete All Journals
-                _buildSettingItem(
+                SettingItem(
                   icon: Icons.delete_outline,
                   title: AppLocalizations.of(context)!.deleteAllJournals,
                   subtitle: AppLocalizations.of(context)!.deleteAllJournalsDesc,
@@ -423,138 +423,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === WIDGET BANTUAN ===
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title.toUpperCase(),
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: textSecondary,
-        letterSpacing: 1.2,
-      ),
-    );
-  }
-
-  Widget _buildSettingItem({
-    IconData? icon,
-    Widget? customIcon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    bool isDestructive = false,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: isDestructive
-                    ? Colors.red.withValues(alpha: 0.15)
-                    : textPrimary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              // Pakai customIcon kalau ada, kalau tidak pakai Icon biasa
-              child:
-                  customIcon ??
-                  Icon(
-                    icon,
-                    color: isDestructive ? Colors.red : textPrimary,
-                    size: 20,
-                  ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: isDestructive ? Colors.red : textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 12, color: textSecondary),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: textSecondary.withValues(alpha: 0.5),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   // === FUNGSI EXPORT ===
   Future<void> _exportJournals() async {
-    final box = Hive.box<JournalEntry>('journalBox');
+    final exportService = ExportService();
 
-    if (box.isEmpty) {
+    if (!exportService.hasData()) {
       _showSnackBar(AppLocalizations.of(context)!.nothingToExport);
       return;
     }
 
-    final buffer = StringBuffer();
-    buffer.writeln('=== NOTENEST EXPORT ===');
-    buffer.writeln(
-      'Tanggal Export: ${DateFormat('MMM d, yyyy - HH:mm').format(DateTime.now())}',
+    final filePath = await exportService.saveToTempFile();
+    if (filePath == null) {
+      if (!mounted) return;
+      _showSnackBar('Gagal export jurnal.');
+      return;
+    }
+
+    if (!mounted) return;
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'text/plain')],
+        subject: 'NoteNest Export',
+        text: 'Berikut adalah export jurnal dari NoteNest.',
+      ),
     );
-    buffer.writeln('Total Jurnal: ${box.length}');
-    buffer.writeln('================================\n');
-
-    final entries = box.values.toList().reversed.toList();
-    for (var i = 0; i < entries.length; i++) {
-      final entry = entries[i];
-      buffer.writeln('--- Jurnal #${i + 1} ---');
-      buffer.writeln('Tanggal: ${entry.date}');
-      buffer.writeln('Mood   : ${entry.mood}');
-      buffer.writeln('Judul  : ${entry.title}');
-      buffer.writeln('Isi    :');
-      buffer.writeln(entry.content);
-      buffer.writeln('\n');
-    }
-
-    try {
-      // Simpan ke file sementara
-      final directory = await getTemporaryDirectory();
-      final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      final file = File('${directory.path}/NoteNest_$timestamp.txt');
-      await file.writeAsString(buffer.toString());
-
-      // Buka dialog share
-      if (!mounted) return;
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path, mimeType: 'text/plain')],
-          subject: 'NoteNest Export',
-          text: 'Berikut adalah export jurnal dari NoteNest.',
-        ),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      _showSnackBar('Gagal export jurnal: $e');
-    }
   }
 
   // === FUNGSI HAPUS SEMUA ===

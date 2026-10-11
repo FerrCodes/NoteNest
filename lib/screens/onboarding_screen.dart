@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../main.dart';
+import 'reflect_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/slide_route.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -47,10 +48,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     await settingsBox.put('hasSeenOnboarding', true);
 
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const ReflectScreen()),
-    );
+    Navigator.pushReplacement(context, SlideRoute(page: const ReflectScreen()));
   }
 
   @override
