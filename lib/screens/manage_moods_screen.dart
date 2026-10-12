@@ -57,149 +57,151 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.cardDark,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          padding: EdgeInsets.only(
-            top: 12,
-            left: 24,
-            right: 24,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Drag handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.textSecondary.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(2),
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.cardDark,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            padding: EdgeInsets.only(
+              top: 12,
+              left: 24,
+              right: 24,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Drag handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.textSecondary.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                AppLocalizations.of(context)!.newMood,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _moodNameController,
-                autofocus: true,
-                maxLength: 20,
-                textCapitalization: TextCapitalization.words,
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 15),
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.moodNameHint,
-                  hintStyle: TextStyle(
-                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                const SizedBox(height: 24),
+                Text(
+                  AppLocalizations.of(context)!.newMood,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
                   ),
-                  filled: true,
-                  fillColor: AppColors.bgDark,
-                  counterStyle: TextStyle(color: AppColors.textSecondary),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _moodNameController,
+                  maxLength: 20,
+                  textCapitalization: TextCapitalization.words,
+                  style: TextStyle(color: AppColors.textPrimary, fontSize: 15),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.moodNameHint,
+                    hintStyle: TextStyle(
+                      color: AppColors.textSecondary.withValues(alpha: 0.5),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.bgDark,
+                    counterStyle: TextStyle(color: AppColors.textSecondary),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.all(16),
                   ),
-                  contentPadding: const EdgeInsets.all(16),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Warna Mood', // Bisa pakai l10n nanti
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                const SizedBox(height: 20),
+                Text(
+                  'Warna Mood',
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // === COLOR PICKER dengan ValueListenableBuilder ===
-              ValueListenableBuilder<String>(
-                valueListenable: _selectedColorNotifier,
-                builder: (context, selectedHex, _) {
-                  return Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: _colorOptions.map((hex) {
-                      final color = _hexToColor(hex);
-                      final isSelected = selectedHex == hex;
-                      return GestureDetector(
-                        onTap: () {
-                          HapticFeedback.selectionClick();
-                          _selectedColorNotifier.value =
-                              hex; // <-- Update via notifier
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: isSelected
-                                ? Border.all(
-                                    color: AppColors.textPrimary,
-                                    width: 3,
+                // === COLOR PICKER dengan ValueListenableBuilder ===
+                ValueListenableBuilder<String>(
+                  valueListenable: _selectedColorNotifier,
+                  builder: (context, selectedHex, _) {
+                    return Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: _colorOptions.map((hex) {
+                        final color = _hexToColor(hex);
+                        final isSelected = selectedHex == hex;
+                        return GestureDetector(
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            _selectedColorNotifier.value = hex;
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: isSelected
+                                  ? Border.all(
+                                      color: AppColors.textPrimary,
+                                      width: 3,
+                                    )
+                                  : null,
+                            ),
+                            child: isSelected
+                                ? const Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 20,
                                   )
                                 : null,
                           ),
-                          child: isSelected
-                              ? const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 20,
-                                )
-                              : null,
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+                ValueListenableBuilder(
+                  valueListenable: _moodNameController,
+                  builder: (context, value, child) {
+                    final hasText = value.text.trim().isNotEmpty;
+                    return GestureDetector(
+                      onTap: hasText ? () => _addMood(value.text) : null,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: hasText
+                              ? AppColors.systemBlue
+                              : AppColors.textSecondary.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(14),
                         ),
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              ValueListenableBuilder(
-                valueListenable: _moodNameController,
-                builder: (context, value, child) {
-                  final hasText = value.text.trim().isNotEmpty;
-                  return GestureDetector(
-                    onTap: hasText ? () => _addMood(value.text) : null,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      decoration: BoxDecoration(
-                        color: hasText
-                            ? AppColors.systemBlue
-                            : AppColors.textSecondary.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.addMood,
-                          style: TextStyle(
-                            color: hasText
-                                ? Colors.white
-                                : AppColors.textSecondary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.addMood,
+                            style: TextStyle(
+                              color: hasText
+                                  ? Colors.white
+                                  : AppColors.textSecondary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

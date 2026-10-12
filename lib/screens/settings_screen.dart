@@ -826,135 +826,144 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showFeedbackBottomSheet() {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // <-- Penting agar tidak tertutup keyboard
-      backgroundColor: Colors.transparent, // <-- Agar sudut melengkung terlihat
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.cardDark,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          padding: EdgeInsets.only(
-            top: 12,
-            left: 24,
-            right: 24,
-            // Memberi ruang saat keyboard muncul
-            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // === DRAG HANDLE (Garis kecil di atas) ===
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.textSecondary.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.cardDark,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
               ),
-              const SizedBox(height: 24),
-
-              // === TITLE ===
-              Text(
-                AppLocalizations.of(context)!.sendFeedback,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              // === SUBTITLE ===
-              Text(
-                AppLocalizations.of(context)!.feedbackWhatHappened,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // === TEXT FIELD ===
-              TextField(
-                controller: _feedbackController,
-                maxLines: null,
-                maxLength: 2000,
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)!.feedbackHint,
-                  hintStyle: TextStyle(
-                    color: AppColors.textSecondary.withValues(alpha: 0.5),
-                  ),
-                  filled: true,
-                  fillColor: AppColors.bgDark,
-                  counterStyle: TextStyle(color: AppColors.textSecondary),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.all(16),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // === DISCLAIMER ===
-              Text(
-                AppLocalizations.of(context)!.feedbackDisclaimer,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // === TOMBOL SEND (Mengikuti status teks) ===
-              ValueListenableBuilder(
-                valueListenable: _feedbackController,
-                builder: (context, value, child) {
-                  final hasText = value.text.trim().isNotEmpty;
-                  return GestureDetector(
-                    onTap: hasText
-                        ? () {
-                            HapticFeedback.mediumImpact();
-                            // Kirim via email (bisa juga WhatsApp)
-                            _sendFeedbackViaEmailWithText(value.text);
-                            Navigator.pop(context);
-                          }
-                        : null, // Tombol mati kalau kosong
+            ),
+            padding: EdgeInsets.only(
+              top: 12,
+              left: 24,
+              right: 24,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // === DRAG HANDLE (Garis kecil di atas) ===
+                  Center(
                     child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      width: 40,
+                      height: 4,
                       decoration: BoxDecoration(
-                        color: hasText
-                            ? AppColors.systemBlue
-                            : AppColors.textSecondary.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.send,
-                          style: TextStyle(
-                            color: hasText
-                                ? Colors.white
-                                : AppColors.textSecondary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        color: AppColors.textSecondary.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                  );
-                },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // === TITLE ===
+                  Text(
+                    AppLocalizations.of(context)!.sendFeedback,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // === SUBTITLE ===
+                  Text(
+                    AppLocalizations.of(context)!.feedbackWhatHappened,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // === TEXT FIELD ===
+                  TextField(
+                    controller: _feedbackController,
+                    maxLines: null,
+                    maxLength: 2000,
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 14,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.feedbackHint,
+                      hintStyle: TextStyle(
+                        color: AppColors.textSecondary.withValues(alpha: 0.5),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.bgDark,
+                      counterStyle: TextStyle(color: AppColors.textSecondary),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.all(16),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // === DISCLAIMER ===
+                  Text(
+                    AppLocalizations.of(context)!.feedbackDisclaimer,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // === TOMBOL SEND (Mengikuti status teks) ===
+                  ValueListenableBuilder(
+                    valueListenable: _feedbackController,
+                    builder: (context, value, child) {
+                      final hasText = value.text.trim().isNotEmpty;
+                      return GestureDetector(
+                        onTap: hasText
+                            ? () {
+                                HapticFeedback.mediumImpact();
+                                // Kirim via email (bisa juga WhatsApp)
+                                _sendFeedbackViaEmailWithText(value.text);
+                                Navigator.pop(context);
+                              }
+                            : null, // Tombol mati kalau kosong
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          decoration: BoxDecoration(
+                            color: hasText
+                                ? AppColors.systemBlue
+                                : AppColors.textSecondary.withValues(
+                                    alpha: 0.2,
+                                  ),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.send,
+                              style: TextStyle(
+                                color: hasText
+                                    ? Colors.white
+                                    : AppColors.textSecondary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-            ],
+            ),
           ),
         );
       },
