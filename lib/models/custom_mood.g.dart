@@ -21,13 +21,14 @@ class CustomMoodAdapter extends TypeAdapter<CustomMood> {
       iconName: fields[1] as String,
       createdAt: fields[2] as DateTime,
       colorHex: fields[3] as String,
+      isArchived: fields[4] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, CustomMood obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.label)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class CustomMoodAdapter extends TypeAdapter<CustomMood> {
       ..writeByte(2)
       ..write(obj.createdAt)
       ..writeByte(3)
-      ..write(obj.colorHex);
+      ..write(obj.colorHex)
+      ..writeByte(4)
+      ..write(obj.isArchived);
   }
 
   @override

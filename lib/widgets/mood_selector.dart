@@ -8,11 +8,13 @@ import '../repositories/mood_repository.dart';
 class MoodSelector extends StatelessWidget {
   final String selectedMood;
   final ValueChanged<String> onMoodSelected;
+  final String? currentMood;
   final _moodRepository = MoodRepository();
   MoodSelector({
     super.key,
     required this.selectedMood,
     required this.onMoodSelected,
+    this.currentMood,
   });
 
   String _getLocalizedMood(BuildContext context, String mood) {
@@ -37,10 +39,12 @@ class MoodSelector extends StatelessWidget {
       valueListenable: _moodRepository.listenable,
       builder: (context, box, _) {
         final presetMoods = MoodPresets.all;
-        final customMoods = _moodRepository.getAllCustomMoods();
+        final activeCustomMoods = _moodRepository.getAllCustomMoods();
+
+        // Mood custom aktif
         final allMoods = <Map<String, dynamic>>[
           ...presetMoods,
-          ...customMoods.map(
+          ...activeCustomMoods.map(
             (m) => {
               'icon': Icons.mood_outlined,
               'label': m.label,
@@ -49,6 +53,33 @@ class MoodSelector extends StatelessWidget {
             },
           ),
         ];
+
+        // Cek apakah `currentMood` ada di allMoods
+        final currentMoodExists = allMoods.any(
+          (m) => m['label'] == currentMood,
+        );
+
+        // Kalau currentMood ada tapi tidak di allMoods (misal: sudah diarsipkan)
+        // tambahkan sebagai "legacy mood"
+        if (currentMood != null &&
+            currentMood!.isNotEmpty &&
+            !currentMoodExists) {
+          // Cari di arsip untuk dapat warna aslinya
+          final archivedMood = _moodRepository
+              .getArchivedMoods()
+              .where((m) => m.label == currentMood)
+              .firstOrNull;
+
+          allMoods.insert(0, {
+            'icon': Icons.mood_outlined,
+            'label': currentMood,
+            'color': archivedMood != null
+                ? _hexToColor(archivedMood.colorHex)
+                : AppColors.textSecondary,
+            'isCustom': true,
+            'isLegacy': true,
+          });
+        }
 
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,

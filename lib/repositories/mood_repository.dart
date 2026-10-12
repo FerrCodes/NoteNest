@@ -8,36 +8,46 @@ class MoodRepository {
 
   final Box<CustomMood> _box = Hive.box<CustomMood>('customMoodsBox');
 
-  /// Ambil semua mood custom, urutkan dari yang terbaru.
+  /// Ambil semua mood custom yang TIDAK diarsipkan, urutkan dari yang terbaru.
   List<CustomMood> getAllCustomMoods() {
-    return _box.values.toList()
+    return _box.values.where((m) => !m.isArchived).toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
-  /// Ambil semua label mood custom saja.
+  /// Ambil semua mood custom yang diarsipkan.
+  List<CustomMood> getArchivedMoods() {
+    return _box.values.where((m) => m.isArchived).toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  /// Ambil semua label mood custom saja (yang aktif).
   List<String> getCustomMoodLabels() {
     return getAllCustomMoods().map((m) => m.label).toList();
   }
 
-  /// Jumlah mood custom saat ini.
-  int get customMoodCount => _box.length;
+  /// Jumlah mood custom aktif saat ini.
+  int get customMoodCount {
+    return _box.values.where((m) => !m.isArchived).length;
+  }
 
-  /// Apakah sudah mencapai batas maksimal?
-  bool get isAtMaxCapacity => _box.length >= maxCustomMoods;
+  /// Apakah sudah mencapai batas maksimal (hanya hitung yang aktif)?
+  bool get isAtMaxCapacity {
+    final activeCount = _box.values.where((m) => !m.isArchived).length;
+    return activeCount >= maxCustomMoods;
+  }
 
-  /// Cek apakah label sudah dipakai (baik preset maupun custom).
+  /// Cek apakah label sudah dipakai (preset, custom aktif, atau custom arsip).
   bool isLabelTaken(String label) {
     final normalized = label.trim().toLowerCase();
     // Cek preset
     if (MoodPresets.labels.map((l) => l.toLowerCase()).contains(normalized)) {
       return true;
     }
-    // Cek custom
-    return getAllCustomMoods().any((m) => m.label.toLowerCase() == normalized);
+    // Cek custom (termasuk yang diarsipkan, supaya user tidak bisa bikin duplikat)
+    return _box.values.any((m) => m.label.toLowerCase() == normalized);
   }
 
   /// Tambah mood custom baru.
-  /// Return true kalau berhasil, false kalau gagal (label duplikat / penuh).
   Future<bool> addCustomMood(
     String label, {
     String iconName = 'mood',
@@ -58,7 +68,21 @@ class MoodRepository {
     return true;
   }
 
-  /// Hapus mood custom berdasarkan objek.
+  /// Arsipkan mood custom (soft delete).
+  /// Data tetap ada, tapi tidak muncul di pilihan baru.
+  Future<void> archiveCustomMood(CustomMood mood) async {
+    mood.isArchived = true;
+    await mood.save();
+  }
+
+  /// Pulihkan mood custom dari arsip.
+  Future<void> restoreCustomMood(CustomMood mood) async {
+    mood.isArchived = false;
+    await mood.save();
+  }
+
+  /// Hapus mood custom secara permanen (hard delete).
+  /// Dipakai kalau user mau benar-benar menghapus dari arsip.
   Future<void> deleteCustomMood(CustomMood mood) async {
     await mood.delete();
   }

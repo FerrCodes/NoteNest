@@ -364,87 +364,107 @@ class _StatsScreenState extends State<StatsScreen> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: SizedBox(
-                          height: 200,
-                          child: BarChart(
-                            BarChartData(
-                              alignment: BarChartAlignment.spaceAround,
-                              maxY: moodCounts.isEmpty
-                                  ? 5.0
-                                  : (moodCounts.values.reduce(
-                                              (a, b) => a > b ? a : b,
-                                            ) +
-                                            1)
-                                        .toDouble(),
-                              barTouchData: BarTouchData(enabled: false),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    getTitlesWidget: (value, meta) {
-                                      final index = value.toInt();
-                                      if (index >= 0 &&
-                                          index < allMoods.length) {
-                                        // <-- Pakai allMoods
-                                        final mood = allMoods[index];
-                                        final label = mood['label'] as String;
-                                        final isCustom =
-                                            mood['isCustom'] == true;
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 8,
-                                          ),
-                                          child: Text(
-                                            isCustom
-                                                ? label
-                                                : _getLocalizedMood(
-                                                    context,
-                                                    label,
-                                                  ), // <-- INI DIA
-                                            style: TextStyle(
-                                              color: AppColors.textSecondary,
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return const Text('');
-                                    },
+                          height: 220,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: SizedBox(
+                              // Lebar dinamis: 60px per mood, minimal selebar container
+                              width: allMoods.length * 64.0,
+                              child: BarChart(
+                                BarChartData(
+                                  alignment: BarChartAlignment.spaceAround,
+                                  maxY: moodCounts.isEmpty
+                                      ? 5.0
+                                      : (moodCounts.values.reduce(
+                                                  (a, b) => a > b ? a : b,
+                                                ) +
+                                                1)
+                                            .toDouble(),
+                                  barTouchData: BarTouchData(enabled: false),
+                                  titlesData: FlTitlesData(
+                                    show: true,
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        reservedSize:
+                                            50, // <-- Ruang ekstra untuk label
+                                        getTitlesWidget: (value, meta) {
+                                          final index = value.toInt();
+                                          if (index >= 0 &&
+                                              index < allMoods.length) {
+                                            final mood = allMoods[index];
+                                            final label =
+                                                mood['label'] as String;
+                                            final isCustom =
+                                                mood['isCustom'] == true;
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 8,
+                                              ),
+                                              child: SizedBox(
+                                                width:
+                                                    56, // <-- Batasi lebar label
+                                                child: Text(
+                                                  isCustom
+                                                      ? label
+                                                      : _getLocalizedMood(
+                                                          context,
+                                                          label,
+                                                        ),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color:
+                                                        AppColors.textSecondary,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          return const Text('');
+                                        },
+                                      ),
+                                    ),
+                                    leftTitles: const AxisTitles(
+                                      sideTitles: SideTitles(showTitles: false),
+                                    ),
+                                    topTitles: const AxisTitles(
+                                      sideTitles: SideTitles(showTitles: false),
+                                    ),
+                                    rightTitles: const AxisTitles(
+                                      sideTitles: SideTitles(showTitles: false),
+                                    ),
                                   ),
-                                ),
-                                leftTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                topTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                rightTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
+                                  gridData: const FlGridData(show: false),
+                                  borderData: FlBorderData(show: false),
+                                  barGroups: List.generate(allMoods.length, (
+                                    index,
+                                  ) {
+                                    final mood = allMoods[index];
+                                    final label = mood['label'] as String;
+                                    final count = moodCounts[label] ?? 0;
+                                    final color =
+                                        mood['color'] as Color? ??
+                                        AppColors.textPrimary;
+                                    return BarChartGroupData(
+                                      x: index,
+                                      barRods: [
+                                        BarChartRodData(
+                                          toY: count.toDouble(),
+                                          color: color,
+                                          width: 24,
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
                                 ),
                               ),
-                              gridData: const FlGridData(show: false),
-                              borderData: FlBorderData(show: false),
-                              barGroups: List.generate(allMoods.length, (
-                                index,
-                              ) {
-                                final mood = allMoods[index];
-                                final label = mood['label'] as String;
-                                final count = moodCounts[label] ?? 0;
-                                final color =
-                                    mood['color'] as Color? ??
-                                    AppColors.textPrimary;
-                                return BarChartGroupData(
-                                  x: index,
-                                  barRods: [
-                                    BarChartRodData(
-                                      toY: count.toDouble(),
-                                      color: color, // <-- Pakai warna mood!
-                                      width: 24,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                  ],
-                                );
-                              }),
                             ),
                           ),
                         ),
@@ -775,7 +795,7 @@ class _StatsScreenState extends State<StatsScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

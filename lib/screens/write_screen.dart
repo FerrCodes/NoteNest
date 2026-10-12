@@ -442,6 +442,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                     const SizedBox(height: 12),
                     MoodSelector(
                       selectedMood: _selectedMood,
+                      currentMood: widget.entry?.mood,
                       onMoodSelected: (mood) {
                         setState(() {
                           _selectedMood = mood;

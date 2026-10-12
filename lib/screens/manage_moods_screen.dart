@@ -228,7 +228,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
     _showSnackBar(AppLocalizations.of(context)!.moodAdded);
   }
 
-  void _confirmDeleteMood(CustomMood mood) {
+  void _confirmArchiveMood(CustomMood mood) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -256,7 +256,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
           TextButton(
             onPressed: () async {
               HapticFeedback.heavyImpact();
-              await _repository.deleteCustomMood(mood);
+              await _repository.archiveCustomMood(mood);
               if (!context.mounted) return;
               Navigator.pop(context);
               _showSnackBar(AppLocalizations.of(context)!.moodDeleted);
@@ -324,6 +324,15 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                       _buildEmptyState()
                     else
                       ...moods.map((mood) => _buildMoodItem(mood)),
+                    // === SECTION: ARSIP (kalau ada) ===
+                    if (_repository.getArchivedMoods().isNotEmpty) ...[
+                      const SizedBox(height: 32),
+                      SectionTitle(title: 'Arsip'),
+                      const SizedBox(height: 12),
+                      ..._repository.getArchivedMoods().map(
+                        (mood) => _buildMoodItem(mood, isArchived: true),
+                      ),
+                    ],
                   ],
                 );
               },
@@ -389,8 +398,10 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
   }
 
   // === MOOD ITEM ===
-  Widget _buildMoodItem(CustomMood mood) {
-    final color = _hexToColor(mood.colorHex);
+  Widget _buildMoodItem(CustomMood mood, {bool isArchived = false}) {
+    final color = isArchived
+        ? AppColors.textSecondary
+        : _hexToColor(mood.colorHex);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -416,24 +427,47 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: isArchived
+                      ? AppColors.textSecondary
+                      : AppColors.textPrimary,
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                HapticFeedback.selectionClick();
-                _confirmDeleteMood(mood);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Icon(
-                  Icons.delete_outline,
-                  color: AppColors.systemRed,
-                  size: 20,
+            if (isArchived)
+              // Kalau diarsipkan, tampilkan ikon restore (opsional)
+              GestureDetector(
+                onTap: () async {
+                  HapticFeedback.selectionClick();
+                  mood.isArchived = false;
+                  await mood.save();
+                  if (!mounted) return;
+                  _showSnackBar('Mood dipulihkan');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.restore,
+                    color: AppColors.systemBlue,
+                    size: 20,
+                  ),
+                ),
+              )
+            else
+              // Kalau aktif, tampilkan tombol hapus
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _confirmArchiveMood(mood);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: AppColors.systemRed,
+                    size: 20,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

@@ -13,15 +13,19 @@ class CustomMood extends HiveObject {
   @HiveField(2)
   DateTime createdAt;
 
-  /// Warna mood dalam format hex string (misal '0xFF0A84FF').
-  /// Disimpan sebagai string karena Hive tidak support Color langsung.
   @HiveField(3)
   String colorHex;
+
+  /// True kalau mood ini sudah "dihapus" oleh user.
+  /// Data tetap ada, tapi tidak muncul di pilihan baru.
+  @HiveField(4)
+  bool isArchived;
 
   CustomMood({
     required this.label,
     this.iconName = 'mood',
     required this.createdAt,
-    this.colorHex = '0xFF8E8E93', // Default: System Gray
+    this.colorHex = '0xFF8E8E93',
+    this.isArchived = false, // Default: tidak diarsipkan
   });
 }
