@@ -323,14 +323,35 @@ class _ReflectScreenState extends State<ReflectScreen> {
                     const SizedBox(height: 30),
 
                     // Quote berganti berdasarkan waktu
-                    Text(
-                      _getTimeBasedQuote(context),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        height: 1.5,
-                        color: AppColors.textPrimary.withValues(alpha: 0.8),
+                    // === QUOTE DENGAN SERIF FONT + TANDA KUTIP BESAR ===
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Quote itu sendiri
+                          Expanded(
+                            child: // === QUOTE DENGAN DM SERIF DISPLAY ===
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: Text(
+                                _getTimeBasedQuote(context),
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.5,
+                                  color: AppColors.textPrimary.withValues(
+                                    alpha: 0.85,
+                                  ),
+                                  fontFamily: 'DMSerifDisplay',
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 40),

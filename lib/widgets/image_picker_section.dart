@@ -4,6 +4,7 @@ import 'dart:io';
 import '../utils/preset_images.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
+import '../screens/photo_viewer_screen.dart';
 
 class ImagePickerSection extends StatelessWidget {
   final String selectedImage;
@@ -26,11 +27,12 @@ class ImagePickerSection extends StatelessWidget {
       children: [
         // === KATEGORI 1: PRESET GAMBAR ===
         Text(
-          AppLocalizations.of(context)!.selectImage,
+          AppLocalizations.of(context)!.selectImage.toUpperCase(),
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
             color: AppColors.textSecondary,
-            fontWeight: FontWeight.w500,
+            letterSpacing: 1.2,
           ),
         ),
         const SizedBox(height: 12),
@@ -64,7 +66,11 @@ class ImagePickerSection extends StatelessWidget {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.asset(img['url']!, fit: BoxFit.cover),
+                        Image.asset(
+                          img['url']!,
+                          fit: BoxFit.cover,
+                          cacheWidth: 200,
+                        ),
                         if (isSelected)
                           Container(
                             color: Colors.black.withValues(alpha: 0.3),
@@ -84,163 +90,262 @@ class ImagePickerSection extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
-        // === KATEGORI 2: UPLOAD DARI GALERI/KAMERA ===
+        // === KATEGORI 2: UNGGAH FOTO ===
         Row(
           children: [
             Text(
-              AppLocalizations.of(context)!.uploadPhoto,
+              AppLocalizations.of(context)!.uploadPhoto.toUpperCase(),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
                 color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
+                letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(width: 6),
           ],
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: onPickFromGallery,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: !selectedImage.startsWith('assets/')
-                          ? AppColors.textPrimary
-                          : Colors.transparent,
-                      width: 2,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.photo_library_outlined,
-                        color: AppColors.textPrimary,
-                        size: 28,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        AppLocalizations.of(context)!.galleryOption,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        AppLocalizations.of(context)!.galleryOptionDesc,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: GestureDetector(
-                onTap: onPickFromCamera,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.camera_alt_outlined,
-                        color: AppColors.textPrimary,
-                        size: 28,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        AppLocalizations.of(context)!.cameraOption,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        AppLocalizations.of(context)!.cameraOptionDesc,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
 
-        // === PREVIEW FOTO YANG DIPILIH ===
-        if (!selectedImage.startsWith('assets/')) ...[
-          const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
+        // === TOMBOL UNGGAH (SINGLE BUTTON) ===
+        GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            _showImageSourceSheet(context);
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            decoration: BoxDecoration(
+              color: AppColors.cardDark,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: !selectedImage.startsWith('assets/')
+                    ? AppColors.textPrimary
+                    : Colors.transparent,
+                width: 1.5,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (selectedImage.startsWith('http'))
-                  Image.network(
-                    selectedImage,
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  )
-                else
-                  Image.file(
-                    File(selectedImage),
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      onImageSelected(PresetImages.getDefault());
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
+                Icon(
+                  Icons.add_photo_alternate_outlined,
+                  color: AppColors.textPrimary,
+                  size: 22,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  AppLocalizations.of(context)!.uploadPhoto,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
                   ),
                 ),
               ],
             ),
           ),
+        ),
+
+        // === PREVIEW FOTO ===
+        if (!selectedImage.startsWith('assets/')) ...[
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.selectionClick();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      PhotoViewerScreen(imagePath: selectedImage),
+                ),
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Stack(
+                children: [
+                  if (selectedImage.startsWith('http'))
+                    Image.network(
+                      selectedImage,
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    )
+                  else
+                    Image.file(
+                      File(selectedImage),
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  // Tombol close
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        onImageSelected(PresetImages.getDefault());
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.6),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ],
+    );
+  }
+
+  // === BOTTOM SHEET: PILIH SUMBER FOTO ===
+  void _showImageSourceSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.cardDark,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Drag handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.textSecondary.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  AppLocalizations.of(context)!.uploadPhoto,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Option: Galeri
+                _buildSourceOption(
+                  context,
+                  icon: Icons.photo_library_outlined,
+                  label: AppLocalizations.of(context)!.galleryOption,
+                  subtitle: AppLocalizations.of(context)!.galleryOptionDesc,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onPickFromGallery();
+                  },
+                ),
+                const SizedBox(height: 8),
+                // Option: Kamera
+                _buildSourceOption(
+                  context,
+                  icon: Icons.camera_alt_outlined,
+                  label: AppLocalizations.of(context)!.cameraOption,
+                  subtitle: AppLocalizations.of(context)!.cameraOptionDesc,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onPickFromCamera();
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // === ITEM BOTTOM SHEET ===
+  Widget _buildSourceOption(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.bgDark,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.textPrimary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: AppColors.textPrimary, size: 22),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: AppColors.textSecondary.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

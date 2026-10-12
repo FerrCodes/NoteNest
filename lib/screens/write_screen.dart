@@ -467,9 +467,16 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                           color: AppColors.textSecondary.withValues(alpha: 0.5),
                         ),
                         border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
                       ),
                     ),
-                    const SizedBox(height: 8),
+
+                    // Divider pemisah
+                    Container(
+                      height: 1,
+                      margin: const EdgeInsets.symmetric(vertical: 16),
+                      color: AppColors.dividerDark.withValues(alpha: 0.5),
+                    ),
 
                     // === ISI JURNAL ===
                     ConstrainedBox(
@@ -480,18 +487,19 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textPrimary.withValues(alpha: 0.8),
-                          height: 1.6,
+                          color: AppColors.textPrimary.withValues(alpha: 0.85),
+                          height: 1.7,
                         ),
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.contentHint,
                           hintStyle: TextStyle(
                             fontSize: 16,
                             color: AppColors.textSecondary.withValues(
-                              alpha: 0.5,
+                              alpha: 0.4,
                             ),
                           ),
                           border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
                         ),
                       ),
                     ),

@@ -91,7 +91,7 @@ class MoodSelector extends StatelessWidget {
                   mood['color'] as Color? ?? AppColors.textSecondary;
 
               return Padding(
-                padding: const EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.only(right: 33),
                 child: GestureDetector(
                   onTap: () {
                     HapticFeedback.selectionClick();
@@ -100,7 +100,7 @@ class MoodSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: isSelected ? moodColor : AppColors.cardDark,
                           shape: BoxShape.circle,

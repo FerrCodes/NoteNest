@@ -77,10 +77,14 @@ flutter:
 
 # fonts
   fonts:
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter_28pt-Regular.ttf
-        - asset: assets/fonts/Inter_28pt-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Inter_28pt-Bold.ttf
-          weight: 700
+  - family: Inter
+    fonts:
+      - asset: assets/fonts/Inter_28pt-Regular.ttf
+      - asset: assets/fonts/Inter_28pt-Medium.ttf
+        weight: 500
+      - asset: assets/fonts/Inter_28pt-Bold.ttf
+        weight: 700
+
+  - family: DMSerifDisplay
+    fonts:
+      - asset: assets/fonts/DMSerifDisplay-Regular.ttf

@@ -21,6 +21,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
   final ValueNotifier<String> _selectedColorNotifier = ValueNotifier<String>(
     '0xFF0A84FF',
   );
+  String? _nameError; // null = tidak ada error
 
   static const List<String> _colorOptions = [
     '0xFF0A84FF', // Blue
@@ -51,182 +52,286 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
 
     _moodNameController.clear();
     _selectedColorNotifier.value = '0xFF0A84FF';
+    _nameError = null;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.cardDark,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
-              ),
-            ),
-            padding: EdgeInsets.only(
-              top: 12,
-              left: 24,
-              right: 24,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Drag handle
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.textSecondary.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(2),
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return SafeArea(
+              // <-- TAMBAHKAN SAFEAREA DI SINI
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  AppLocalizations.of(context)!.newMood,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _moodNameController,
-                  maxLength: 20,
-                  textCapitalization: TextCapitalization.words,
-                  style: TextStyle(color: AppColors.textPrimary, fontSize: 15),
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)!.moodNameHint,
-                    hintStyle: TextStyle(
-                      color: AppColors.textSecondary.withValues(alpha: 0.5),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.bgDark,
-                    counterStyle: TextStyle(color: AppColors.textSecondary),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.all(16),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  AppLocalizations.of(context)!.moodColor,
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // === COLOR PICKER dengan ValueListenableBuilder ===
-                ValueListenableBuilder<String>(
-                  valueListenable: _selectedColorNotifier,
-                  builder: (context, selectedHex, _) {
-                    return Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: _colorOptions.map((hex) {
-                        final color = _hexToColor(hex);
-                        final isSelected = selectedHex == hex;
-                        return GestureDetector(
-                          onTap: () {
-                            HapticFeedback.selectionClick();
-                            _selectedColorNotifier.value = hex;
-                          },
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: color,
-                              shape: BoxShape.circle,
-                              border: isSelected
-                                  ? Border.all(
-                                      color: AppColors.textPrimary,
-                                      width: 3,
-                                    )
-                                  : null,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Drag handle
+                          Center(
+                            child: Container(
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: AppColors.textSecondary.withValues(
+                                  alpha: 0.3,
+                                ),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                            child: isSelected
-                                ? const Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : null,
                           ),
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-                ValueListenableBuilder(
-                  valueListenable: _moodNameController,
-                  builder: (context, value, child) {
-                    final hasText = value.text.trim().isNotEmpty;
-                    return GestureDetector(
-                      onTap: hasText ? () => _addMood(value.text) : null,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(
-                          color: hasText
-                              ? AppColors.systemBlue
-                              : AppColors.textSecondary.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.addMood,
+                          const SizedBox(height: 24),
+                          Text(
+                            AppLocalizations.of(context)!.newMood,
                             style: TextStyle(
-                              color: hasText
-                                  ? Colors.white
-                                  : AppColors.textSecondary,
-                              fontSize: 16,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // === TEXT FIELD dengan ERROR INLINE ===
+                          TextField(
+                            controller: _moodNameController,
+                            maxLength: 20,
+                            textCapitalization: TextCapitalization.words,
+                            style: TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 15,
+                            ),
+                            onChanged: (value) {
+                              // Rebuild bottom sheet supaya border merah hilang
+                              if (_nameError != null) {
+                                setSheetState(() => _nameError = null);
+                              }
+                            },
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.moodNameHint,
+                              hintStyle: TextStyle(
+                                color: AppColors.textSecondary.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: AppColors.bgDark,
+                              counterStyle: TextStyle(
+                                color: AppColors.textSecondary,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: _nameError != null
+                                      ? AppColors.systemRed
+                                      : Colors.transparent,
+                                  width: 1.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: _nameError != null
+                                      ? AppColors.systemRed
+                                      : Colors.transparent,
+                                  width: 1.5,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: _nameError != null
+                                      ? AppColors.systemRed
+                                      : AppColors.systemBlue.withValues(
+                                          alpha: 0.5,
+                                        ),
+                                  width: 1.5,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.all(16),
+                              errorText: _nameError,
+                              errorStyle: TextStyle(
+                                color: AppColors.systemRed,
+                                fontSize: 12,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Section label warna
+                          Text(
+                            AppLocalizations.of(context)!.moodColor,
+                            style: TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 12),
+
+                          // Color picker
+                          ValueListenableBuilder<String>(
+                            valueListenable: _selectedColorNotifier,
+                            builder: (context, selectedHex, _) {
+                              return Wrap(
+                                spacing: 12,
+                                runSpacing: 12,
+                                children: _colorOptions.map((hex) {
+                                  final color = _hexToColor(hex);
+                                  final isSelected = selectedHex == hex;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      HapticFeedback.selectionClick();
+                                      _selectedColorNotifier.value = hex;
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: color,
+                                        shape: BoxShape.circle,
+                                        border: isSelected
+                                            ? Border.all(
+                                                color: AppColors.textPrimary,
+                                                width: 3,
+                                              )
+                                            : null,
+                                      ),
+                                      child: isSelected
+                                          ? const Icon(
+                                              Icons.check,
+                                              color: Colors.white,
+                                              size: 20,
+                                            )
+                                          : null,
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Tombol Tambah
+                          ValueListenableBuilder(
+                            valueListenable: _moodNameController,
+                            builder: (context, value, child) {
+                              final hasText = value.text.trim().isNotEmpty;
+                              return GestureDetector(
+                                onTap: hasText
+                                    ? () => _addMoodWithSheet(
+                                        context,
+                                        value.text,
+                                        setSheetState,
+                                      )
+                                    : null,
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: hasText
+                                        ? AppColors.systemBlue
+                                        : AppColors.textSecondary.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.addMood,
+                                      style: TextStyle(
+                                        color: hasText
+                                            ? Colors.white
+                                            : AppColors.textSecondary,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  Future<void> _addMood(String label) async {
+  Future<void> _addMoodWithSheet(
+    BuildContext sheetContext,
+    String label,
+    StateSetter setSheetState,
+  ) async {
+    final trimmed = label.trim();
+
+    // Validasi: nama kosong
+    if (trimmed.isEmpty) {
+      setSheetState(() => _nameError = 'Nama mood tidak boleh kosong');
+      return;
+    }
+
+    // Validasi: nama sudah dipakai
+    if (_repository.isLabelTaken(trimmed)) {
+      HapticFeedback.heavyImpact();
+      setSheetState(() {
+        _nameError = AppLocalizations.of(context)!.moodAlreadyExists;
+      });
+      return;
+    }
+
+    // Validasi: penuh
+    if (_repository.isAtMaxCapacity) {
+      HapticFeedback.heavyImpact();
+      setSheetState(() {
+        _nameError = AppLocalizations.of(context)!.moodLimitReached;
+      });
+      return;
+    }
+
+    // Tambahkan
     final success = await _repository.addCustomMood(
-      label,
+      trimmed,
       colorHex: _selectedColorNotifier.value,
     );
 
     if (!mounted) return;
 
     if (!success) {
-      HapticFeedback.heavyImpact();
-      _showSnackBar(
-        AppLocalizations.of(context)!.moodAlreadyExists,
-        type: BannerType.error,
-      );
+      setSheetState(() => _nameError = 'Gagal menambahkan mood');
       return;
     }
 
+    // Cek sheetContext masih mounted atau tidak
+    if (!sheetContext.mounted) return;
+
     HapticFeedback.mediumImpact();
-    Navigator.pop(context);
+    Navigator.pop(sheetContext);
     _showSnackBar(AppLocalizations.of(context)!.moodAdded);
   }
 
@@ -344,7 +449,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
 
             // === TOMBOL TAMBAH (KANAN BAWAH) ===
             Positioned(
-              bottom: 50 + MediaQuery.of(context).padding.bottom,
+              bottom: 1 + MediaQuery.of(context).padding.bottom,
               right: 40,
               child: GestureDetector(
                 onTap: () {
@@ -354,7 +459,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.systemBlue, // atau AppColors.textPrimary
+                    color: AppColors.systemBlue,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
