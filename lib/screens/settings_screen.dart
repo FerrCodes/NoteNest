@@ -132,7 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             // === KONTEN UTAMA ===
             ListView(
-              padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 80, 24, 25),
               children: [
                 // === SECTION BAHASA ===
                 SectionTitle(title: AppLocalizations.of(context)!.language),
@@ -230,10 +230,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                 ),
-                // === FOOTER ===
-                const SizedBox(height: 8),
-                const SizedBox(height: 40),
-
+                const SizedBox(height: 32),
                 // === FOOTER ===
                 Center(
                   child: Text(
@@ -242,7 +239,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary.withValues(alpha: 0.5),
-                      height: 1.6,
+                      height: 1.5,
                     ),
                   ),
                 ),

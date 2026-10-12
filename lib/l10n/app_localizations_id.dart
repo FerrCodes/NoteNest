@@ -365,7 +365,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get aboutInstagramHandle => 'imnotferrriii';
 
   @override
-  String get sourceCode => 'Kode Sumber';
+  String get sourceCode => 'Lihat Repositori di GitHub';
 
   @override
   String get sourceCodeDesc => 'Lihat semua projek ini di repositori GitHub';
@@ -522,6 +522,38 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get noCustomMoodsDesc =>
       'Tap \"Tambah Mood\" untuk membuat mood kustom pertamamu.';
+
+  @override
+  String get archive => 'Arsipkan';
+
+  @override
+  String get archiveMoodTitle => 'Arsipkan Mood?';
+
+  @override
+  String get archiveMoodDesc =>
+      'Mood ini akan disembunyikan. Kamu bisa memulihkannya nanti dari section Arsip.';
+
+  @override
+  String get moodArchived => 'Mood diarsipkan';
+
+  @override
+  String get moodRestored => 'Mood dipulihkan';
+
+  @override
+  String get deletePermanentTitle => 'Hapus Permanen?';
+
+  @override
+  String get deletePermanentDesc =>
+      'Mood ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.';
+
+  @override
+  String get moodDeletedPermanent => 'Mood dihapus permanen';
+
+  @override
+  String get moodColor => 'Warna Mood';
+
+  @override
+  String get dropdownHint => 'Lihat menu';
 
   @override
   String readingTime(int count) {

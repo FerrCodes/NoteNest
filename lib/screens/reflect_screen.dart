@@ -16,6 +16,7 @@ import '../theme/app_colors.dart';
 import '../repositories/mood_repository.dart';
 import '../constants/moods.dart';
 import 'manage_moods_screen.dart';
+import '../widgets/app_tooltip.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -441,57 +442,60 @@ class _ReflectScreenState extends State<ReflectScreen> {
             left: 0,
             right: 0,
             child: Center(
-              child: GestureDetector(
-                onTap: _toggleDropdown,
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.reflect,
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
+              child: AppTooltip(
+                message: AppLocalizations.of(context)!.dropdownHint,
+                child: GestureDetector(
+                  onTap: _toggleDropdown,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardDark.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
                         ),
-                      ),
-                      // AnimatedSize: ukuran container menyesuaikan, jadi pill "melebar" saat chevron muncul
-                      AnimatedSize(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeOutCubic,
-                        alignment: Alignment.centerLeft,
-                        child: _isDropdownOpen
-                            ? Padding(
-                                padding: const EdgeInsets.only(left: 6),
-                                child: AnimatedRotation(
-                                  turns: 0.5, // chevron menghadap ke atas
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.textPrimary,
-                                    size: 22,
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.reflect,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        // AnimatedSize: ukuran container menyesuaikan, jadi pill "melebar" saat chevron muncul
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeOutCubic,
+                          alignment: Alignment.centerLeft,
+                          child: _isDropdownOpen
+                              ? Padding(
+                                  padding: const EdgeInsets.only(left: 6),
+                                  child: AnimatedRotation(
+                                    turns: 0.5, // chevron menghadap ke atas
+                                    duration: const Duration(milliseconds: 200),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColors.textPrimary,
+                                      size: 22,
+                                    ),
                                   ),
-                                ),
-                              )
-                            : const SizedBox.shrink(), // ukuran 0 saat tertutup
-                      ),
-                    ],
+                                )
+                              : const SizedBox.shrink(), // ukuran 0 saat tertutup
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

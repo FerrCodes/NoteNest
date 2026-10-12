@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
-import '../widgets/setting_item.dart';
+import '../widgets/app_tooltip.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -24,7 +24,7 @@ class _AboutScreenState extends State<AboutScreen> {
           children: [
             // === KONTEN UTAMA ===
             ListView(
-              padding: const EdgeInsets.fromLTRB(24, 80, 24, 40),
+              padding: const EdgeInsets.fromLTRB(24, 80, 24, 25),
               children: [
                 // === HEADER: LOGO, NAMA, VERSI ===
                 Center(
@@ -192,34 +192,6 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
                 const SizedBox(height: 32),
 
-                // === SECTION: SOURCE CODE ===
-                SectionTitle(title: AppLocalizations.of(context)!.sourceCode),
-                const SizedBox(height: 12),
-                SettingItem(
-                  customIcon: const FaIcon(
-                    FontAwesomeIcons.github,
-                    color: AppColors.textPrimary,
-                    size: 20,
-                  ),
-                  title: AppLocalizations.of(context)!.sourceCode,
-                  onTap: () =>
-                      _launchUrl('https://github.com/FerrCodes/Note-Nest'),
-                ),
-                const SizedBox(height: 8),
-                // === DESKRIPSI ===
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    AppLocalizations.of(context)!.sourceCodeDesc,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-
                 // === FOOTER ===
                 Center(
                   child: Text(
@@ -228,7 +200,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary.withValues(alpha: 0.5),
-                      height: 1.6,
+                      height: 1.5,
                     ),
                   ),
                 ),
@@ -273,6 +245,40 @@ class _AboutScreenState extends State<AboutScreen> {
                       color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // === TOMBOL GITHUB (KANAN ATAS) ===
+            Positioned(
+              top: 12,
+              right: 20,
+              child: AppTooltip(
+                message: AppLocalizations.of(context)!.sourceCode,
+                child: GestureDetector(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    _launchUrl('https://github.com/FerrCodes/Note-Nest');
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardDark.withValues(alpha: 0.9),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.github,
+                      color: AppColors.textPrimary,
+                      size: 20,
                     ),
                   ),
                 ),

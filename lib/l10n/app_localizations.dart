@@ -779,7 +779,7 @@ abstract class AppLocalizations {
   /// No description provided for @sourceCode.
   ///
   /// In en, this message translates to:
-  /// **'Source Code'**
+  /// **'View Repository on GitHub'**
   String get sourceCode;
 
   /// No description provided for @sourceCodeDesc.
@@ -1081,6 +1081,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap \"Add Mood\" to create your first custom mood.'**
   String get noCustomMoodsDesc;
+
+  /// No description provided for @archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// No description provided for @archiveMoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive Mood?'**
+  String get archiveMoodTitle;
+
+  /// No description provided for @archiveMoodDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This mood will be hidden. You can restore it later from the Archive section.'**
+  String get archiveMoodDesc;
+
+  /// No description provided for @moodArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood archived'**
+  String get moodArchived;
+
+  /// No description provided for @moodRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood restored'**
+  String get moodRestored;
+
+  /// No description provided for @deletePermanentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently?'**
+  String get deletePermanentTitle;
+
+  /// No description provided for @deletePermanentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This mood will be permanently deleted. This action cannot be undone.'**
+  String get deletePermanentDesc;
+
+  /// No description provided for @moodDeletedPermanent.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood deleted permanently'**
+  String get moodDeletedPermanent;
+
+  /// No description provided for @moodColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood Color'**
+  String get moodColor;
+
+  /// No description provided for @dropdownHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for menu'**
+  String get dropdownHint;
 
   /// No description provided for @readingTime.
   ///

@@ -118,7 +118,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Warna Mood',
+                  AppLocalizations.of(context)!.moodColor,
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 14,
@@ -237,14 +237,14 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
         backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
-          AppLocalizations.of(context)!.deleteMoodTitle,
+          AppLocalizations.of(context)!.archiveMoodTitle,
           style: TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
         content: Text(
-          AppLocalizations.of(context)!.deleteMoodDesc,
+          AppLocalizations.of(context)!.archiveMoodDesc,
           style: TextStyle(color: AppColors.textSecondary, height: 1.5),
         ),
         actions: [
@@ -261,11 +261,11 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
               await _repository.archiveCustomMood(mood);
               if (!context.mounted) return;
               Navigator.pop(context);
-              _showSnackBar(AppLocalizations.of(context)!.moodDeleted);
+              _showSnackBar(AppLocalizations.of(context)!.moodArchived);
             },
             child: Text(
-              AppLocalizations.of(context)!.delete,
-              style: const TextStyle(color: AppColors.systemRed),
+              AppLocalizations.of(context)!.archive,
+              style: TextStyle(color: AppColors.systemBlue),
             ),
           ),
         ],
@@ -329,7 +329,9 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                     // === SECTION: ARSIP (kalau ada) ===
                     if (_repository.getArchivedMoods().isNotEmpty) ...[
                       const SizedBox(height: 32),
-                      SectionTitle(title: 'Arsip'),
+                      SectionTitle(
+                        title: AppLocalizations.of(context)!.archive,
+                      ),
                       const SizedBox(height: 12),
                       ..._repository.getArchivedMoods().map(
                         (mood) => _buildMoodItem(mood, isArchived: true),
@@ -340,13 +342,30 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
               },
             ),
 
-            // === TOMBOL TAMBAH (KANAN ATAS) ===
+            // === TOMBOL TAMBAH (KANAN BAWAH) ===
             Positioned(
-              top: 12,
-              right: 20,
-              child: _buildCircleButton(
-                icon: Icons.add,
-                onTap: _showAddMoodSheet,
+              bottom: 50 + MediaQuery.of(context).padding.bottom,
+              right: 40,
+              child: GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _showAddMoodSheet();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.systemBlue, // atau AppColors.textPrimary
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.systemBlue.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.add, color: Colors.white, size: 26),
+                ),
               ),
             ),
 
@@ -399,11 +418,11 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
     );
   }
 
-  // === MOOD ITEM ===
   Widget _buildMoodItem(CustomMood mood, {bool isArchived = false}) {
     final color = isArchived
         ? AppColors.textSecondary
         : _hexToColor(mood.colorHex);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -414,6 +433,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
         ),
         child: Row(
           children: [
+            // === IKON MOOD ===
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -423,6 +443,8 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
               child: Icon(Icons.mood_outlined, color: color, size: 20),
             ),
             const SizedBox(width: 16),
+
+            // === NAMA MOOD ===
             Expanded(
               child: Text(
                 mood.label,
@@ -435,15 +457,16 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                 ),
               ),
             ),
-            if (isArchived)
-              // Kalau diarsipkan, tampilkan ikon restore (opsional)
+
+            // === TOMBOL AKSI ===
+            if (isArchived) ...[
+              // Mood diarsipkan: Restore + Hapus Permanen
               GestureDetector(
                 onTap: () async {
                   HapticFeedback.selectionClick();
-                  mood.isArchived = false;
-                  await mood.save();
+                  await _repository.restoreCustomMood(mood);
                   if (!mounted) return;
-                  _showSnackBar('Mood dipulihkan');
+                  _showSnackBar(AppLocalizations.of(context)!.moodRestored);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8),
@@ -453,9 +476,24 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                     size: 20,
                   ),
                 ),
-              )
-            else
-              // Kalau aktif, tampilkan tombol hapus
+              ),
+              const SizedBox(width: 4),
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _confirmPermanentDelete(mood);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.delete_forever,
+                    color: AppColors.systemRed,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ] else ...[
+              // Mood aktif: Arsip + Hapus
               GestureDetector(
                 onTap: () {
                   HapticFeedback.selectionClick();
@@ -464,12 +502,28 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   child: Icon(
-                    Icons.delete_outline,
+                    Icons.archive_outlined,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _confirmPermanentDelete(mood);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.delete_forever,
                     color: AppColors.systemRed,
                     size: 20,
                   ),
                 ),
               ),
+            ],
           ],
         ),
       ),
@@ -526,6 +580,49 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
           ],
         ),
         child: Icon(icon, color: AppColors.textPrimary, size: 20),
+      ),
+    );
+  }
+
+  void _confirmPermanentDelete(CustomMood mood) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.cardDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          AppLocalizations.of(context)!.deletePermanentTitle,
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.deletePermanentDesc,
+          style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              HapticFeedback.heavyImpact();
+              await _repository.deleteCustomMood(mood);
+              if (!context.mounted) return;
+              Navigator.pop(context);
+              _showSnackBar(AppLocalizations.of(context)!.moodDeletedPermanent);
+            },
+            child: Text(
+              AppLocalizations.of(context)!.delete,
+              style: const TextStyle(color: AppColors.systemRed),
+            ),
+          ),
+        ],
       ),
     );
   }
