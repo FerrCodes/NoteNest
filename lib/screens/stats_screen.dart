@@ -481,7 +481,7 @@ class _StatsScreenState extends State<StatsScreen> {
               top: 12,
               left: 20,
               child: _buildCircleButton(
-                icon: Icons.close,
+                icon: Icons.arrow_back_ios_new,
                 onTap: () => Navigator.pop(context),
               ),
             ),

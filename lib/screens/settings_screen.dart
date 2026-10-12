@@ -13,7 +13,6 @@ import '../widgets/setting_item.dart';
 import '../theme/app_colors.dart';
 import 'about_screen.dart';
 import '../utils/slide_route.dart';
-import 'manage_moods_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -153,23 +152,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildTestNotification(),
                 ],
                 const SizedBox(height: 32),
-                // === SECTION PERSONALIZATION ===
-                SectionTitle(
-                  title: AppLocalizations.of(context)!.personalization,
-                ),
-                const SizedBox(height: 12),
-                SettingItem(
-                  icon: Icons.mood_outlined,
-                  title: AppLocalizations.of(context)!.manageMoods,
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    Navigator.push(
-                      context,
-                      SlideRoute(page: const ManageMoodsScreen()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 32),
                 // === SECTION DATA ===
                 SectionTitle(title: AppLocalizations.of(context)!.data),
                 const SizedBox(height: 12),
@@ -272,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               top: 12,
               left: 20,
               child: _buildCircleButton(
-                icon: Icons.close,
+                icon: Icons.arrow_back_ios_new,
                 onTap: () => Navigator.pop(context),
               ),
             ),

@@ -15,6 +15,7 @@ import '../utils/slide_route.dart';
 import '../theme/app_colors.dart';
 import '../repositories/mood_repository.dart';
 import '../constants/moods.dart';
+import 'manage_moods_screen.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -26,7 +27,10 @@ class _ReflectScreenState extends State<ReflectScreen> {
   // State untuk pencarian & filter
   String _searchQuery = '';
   final _moodRepository = MoodRepository();
-  String? _selectedMoodFilter; // null = tampilkan semua
+  final GlobalKey<_AnimatedDropdownState> _dropdownKey = GlobalKey();
+  String? _selectedMoodFilter;
+  OverlayEntry? _dropdownOverlay;
+  bool _isDropdownOpen = false;
 
   String _getTimeBasedQuote(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -59,10 +63,118 @@ class _ReflectScreenState extends State<ReflectScreen> {
     }
   }
 
+  void _toggleDropdown() {
+    HapticFeedback.selectionClick();
+
+    if (_isDropdownOpen) {
+      _closeDropdown();
+    } else {
+      _openDropdown();
+    }
+  }
+
+  void _openDropdown() {
+    setState(() => _isDropdownOpen = true);
+
+    _dropdownOverlay = OverlayEntry(
+      builder: (context) => _AnimatedDropdown(
+        key: _dropdownKey,
+        onDismiss: () {
+          _dropdownOverlay?.remove();
+          _dropdownOverlay = null;
+          if (mounted) {
+            setState(() => _isDropdownOpen = false);
+          }
+        },
+        child: _buildDropdownMenu(),
+      ),
+    );
+
+    Overlay.of(context).insert(_dropdownOverlay!);
+  }
+
+  void _closeDropdown() {
+    // Panggil close() dari _AnimatedDropdown agar animasi reverse jalan
+    _dropdownKey.currentState?.close();
+  }
+
+  Widget _buildDropdownMenu() {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        width: 240,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.cardDark,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.4),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildDropdownItem(
+              icon: Icons.mood_outlined,
+              label: AppLocalizations.of(context)!.manageMoods,
+              onTap: () {
+                _closeDropdown();
+                Future.delayed(const Duration(milliseconds: 220), () {
+                  if (!mounted) return;
+                  Navigator.push(
+                    context,
+                    SlideRoute(page: const ManageMoodsScreen()),
+                  );
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      splashColor: Colors.transparent, // Tidak ada ripple
+      highlightColor: AppColors.textPrimary.withValues(alpha: 0.05),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.textPrimary, size: 20),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   final TextEditingController _searchController = TextEditingController();
   final _repository = JournalRepository();
   @override
   void dispose() {
+    _dropdownOverlay?.remove();
     _searchController.dispose();
     super.dispose();
   }
@@ -77,24 +189,17 @@ class _ReflectScreenState extends State<ReflectScreen> {
             height: MediaQuery.of(context).size.height,
             child: SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 20.0,
+                padding: EdgeInsets.fromLTRB(
+                  24.0,
+                  MediaQuery.of(context).padding.top + 37.0,
+                  24.0,
+                  20.0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Header
-                    Text(
-                      AppLocalizations.of(context)!.reflect,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
                     const SizedBox(height: 20),
-
                     // === KOLOM PENCARIAN ===
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -330,6 +435,68 @@ class _ReflectScreenState extends State<ReflectScreen> {
               ),
             ),
           ),
+          // === PILL JUDUL ===
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 12,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: GestureDetector(
+                onTap: _toggleDropdown,
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark.withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.reflect,
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      // AnimatedSize: ukuran container menyesuaikan, jadi pill "melebar" saat chevron muncul
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOutCubic,
+                        alignment: Alignment.centerLeft,
+                        child: _isDropdownOpen
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 6),
+                                child: AnimatedRotation(
+                                  turns: 0.5, // chevron menghadap ke atas
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.textPrimary,
+                                    size: 22,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(), // ukuran 0 saat tertutup
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -523,6 +690,98 @@ class _ReflectScreenState extends State<ReflectScreen> {
           _selectedMoodFilter = value;
         });
       },
+    );
+  }
+}
+
+// Animasi
+class _AnimatedDropdown extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onDismiss;
+
+  const _AnimatedDropdown({
+    super.key,
+    required this.child,
+    required this.onDismiss,
+  });
+
+  @override
+  State<_AnimatedDropdown> createState() => _AnimatedDropdownState();
+}
+
+class _AnimatedDropdownState extends State<_AnimatedDropdown>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.95,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    // Mulai animasi masuk
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  /// Fungsi untuk menutup dengan animasi reverse, lalu panggil onDismiss.
+  Future<void> close() async {
+    await _controller.reverse();
+    widget.onDismiss();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Overlay transparan untuk menangkap tap di luar
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: () {
+              // Tutup dengan animasi, lalu dismiss
+              close();
+            },
+            behavior: HitTestBehavior.translucent,
+            child: Container(color: Colors.transparent),
+          ),
+        ),
+
+        // Dropdown dengan animasi
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 76,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                alignment: Alignment.topCenter,
+                child: widget.child,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

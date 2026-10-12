@@ -505,7 +505,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
               top: 16,
               left: 16,
               child: _buildCircleButton(
-                icon: Icons.close,
+                icon: Icons.arrow_back_ios_new,
                 onTap: () {
                   HapticFeedback.selectionClick();
                   if (_hasUnsavedContent()) {
