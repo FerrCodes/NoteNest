@@ -6,12 +6,14 @@ import '../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import '../services/notification_service.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/top_banner.dart';
 import '../services/export_service.dart';
 import '../widgets/section_title.dart';
 import '../widgets/setting_item.dart';
 import '../theme/app_colors.dart';
+import 'about_screen.dart';
+import '../utils/slide_route.dart';
+import 'manage_moods_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -21,12 +23,12 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isSocialMediaExpanded = false;
   // State Reminder
   bool _reminderEnabled = false;
   TimeOfDay _reminderTime = const TimeOfDay(hour: 20, minute: 0);
   final TextEditingController _reminderMessageController =
       TextEditingController();
+  final TextEditingController _feedbackController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -42,8 +44,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
-            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 AppLocalizations.of(context)!.resetSettingsTitle,
@@ -120,6 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void dispose() {
     _reminderMessageController.dispose();
+    _feedbackController.dispose();
     super.dispose();
   }
 
@@ -134,6 +135,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ListView(
               padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
               children: [
+                // === SECTION BAHASA ===
+                SectionTitle(title: AppLocalizations.of(context)!.language),
+                const SizedBox(height: 12),
+                _buildLanguageSelector(),
+                const SizedBox(height: 32),
                 // === SECTION REMINDER ===
                 SectionTitle(title: AppLocalizations.of(context)!.reminder),
                 const SizedBox(height: 12),
@@ -147,23 +153,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildTestNotification(),
                 ],
                 const SizedBox(height: 32),
-                // === SECTION BAHASA ===
-                SectionTitle(title: AppLocalizations.of(context)!.language),
+                // === SECTION PERSONALIZATION ===
+                SectionTitle(
+                  title: AppLocalizations.of(context)!.personalization,
+                ),
                 const SizedBox(height: 12),
-                _buildLanguageSelector(),
+                SettingItem(
+                  icon: Icons.mood_outlined,
+                  title: AppLocalizations.of(context)!.manageMoods,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    Navigator.push(
+                      context,
+                      SlideRoute(page: const ManageMoodsScreen()),
+                    );
+                  },
+                ),
                 const SizedBox(height: 32),
-
                 // === SECTION DATA ===
                 SectionTitle(title: AppLocalizations.of(context)!.data),
                 const SizedBox(height: 12),
                 SettingItem(
                   icon: Icons.ios_share,
                   title: AppLocalizations.of(context)!.exportJournals,
-                  subtitle: AppLocalizations.of(context)!.exportJournalsDesc,
                   onTap: _exportJournals,
                 ),
                 const SizedBox(height: 32),
-
                 // === SECTION 2: TENTANG ===
                 SectionTitle(title: AppLocalizations.of(context)!.about),
                 const SizedBox(height: 12),
@@ -171,42 +186,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.info_outline,
                   title: AppLocalizations.of(context)!.aboutApp,
                   subtitle: AppLocalizations.of(context)!.version,
-                  onTap: _showAboutDialog,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    Navigator.push(
+                      context,
+                      SlideRoute(page: const AboutScreen()),
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
                 SettingItem(
                   icon: Icons.mail_outline,
                   title: AppLocalizations.of(context)!.sendFeedback,
-                  subtitle: AppLocalizations.of(context)!.feedbackDesc,
                   onTap: () async {
                     HapticFeedback.selectionClick();
-                    _showFeedbackOptionsDialog(context);
-                  },
-                ),
-                const SizedBox(height: 8),
-                // === SOURCE CODE (dengan ikon GitHub asli) ===
-                SettingItem(
-                  customIcon: const FaIcon(
-                    FontAwesomeIcons.github,
-                    color: Color(0xFFF2F2F7),
-                    size: 20,
-                  ),
-                  title: AppLocalizations.of(context)!.sourceCode,
-                  subtitle: AppLocalizations.of(context)!.sourceCodeDesc,
-                  onTap: () async {
-                    HapticFeedback.selectionClick();
-                    final Uri repoUri = Uri.parse(
-                      'https://github.com/FerrCodes/Note-Nest',
-                    );
-                    try {
-                      await launchUrl(
-                        repoUri,
-                        mode: LaunchMode.platformDefault,
-                      );
-                    } catch (e) {
-                      if (!context.mounted) return;
-                      _showSnackBar('Gagal membuka GitHub: $e');
-                    }
+                    _showFeedbackBottomSheet();
                   },
                 ),
                 const SizedBox(height: 40),
@@ -214,12 +208,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // === DANGER ZONE ===
                 Row(
                   children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.red,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 6),
                     Text(
                       AppLocalizations.of(context)!.dangerZone.toUpperCase(),
                       style: TextStyle(
@@ -231,7 +219,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 12),
+
+                // Reset Settings
+                SettingItem(
+                  icon: Icons.restore_outlined,
+                  title: AppLocalizations.of(context)!.resetSettings,
+                  onTap: _confirmResetSettings,
+                  isDestructive: true,
+                ),
+                const SizedBox(height: 8),
+
+                // Delete All Journals
+                SettingItem(
+                  icon: Icons.delete_outline,
+                  title: AppLocalizations.of(context)!.deleteAllJournals,
+                  onTap: _confirmDeleteAll,
+                  isDestructive: true,
+                ),
+                const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Text(
@@ -242,27 +248,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-
-                // Reset Settings
-                SettingItem(
-                  icon: Icons.restore_outlined,
-                  title: AppLocalizations.of(context)!.resetSettings,
-                  subtitle: AppLocalizations.of(context)!.resetSettingsDesc,
-                  onTap: _confirmResetSettings,
-                  isDestructive: true,
-                ),
-                const SizedBox(height: 8),
-
-                // Delete All Journals
-                SettingItem(
-                  icon: Icons.delete_outline,
-                  title: AppLocalizations.of(context)!.deleteAllJournals,
-                  subtitle: AppLocalizations.of(context)!.deleteAllJournalsDesc,
-                  onTap: _confirmDeleteAll,
-                  isDestructive: true,
-                ),
-
                 // === FOOTER ===
                 const SizedBox(height: 8),
                 const SizedBox(height: 40),
@@ -465,6 +450,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
+            fontSize: 16,
           ),
         ),
         content: Text(
@@ -494,350 +480,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // === FUNGSI TENTANG ===
-  void _showAboutDialog() {
-    // Reset dropdown ke tertutup setiap kali modal dibuka
-    _isSocialMediaExpanded = false;
-
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => AlertDialog(
-          backgroundColor: AppColors.cardDark,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // === LOGO & NAMA ===
-                Center(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.textPrimary.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.auto_stories_outlined,
-                          color: AppColors.textPrimary,
-                          size: 36,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        AppLocalizations.of(context)!.appName,
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        AppLocalizations.of(context)!.version,
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // === DESKRIPSI APLIKASI ===
-                Text(
-                  AppLocalizations.of(context)!.appDescription,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    height: 1.6,
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // === DEVELOPER ===
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.bgDark,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color(
-                            0xFF0A84FF,
-                          ).withValues(alpha: 0.15),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.manage_accounts_outlined,
-                          color: Color(0xFF0A84FF),
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.aboutDeveloper,
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 11,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            AppLocalizations.of(context)!.aboutDeveloperName,
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // === DROPDOWN MEDIA SOSIAL ===
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    setModalState(() {
-                      _isSocialMediaExpanded = !_isSocialMediaExpanded;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.bgDark,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColors.textPrimary.withValues(
-                                  alpha: 0.1,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Icon(
-                                Icons.public_outlined,
-                                color: AppColors.textPrimary,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.socialMedia,
-                                    style: TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.socialMediaDesc,
-                                    style: TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            AnimatedRotation(
-                              turns: _isSocialMediaExpanded ? 0.5 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppColors.textSecondary,
-                                size: 22,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // === KONTEN DROPDOWN ===
-                        AnimatedCrossFade(
-                          firstChild: const SizedBox.shrink(),
-                          secondChild: Column(
-                            children: [
-                              const SizedBox(height: 12),
-                              const Divider(
-                                color: Color(0xFF2C2C2E),
-                                height: 1,
-                              ),
-                              const SizedBox(height: 12),
-
-                              // Instagram
-                              GestureDetector(
-                                onTap: () async {
-                                  HapticFeedback.selectionClick();
-                                  final Uri uri = Uri.parse(
-                                    'https://www.instagram.com/imnotferrriii/',
-                                  );
-                                  try {
-                                    await launchUrl(
-                                      uri,
-                                      mode: LaunchMode.platformDefault,
-                                    );
-                                  } catch (e) {
-                                    if (!context.mounted) return;
-                                    _showSnackBar(
-                                      'Gagal membuka Instagram: $e',
-                                    );
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      ShaderMask(
-                                        shaderCallback: (bounds) =>
-                                            const LinearGradient(
-                                              colors: [
-                                                Color(0xFF833AB4),
-                                                Color(0xFFFD1D1D),
-                                                Color(0xFFFCB045),
-                                              ],
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                            ).createShader(bounds),
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.aboutInstagramHandle,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 12,
-                                        color: AppColors.textSecondary
-                                            .withValues(alpha: 0.5),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // GitHub
-                              GestureDetector(
-                                onTap: () async {
-                                  HapticFeedback.selectionClick();
-                                  final Uri uri = Uri.parse(
-                                    'https://github.com/FerrCodes',
-                                  );
-                                  try {
-                                    await launchUrl(
-                                      uri,
-                                      mode: LaunchMode.platformDefault,
-                                    );
-                                  } catch (e) {
-                                    if (!context.mounted) return;
-                                    _showSnackBar('Gagal membuka GitHub: $e');
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      ShaderMask(
-                                        shaderCallback: (bounds) =>
-                                            const LinearGradient(
-                                              colors: [
-                                                Color(0xFF6E7681),
-                                                Color(0xFFC9D1D9),
-                                                Color(0xFFF0F6FC),
-                                              ],
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                            ).createShader(bounds),
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.aboutGithubHandle,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 12,
-                                        color: AppColors.textSecondary
-                                            .withValues(alpha: 0.5),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          crossFadeState: _isSocialMediaExpanded
-                              ? CrossFadeState.showSecond
-                              : CrossFadeState.showFirst,
-                          duration: const Duration(milliseconds: 200),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                AppLocalizations.of(context)!.cancel,
-                style: const TextStyle(color: Color(0xFF0A84FF)),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -1181,139 +823,150 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === DIALOG PILIHAN FEEDBACK ===
-  void _showFeedbackOptionsDialog(BuildContext context) {
-    showDialog(
+  void _showFeedbackBottomSheet() {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardDark,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          AppLocalizations.of(context)!.sendFeedback,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
+      isScrollControlled: true, // <-- Penting agar tidak tertutup keyboard
+      backgroundColor: Colors.transparent, // <-- Agar sudut melengkung terlihat
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.cardDark,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.sendFeedbackOptions,
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 13,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Tombol Email
-            // Tombol Email (dengan ikon Gmail asli)
-            _buildFeedbackOption(
-              customIcon: const FaIcon(
-                FontAwesomeIcons.envelope,
-                color: Color(0xFFEA4335), // Warna merah Gmail
-                size: 20,
-              ),
-              label: AppLocalizations.of(context)!.viaEmail,
-              color: const Color(0xFFEA4335),
-              onTap: () {
-                Navigator.pop(context);
-                _sendFeedbackViaEmail();
-              },
-            ),
-            const SizedBox(height: 10),
-            // Tombol WhatsApp (dengan ikon WhatsApp asli)
-            _buildFeedbackOption(
-              customIcon: const FaIcon(
-                FontAwesomeIcons.whatsapp,
-                color: Color(0xFF25D366), // Warna hijau WhatsApp
-                size: 20,
-              ),
-              label: AppLocalizations.of(context)!.viaWhatsApp,
-              color: const Color(0xFF25D366),
-              onTap: () {
-                Navigator.pop(context);
-                _sendFeedbackViaWhatsApp();
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              AppLocalizations.of(context)!.cancel,
-              style: TextStyle(color: AppColors.textSecondary),
-            ),
+          padding: EdgeInsets.only(
+            top: 12,
+            left: 24,
+            right: 24,
+            // Memberi ruang saat keyboard muncul
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
           ),
-        ],
-      ),
-    );
-  }
-
-  // === WIDGET TOMBOL PILIHAN FEEDBACK ===
-  Widget _buildFeedbackOption({
-    IconData? icon,
-    Widget? customIcon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.bgDark,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: customIcon ?? Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // === DRAG HANDLE (Garis kecil di atas) ===
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.textSecondary.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: AppColors.textSecondary.withValues(alpha: 0.5),
-            ),
-          ],
-        ),
-      ),
+              const SizedBox(height: 24),
+
+              // === TITLE ===
+              Text(
+                AppLocalizations.of(context)!.sendFeedback,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // === SUBTITLE ===
+              Text(
+                AppLocalizations.of(context)!.feedbackWhatHappened,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // === TEXT FIELD ===
+              TextField(
+                controller: _feedbackController,
+                maxLines: null,
+                maxLength: 2000,
+                style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.feedbackHint,
+                  hintStyle: TextStyle(
+                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.bgDark,
+                  counterStyle: TextStyle(color: AppColors.textSecondary),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.all(16),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // === DISCLAIMER ===
+              Text(
+                AppLocalizations.of(context)!.feedbackDisclaimer,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // === TOMBOL SEND (Mengikuti status teks) ===
+              ValueListenableBuilder(
+                valueListenable: _feedbackController,
+                builder: (context, value, child) {
+                  final hasText = value.text.trim().isNotEmpty;
+                  return GestureDetector(
+                    onTap: hasText
+                        ? () {
+                            HapticFeedback.mediumImpact();
+                            // Kirim via email (bisa juga WhatsApp)
+                            _sendFeedbackViaEmailWithText(value.text);
+                            Navigator.pop(context);
+                          }
+                        : null, // Tombol mati kalau kosong
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: hasText
+                            ? AppColors.systemBlue
+                            : AppColors.textSecondary.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.send,
+                          style: TextStyle(
+                            color: hasText
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
     );
   }
 
   // === KIRIM FEEDBACK VIA EMAIL ===
-  Future<void> _sendFeedbackViaEmail() async {
+  Future<void> _sendFeedbackViaEmailWithText(String feedbackText) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'ferdiantoferi1303@gmail.com',
-      query: Uri.encodeFull(
-        'subject=NoteNest Feedback&body=${AppLocalizations.of(context)!.feedbackMessage}',
-      ),
+      query: Uri.encodeFull('subject=NoteNest Feedback&body=$feedbackText'),
     );
 
     try {
@@ -1321,23 +974,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       if (!mounted) return;
       _showSnackBar('Tidak ada aplikasi email terinstall');
-    }
-  }
-
-  // === KIRIM FEEDBACK VIA WHATSAPP ===
-  Future<void> _sendFeedbackViaWhatsApp() async {
-    const String phoneNumber = '6285123644293';
-
-    final String message = AppLocalizations.of(context)!.feedbackMessage;
-    final Uri whatsappUri = Uri.parse(
-      'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}',
-    );
-
-    try {
-      await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
-    } catch (e) {
-      if (!mounted) return;
-      _showSnackBar(AppLocalizations.of(context)!.noWhatsApp);
     }
   }
 

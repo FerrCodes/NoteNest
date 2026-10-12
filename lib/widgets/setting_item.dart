@@ -6,7 +6,7 @@ class SettingItem extends StatelessWidget {
   final IconData? icon;
   final Widget? customIcon;
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final VoidCallback onTap;
   final bool isDestructive;
 
@@ -15,7 +15,7 @@ class SettingItem extends StatelessWidget {
     this.icon,
     this.customIcon,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.onTap,
     this.isDestructive = false,
   });
@@ -68,14 +68,17 @@ class SettingItem extends StatelessWidget {
                           : AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
+                  if (subtitle != null && subtitle!.isNotEmpty) ...[
+                    // <-- Cek dulu
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

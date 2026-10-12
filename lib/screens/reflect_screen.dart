@@ -13,6 +13,8 @@ import '../widgets/mood_filter_chip.dart';
 import '../repositories/journal_repository.dart';
 import '../utils/slide_route.dart';
 import '../theme/app_colors.dart';
+import '../repositories/mood_repository.dart';
+import '../constants/moods.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -23,6 +25,7 @@ class ReflectScreen extends StatefulWidget {
 class _ReflectScreenState extends State<ReflectScreen> {
   // State untuk pencarian & filter
   String _searchQuery = '';
+  final _moodRepository = MoodRepository();
   String? _selectedMoodFilter; // null = tampilkan semua
 
   String _getTimeBasedQuote(BuildContext context) {
@@ -37,6 +40,22 @@ class _ReflectScreenState extends State<ReflectScreen> {
       return l10n.quoteEvening; // 18:00 - 21:59
     } else {
       return l10n.quoteNight; // 22:00 - 04:59
+    }
+  }
+
+  String _getLocalizedMood(BuildContext context, String mood) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (mood) {
+      case 'Calm':
+        return l10n.filterCalm;
+      case 'Grateful':
+        return l10n.filterGrateful;
+      case 'Peaceful':
+        return l10n.filterPeaceful;
+      case 'Focused':
+        return l10n.filterFocused;
+      default:
+        return mood;
     }
   }
 
@@ -139,71 +158,61 @@ class _ReflectScreenState extends State<ReflectScreen> {
                     const SizedBox(height: 20),
 
                     // === FILTER MOOD ===
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          MoodFilterChip(
-                            label: AppLocalizations.of(context)!.filterAll,
-                            isSelected: _selectedMoodFilter == null,
-                            onTap: () {
-                              setState(() {
-                                _selectedMoodFilter = null;
-                              });
-                            },
+                    ValueListenableBuilder(
+                      valueListenable: _moodRepository.listenable,
+                      builder: (context, box, _) {
+                        final customMoods = _moodRepository.getAllCustomMoods();
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // Filter "All"
+                              _buildFilterChip(
+                                context,
+                                label: AppLocalizations.of(context)!.filterAll,
+                                value: null,
+                              ),
+                              const SizedBox(width: 8),
+
+                              // Filter "Favorite"
+                              _buildFilterChip(
+                                context,
+                                label: AppLocalizations.of(
+                                  context,
+                                )!.filterFavorite,
+                                value: 'FAVORITE',
+                              ),
+                              const SizedBox(width: 8),
+
+                              // Filter untuk setiap preset mood
+                              ...MoodPresets.all.map((mood) {
+                                final label = mood['label'] as String;
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: _buildFilterChip(
+                                    context,
+                                    label: _getLocalizedMood(context, label),
+                                    value: label,
+                                  ),
+                                );
+                              }),
+
+                              // Filter untuk setiap custom mood
+                              ...customMoods.map((mood) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: _buildFilterChip(
+                                    context,
+                                    label: mood.label,
+                                    value: mood.label,
+                                  ),
+                                );
+                              }),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          MoodFilterChip(
-                            label: AppLocalizations.of(context)!.filterFavorite,
-                            isSelected: _selectedMoodFilter == 'FAVORITE',
-                            onTap: () {
-                              setState(() {
-                                _selectedMoodFilter = 'FAVORITE';
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          MoodFilterChip(
-                            label: AppLocalizations.of(context)!.filterCalm,
-                            isSelected: _selectedMoodFilter == 'Calm',
-                            onTap: () {
-                              setState(() {
-                                _selectedMoodFilter = 'Calm';
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          MoodFilterChip(
-                            label: AppLocalizations.of(context)!.filterGrateful,
-                            isSelected: _selectedMoodFilter == 'Grateful',
-                            onTap: () {
-                              setState(() {
-                                _selectedMoodFilter = 'Grateful';
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          MoodFilterChip(
-                            label: AppLocalizations.of(context)!.filterPeaceful,
-                            isSelected: _selectedMoodFilter == 'Peaceful',
-                            onTap: () {
-                              setState(() {
-                                _selectedMoodFilter = 'Peaceful';
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          MoodFilterChip(
-                            label: AppLocalizations.of(context)!.filterFocused,
-                            isSelected: _selectedMoodFilter == 'Focused',
-                            onTap: () {
-                              setState(() {
-                                _selectedMoodFilter = 'Focused';
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 30),
 
@@ -497,6 +506,22 @@ class _ReflectScreenState extends State<ReflectScreen> {
             );
           }).toList(),
         );
+      },
+    );
+  }
+
+  Widget _buildFilterChip(
+    BuildContext context, {
+    required String label,
+    required String? value,
+  }) {
+    return MoodFilterChip(
+      label: label,
+      isSelected: _selectedMoodFilter == value,
+      onTap: () {
+        setState(() {
+          _selectedMoodFilter = value;
+        });
       },
     );
   }

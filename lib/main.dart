@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'services/notification_service.dart';
+import 'models/custom_mood.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +16,10 @@ void main() async {
   Intl.defaultLocale = 'id_ID';
   // Daftarkan adapter
   Hive.registerAdapter(JournalEntryAdapter());
-  // Buka "box" untuk menyimpan data
+  Hive.registerAdapter(CustomMoodAdapter());
   await Hive.openBox<JournalEntry>('journalBox');
   await Hive.openBox('settingsBox');
+  await Hive.openBox<CustomMood>('customMoodsBox');
   // Inisialisasi Notification Service
   await NotificationService().initialize();
   // Set status bar untuk dark mode (ikon putih)

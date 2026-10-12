@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
+import '../constants/moods.dart';
+import '../repositories/mood_repository.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -15,12 +17,30 @@ class StatsScreen extends StatefulWidget {
 }
 
 class _StatsScreenState extends State<StatsScreen> {
-  final List<Map<String, dynamic>> _moods = [
-    {'label': 'Calm', 'icon': Icons.wb_sunny_outlined},
-    {'label': 'Grateful', 'icon': Icons.favorite_border},
-    {'label': 'Peaceful', 'icon': Icons.cloud_outlined},
-    {'label': 'Focused', 'icon': Icons.eco_outlined},
-  ];
+  final _moodRepository = MoodRepository();
+
+  // === HELPER: HEX TO COLOR ===
+  Color _hexToColor(String hex) {
+    final cleaned = hex.replaceAll('0x', '').replaceAll('#', '');
+    return Color(int.parse('FF$cleaned', radix: 16));
+  }
+
+  // === HELPER: LOCALIZED MOOD ===
+  String _getLocalizedMood(BuildContext context, String mood) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (mood) {
+      case 'Calm':
+        return l10n.filterCalm;
+      case 'Grateful':
+        return l10n.filterGrateful;
+      case 'Peaceful':
+        return l10n.filterPeaceful;
+      case 'Focused':
+        return l10n.filterFocused;
+      default:
+        return mood;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +94,31 @@ class _StatsScreenState extends State<StatsScreen> {
                 // === HITUNG DATA ===
                 final totalEntries = entries.length;
 
+                // Gabungkan preset + custom mood
+                final allMoods = <Map<String, dynamic>>[
+                  ...MoodPresets.all,
+                  ..._moodRepository.getAllCustomMoods().map(
+                    (m) => {
+                      'label': m.label,
+                      'icon': Icons.mood_outlined,
+                      'color': _hexToColor(m.colorHex),
+                      'isCustom': true,
+                    },
+                  ),
+                ];
+
+                // Hitung jumlah per mood (hanya yang ada jurnalnya)
                 final moodCounts = <String, int>{};
-                for (var mood in _moods) {
-                  moodCounts[mood['label']] = entries
+                for (var mood in allMoods) {
+                  final count = entries
                       .where((e) => e.mood == mood['label'])
                       .length;
+                  if (count > 0) {
+                    moodCounts[mood['label']] = count;
+                  }
                 }
 
-                String topMood = 'Calm';
+                String topMood = '';
                 int topCount = 0;
                 moodCounts.forEach((mood, count) {
                   if (count > topCount) {
@@ -232,9 +269,8 @@ class _StatsScreenState extends State<StatsScreen> {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                _moods.firstWhere(
-                                  (m) => m['label'] == topMood,
-                                )['icon'],
+                                MoodPresets.getIcon(topMood) ??
+                                    Icons.mood_outlined,
                                 color: AppColors.textPrimary,
                                 size: 28,
                               ),
@@ -332,12 +368,13 @@ class _StatsScreenState extends State<StatsScreen> {
                           child: BarChart(
                             BarChartData(
                               alignment: BarChartAlignment.spaceAround,
-                              maxY:
-                                  (moodCounts.values.reduce(
-                                            (a, b) => a > b ? a : b,
-                                          ) +
-                                          1)
-                                      .toDouble(),
+                              maxY: moodCounts.isEmpty
+                                  ? 5.0
+                                  : (moodCounts.values.reduce(
+                                              (a, b) => a > b ? a : b,
+                                            ) +
+                                            1)
+                                        .toDouble(),
                               barTouchData: BarTouchData(enabled: false),
                               titlesData: FlTitlesData(
                                 show: true,
@@ -346,13 +383,24 @@ class _StatsScreenState extends State<StatsScreen> {
                                     showTitles: true,
                                     getTitlesWidget: (value, meta) {
                                       final index = value.toInt();
-                                      if (index >= 0 && index < _moods.length) {
+                                      if (index >= 0 &&
+                                          index < allMoods.length) {
+                                        // <-- Pakai allMoods
+                                        final mood = allMoods[index];
+                                        final label = mood['label'] as String;
+                                        final isCustom =
+                                            mood['isCustom'] == true;
                                         return Padding(
                                           padding: const EdgeInsets.only(
                                             top: 8,
                                           ),
                                           child: Text(
-                                            _moods[index]['label'],
+                                            isCustom
+                                                ? label
+                                                : _getLocalizedMood(
+                                                    context,
+                                                    label,
+                                                  ), // <-- INI DIA
                                             style: TextStyle(
                                               color: AppColors.textSecondary,
                                               fontSize: 10,
@@ -376,15 +424,21 @@ class _StatsScreenState extends State<StatsScreen> {
                               ),
                               gridData: const FlGridData(show: false),
                               borderData: FlBorderData(show: false),
-                              barGroups: List.generate(_moods.length, (index) {
-                                final mood = _moods[index]['label'];
-                                final count = moodCounts[mood] ?? 0;
+                              barGroups: List.generate(allMoods.length, (
+                                index,
+                              ) {
+                                final mood = allMoods[index];
+                                final label = mood['label'] as String;
+                                final count = moodCounts[label] ?? 0;
+                                final color =
+                                    mood['color'] as Color? ??
+                                    AppColors.textPrimary;
                                 return BarChartGroupData(
                                   x: index,
                                   barRods: [
                                     BarChartRodData(
                                       toY: count.toDouble(),
-                                      color: AppColors.textPrimary,
+                                      color: color, // <-- Pakai warna mood!
                                       width: 24,
                                       borderRadius: BorderRadius.circular(6),
                                     ),

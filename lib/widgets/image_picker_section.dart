@@ -96,17 +96,6 @@ class ImagePickerSection extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 6),
-            GestureDetector(
-              onTap: () {
-                HapticFeedback.selectionClick();
-                _showPhotoTipsDialog(context);
-              },
-              child: Icon(
-                Icons.info_outline,
-                size: 16,
-                color: AppColors.textSecondary,
-              ),
-            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -251,114 +240,6 @@ class ImagePickerSection extends StatelessWidget {
             ),
           ),
         ],
-      ],
-    );
-  }
-
-  // === DIALOG TIPS FOTO ===
-  void _showPhotoTipsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardDark,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            const Icon(
-              Icons.tips_and_updates_outlined,
-              color: Color(0xFFFFD60A),
-              size: 22,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                AppLocalizations.of(context)!.photoTipsTitle,
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.photoTipsDesc,
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                height: 1.6,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildRatioExample('16:9', 80, 45, '✓'),
-                _buildRatioExample('1:1', 60, 60, '✓'),
-                _buildRatioExample('9:16', 45, 80, '✕'),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              AppLocalizations.of(context)!.gotIt,
-              style: const TextStyle(
-                color: Color(0xFF0A84FF),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRatioExample(String label, double w, double h, String mark) {
-    return Column(
-      children: [
-        Container(
-          width: w,
-          height: h,
-          decoration: BoxDecoration(
-            color: AppColors.cardDark,
-            border: Border.all(
-              color: mark == '✓'
-                  ? AppColors.systemGreen.withValues(alpha: 0.6)
-                  : AppColors.systemRed.withValues(alpha: 0.6),
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: Text(
-              mark,
-              style: TextStyle(
-                color: mark == '✓'
-                    ? AppColors.systemGreen
-                    : AppColors.systemRed,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
       ],
     );
   }

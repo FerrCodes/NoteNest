@@ -294,13 +294,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get cameraOptionDesc => 'Ambil foto langsung';
 
   @override
-  String get photoTipsTitle => 'Tips Memilih Rasio Format Foto';
-
-  @override
-  String get photoTipsDesc =>
-      'Untuk hasil terbaik di halaman detail, gunakan foto landscape (lebar) atau persegi. Foto portrait (tinggi) mungkin akan terpotong.';
-
-  @override
   String get gotIt => 'Mengerti';
 
   @override
@@ -339,7 +332,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get languageDesc =>
-      'Pilih bahasa yang paling nyaman untukmu. Kamu bisa mengubahnya kapan saja.';
+      'Pilih bahasa yang paling cocok, dan bisa diubah kapan saja.';
 
   @override
   String get calendarTitle => 'Kalender';
@@ -466,6 +459,69 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get draftSaved => 'Draft tersimpan otomatis';
+
+  @override
+  String get feedbackTitle => 'Kirim Feedback';
+
+  @override
+  String get feedbackWhatHappened => 'Apa yang terjadi?';
+
+  @override
+  String get feedbackHint => 'Ceritakan masalah atau bug yang kamu alami';
+
+  @override
+  String get feedbackDisclaimer =>
+      'Feedback tersebut akan memberi perbaiki dan peningkatan pengalaman untuk aplikasi ini.';
+
+  @override
+  String get send => 'Kirim';
+
+  @override
+  String get personalization => 'Personalisasi';
+
+  @override
+  String get manageMoods => 'Kelola Mood';
+
+  @override
+  String get manageMoodsDesc => 'Buat mood kustom kamu sendiri';
+
+  @override
+  String get customMoods => 'Mood Kustom';
+
+  @override
+  String get addMood => 'Tambah Mood';
+
+  @override
+  String get newMood => 'Mood Baru';
+
+  @override
+  String get moodNameHint => 'mis. Cemas, Semangat, Lelah...';
+
+  @override
+  String get moodLimitReached => 'Maksimal 10 mood kustom tercapai';
+
+  @override
+  String get moodAlreadyExists => 'Nama mood ini sudah dipakai';
+
+  @override
+  String get moodAdded => 'Mood berhasil ditambahkan';
+
+  @override
+  String get moodDeleted => 'Mood dihapus';
+
+  @override
+  String get deleteMoodTitle => 'Hapus Mood?';
+
+  @override
+  String get deleteMoodDesc =>
+      'Jurnal dengan mood ini tetap menyimpan labelnya.';
+
+  @override
+  String get noCustomMoods => 'Belum ada mood kustom';
+
+  @override
+  String get noCustomMoodsDesc =>
+      'Tap \"Tambah Mood\" untuk membuat mood kustom pertamamu.';
 
   @override
   String readingTime(int count) {

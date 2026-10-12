@@ -638,18 +638,6 @@ abstract class AppLocalizations {
   /// **'Take photo directly'**
   String get cameraOptionDesc;
 
-  /// No description provided for @photoTipsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Tips for Choosing Photo Aspect Ratios'**
-  String get photoTipsTitle;
-
-  /// No description provided for @photoTipsDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'For best results in the detail view, use landscape (wide) or square photos. Portrait photos may be cropped.'**
-  String get photoTipsDesc;
-
   /// No description provided for @gotIt.
   ///
   /// In en, this message translates to:
@@ -725,7 +713,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageDesc.
   ///
   /// In en, this message translates to:
-  /// **'Choose the language you\'re most comfortable with. You can change it anytime.'**
+  /// **'Choose the most suitable language, it can be changed at any time.'**
   String get languageDesc;
 
   /// No description provided for @calendarTitle.
@@ -973,6 +961,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Draft saved automatically'**
   String get draftSaved;
+
+  /// No description provided for @feedbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback'**
+  String get feedbackTitle;
+
+  /// No description provided for @feedbackWhatHappened.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened?'**
+  String get feedbackWhatHappened;
+
+  /// No description provided for @feedbackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about the issue you encountered'**
+  String get feedbackHint;
+
+  /// No description provided for @feedbackDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback can be used to improve NoteNest.'**
+  String get feedbackDisclaimer;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @personalization.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization'**
+  String get personalization;
+
+  /// No description provided for @manageMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Moods'**
+  String get manageMoods;
+
+  /// No description provided for @manageMoodsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your own custom moods'**
+  String get manageMoodsDesc;
+
+  /// No description provided for @customMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Moods'**
+  String get customMoods;
+
+  /// No description provided for @addMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Mood'**
+  String get addMood;
+
+  /// No description provided for @newMood.
+  ///
+  /// In en, this message translates to:
+  /// **'New Mood'**
+  String get newMood;
+
+  /// No description provided for @moodNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Anxious, Excited, Tired...'**
+  String get moodNameHint;
+
+  /// No description provided for @moodLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 10 custom moods reached'**
+  String get moodLimitReached;
+
+  /// No description provided for @moodAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This mood name is already used'**
+  String get moodAlreadyExists;
+
+  /// No description provided for @moodAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood added successfully'**
+  String get moodAdded;
+
+  /// No description provided for @moodDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood deleted'**
+  String get moodDeleted;
+
+  /// No description provided for @deleteMoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Mood?'**
+  String get deleteMoodTitle;
+
+  /// No description provided for @deleteMoodDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Journals with this mood will still keep the label.'**
+  String get deleteMoodDesc;
+
+  /// No description provided for @noCustomMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom moods yet'**
+  String get noCustomMoods;
+
+  /// No description provided for @noCustomMoodsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"Add Mood\" to create your first custom mood.'**
+  String get noCustomMoodsDesc;
 
   /// No description provided for @readingTime.
   ///

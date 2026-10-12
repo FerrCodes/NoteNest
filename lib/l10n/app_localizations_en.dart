@@ -292,13 +292,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cameraOptionDesc => 'Take photo directly';
 
   @override
-  String get photoTipsTitle => 'Tips for Choosing Photo Aspect Ratios';
-
-  @override
-  String get photoTipsDesc =>
-      'For best results in the detail view, use landscape (wide) or square photos. Portrait photos may be cropped.';
-
-  @override
   String get gotIt => 'Got it';
 
   @override
@@ -337,7 +330,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageDesc =>
-      'Choose the language you\'re most comfortable with. You can change it anytime.';
+      'Choose the most suitable language, it can be changed at any time.';
 
   @override
   String get calendarTitle => 'Calendar';
@@ -465,6 +458,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get draftSaved => 'Draft saved automatically';
+
+  @override
+  String get feedbackTitle => 'Send Feedback';
+
+  @override
+  String get feedbackWhatHappened => 'What happened?';
+
+  @override
+  String get feedbackHint => 'Tell us about the issue you encountered';
+
+  @override
+  String get feedbackDisclaimer =>
+      'Your feedback can be used to improve NoteNest.';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get personalization => 'Personalization';
+
+  @override
+  String get manageMoods => 'Manage Moods';
+
+  @override
+  String get manageMoodsDesc => 'Create your own custom moods';
+
+  @override
+  String get customMoods => 'Custom Moods';
+
+  @override
+  String get addMood => 'Add Mood';
+
+  @override
+  String get newMood => 'New Mood';
+
+  @override
+  String get moodNameHint => 'e.g. Anxious, Excited, Tired...';
+
+  @override
+  String get moodLimitReached => 'Maximum 10 custom moods reached';
+
+  @override
+  String get moodAlreadyExists => 'This mood name is already used';
+
+  @override
+  String get moodAdded => 'Mood added successfully';
+
+  @override
+  String get moodDeleted => 'Mood deleted';
+
+  @override
+  String get deleteMoodTitle => 'Delete Mood?';
+
+  @override
+  String get deleteMoodDesc =>
+      'Journals with this mood will still keep the label.';
+
+  @override
+  String get noCustomMoods => 'No custom moods yet';
+
+  @override
+  String get noCustomMoodsDesc =>
+      'Tap \"Add Mood\" to create your first custom mood.';
 
   @override
   String readingTime(int count) {
