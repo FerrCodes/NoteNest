@@ -195,46 +195,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
 
                   // === 2. GAMBAR DI TENGAH ===
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticFeedback.selectionClick();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PhotoViewerScreen(imagePath: entry.imageUrl),
-                          ),
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: Stack(
-                          children: [
-                            _buildImage(entry.imageUrl, height: 300),
-                            // Ikon zoom di pojok kanan bawah (opsional)
-                            Positioned(
-                              bottom: 12,
-                              right: 12,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.5),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.zoom_out_map,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  // === CAROUSEL FOTO ===
+                  if (entry.imageUrls.isNotEmpty)
+                    _buildPhotoCarousel(context, entry),
 
                   // === 3. ISI JURNAL DI BAWAH GAMBAR ===
                   Padding(
@@ -352,6 +315,73 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPhotoCarousel(BuildContext context, JournalEntry entry) {
+    final photos = entry.imageUrls;
+
+    // Kalau cuma 1 foto, tampilkan seperti biasa (tanpa carousel)
+    if (photos.length == 1) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PhotoViewerScreen(
+                  imagePath: photos.first,
+                  allPhotos: photos,
+                  initialIndex: 0,
+                ),
+              ),
+            );
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: _buildImage(photos.first, height: 300),
+          ),
+        ),
+      );
+    }
+
+    // Kalau lebih dari 1 foto, tampilkan sebagai carousel
+    return SizedBox(
+      height: 300,
+      child: PageView.builder(
+        controller: PageController(viewportFraction: 0.85),
+        pageSnapping: false,
+        itemCount: photos.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: index == 0 ? 1 : 12,
+              right: index == photos.length - 0 ? 1 : 12,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PhotoViewerScreen(
+                      imagePath: photos[index],
+                      allPhotos: photos,
+                      initialIndex: index,
+                    ),
+                  ),
+                );
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: _buildImage(photos[index], height: 300),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -14,7 +14,7 @@ class AppColors {
   static const Color cardDark = Color(0xFF1E1E1E);
 
   /// Warna divider atau garis tipis.
-  static const Color dividerDark = Color(0xFF2C2C2E);
+  static const Color dividerDark = Color.fromARGB(255, 60, 60, 63);
 
   // === TEXT ===
   /// Warna teks utama (putih terang).

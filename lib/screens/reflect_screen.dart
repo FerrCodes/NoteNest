@@ -17,6 +17,8 @@ import '../repositories/mood_repository.dart';
 import '../constants/moods.dart';
 import 'manage_moods_screen.dart';
 import '../widgets/app_tooltip.dart';
+import '../widgets/weather_header.dart';
+import 'home_header_screen.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -119,6 +121,30 @@ class _ReflectScreenState extends State<ReflectScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // === ITEM BARU: HEADER BERANDA ===
+            _buildDropdownItem(
+              icon: Icons.tune,
+              label: AppLocalizations.of(context)!.headerSection,
+              onTap: () {
+                _closeDropdown();
+                Future.delayed(const Duration(milliseconds: 220), () {
+                  if (!mounted) return;
+                  Navigator.push(
+                    context,
+                    SlideRoute(page: const HomeHeaderScreen()),
+                  );
+                });
+              },
+            ),
+
+            // Divider
+            Container(
+              height: 1,
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              color: AppColors.dividerDark.withValues(alpha: 0.5),
+            ),
+
+            // === ITEM: KELOLA MOOD ===
             _buildDropdownItem(
               icon: Icons.mood_outlined,
               label: AppLocalizations.of(context)!.manageMoods,
@@ -171,12 +197,10 @@ class _ReflectScreenState extends State<ReflectScreen> {
     );
   }
 
-  final TextEditingController _searchController = TextEditingController();
   final _repository = JournalRepository();
   @override
   void dispose() {
     _dropdownOverlay?.remove();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -190,98 +214,96 @@ class _ReflectScreenState extends State<ReflectScreen> {
             height: MediaQuery.of(context).size.height,
             child: SafeArea(
               child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(
-                  24.0,
-                  MediaQuery.of(context).padding.top + 37.0,
-                  24.0,
-                  20.0,
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 37.0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Header
                     const SizedBox(height: 20),
-                    // === KOLOM PENCARIAN ===
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.cardDark,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+
+                    // === QUOTE ===
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.search,
-                            color: AppColors.textSecondary,
-                            size: 22,
-                          ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 4),
+                          // Quote
                           Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              autofocus: false,
-                              textInputAction: TextInputAction.search,
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 15,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: AppLocalizations.of(
-                                  context,
-                                )!.searchHint,
-                                hintStyle: TextStyle(
-                                  color: AppColors.textSecondary.withValues(
-                                    alpha: 0.5,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(
+                                _getTimeBasedQuote(context),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 27,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.55,
+                                  color: AppColors.textPrimary.withValues(
+                                    alpha: 0.85,
                                   ),
-                                  fontSize: 15,
+                                  fontFamily: 'DMSerifDisplay',
+                                  letterSpacing: 0.2,
                                 ),
-                                border: InputBorder.none,
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _searchQuery = value.toLowerCase();
-                                });
-                              },
                             ),
                           ),
-                          if (_searchQuery.isNotEmpty)
-                            GestureDetector(
-                              onTap: () {
-                                _searchController.clear();
-                                setState(() {
-                                  _searchQuery = '';
-                                });
-                              },
-                              child: Icon(
-                                Icons.close,
-                                color: AppColors.textSecondary,
-                                size: 20,
-                              ),
-                            ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: 47),
+
+                    // === DIVIDER ===
+                    Container(
+                      height: 1,
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      color: AppColors.dividerDark.withValues(alpha: 0.5),
+                    ),
                     const SizedBox(height: 20),
 
-                    // === FILTER MOOD ===
+                    // === WEATHER HEADER (Tanggal + Jam + Cuaca) ===
+                    ValueListenableBuilder(
+                      valueListenable: Hive.box('settingsBox').listenable(),
+                      builder: (context, box, _) {
+                        final showDate = box.get(
+                          'showDate',
+                          defaultValue: true,
+                        );
+                        final showTime = box.get(
+                          'showTime',
+                          defaultValue: true,
+                        );
+                        final showWeather = box.get(
+                          'showWeather',
+                          defaultValue: false,
+                        );
+                        return WeatherHeader(
+                          showDate: showDate,
+                          showTime: showTime,
+                          showWeather: showWeather,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    // === FILTER CHIP ===
                     ValueListenableBuilder(
                       valueListenable: _moodRepository.listenable,
                       builder: (context, box, _) {
                         final customMoods = _moodRepository.getAllCustomMoods();
-
                         return SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              // Filter "All"
+                              const SizedBox(width: 8), // Jarak 8px di kiri
                               _buildFilterChip(
                                 context,
                                 label: AppLocalizations.of(context)!.filterAll,
                                 value: null,
                               ),
                               const SizedBox(width: 8),
-
-                              // Filter "Favorite"
                               _buildFilterChip(
                                 context,
                                 label: AppLocalizations.of(
@@ -290,8 +312,6 @@ class _ReflectScreenState extends State<ReflectScreen> {
                                 value: 'FAVORITE',
                               ),
                               const SizedBox(width: 8),
-
-                              // Filter untuk setiap preset mood
                               ...MoodPresets.all.map((mood) {
                                 final label = mood['label'] as String;
                                 return Padding(
@@ -303,8 +323,6 @@ class _ReflectScreenState extends State<ReflectScreen> {
                                   ),
                                 );
                               }),
-
-                              // Filter untuk setiap custom mood
                               ...customMoods.map((mood) {
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 8),
@@ -320,53 +338,21 @@ class _ReflectScreenState extends State<ReflectScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 15),
 
-                    // Quote berganti berdasarkan waktu
-                    // === QUOTE DENGAN SERIF FONT + TANDA KUTIP BESAR ===
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Quote itu sendiri
-                          Expanded(
-                            child: // === QUOTE DENGAN DM SERIF DISPLAY ===
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                              ),
-                              child: Text(
-                                _getTimeBasedQuote(context),
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.5,
-                                  color: AppColors.textPrimary.withValues(
-                                    alpha: 0.85,
-                                  ),
-                                  fontFamily: 'DMSerifDisplay',
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Journal Card
-                    Text(
-                      AppLocalizations.of(context)!.todaysEntry,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
-                      ),
+                    // === DIVIDER ===
+                    Container(
+                      height: 1,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      color: AppColors.dividerDark.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 16),
-                    _buildJournalList(),
+
+                    // === JOURNAL LIST ===
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _buildJournalList(),
+                    ),
 
                     const SizedBox(height: 120),
                   ],
@@ -517,6 +503,36 @@ class _ReflectScreenState extends State<ReflectScreen> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // === TOMBOL SEARCH ===
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 12,
+            right: 20,
+            child: AppTooltip(
+              message: AppLocalizations.of(context)!.searchHint,
+              child: GestureDetector(
+                onTap: _openSearchModal,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark.withValues(alpha: 0.9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.search,
+                    color: AppColors.textPrimary,
+                    size: 20,
                   ),
                 ),
               ),
@@ -702,6 +718,26 @@ class _ReflectScreenState extends State<ReflectScreen> {
     );
   }
 
+  void _openSearchModal() {
+    HapticFeedback.selectionClick();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return _SearchModal(
+          onSearch: (query) {
+            setState(() {
+              _searchQuery = query.toLowerCase();
+            });
+          },
+          initialQuery: _searchQuery,
+        );
+      },
+    );
+  }
+
   Widget _buildFilterChip(
     BuildContext context, {
     required String label,
@@ -732,6 +768,158 @@ class _AnimatedDropdown extends StatefulWidget {
 
   @override
   State<_AnimatedDropdown> createState() => _AnimatedDropdownState();
+}
+
+class _SearchModal extends StatefulWidget {
+  final ValueChanged<String> onSearch;
+  final String initialQuery;
+
+  const _SearchModal({required this.onSearch, this.initialQuery = ''});
+
+  @override
+  State<_SearchModal> createState() => _SearchModalState();
+}
+
+class _SearchModalState extends State<_SearchModal> {
+  late TextEditingController _controller;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialQuery);
+    // Autofocus setelah modal muncul
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false, // Atas tidak perlu, sudah ada padding top
+      bottom: true, // Bawah perlu, untuk nav bar
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.bgDark,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Drag handle
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.textSecondary.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Row: Search field + Cancel
+              Row(
+                children: [
+                  // Search field
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardDark,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: AppColors.textSecondary,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              controller: _controller,
+                              focusNode: _focusNode,
+                              textInputAction: TextInputAction.search,
+                              style: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 15,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.searchHint,
+                                hintStyle: TextStyle(
+                                  color: AppColors.textSecondary.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                  fontSize: 15,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (value) {
+                                widget.onSearch(value);
+                              },
+                            ),
+                          ),
+                          if (_controller.text.isNotEmpty)
+                            GestureDetector(
+                              onTap: () {
+                                _controller.clear();
+                                widget.onSearch('');
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.close,
+                                color: AppColors.textSecondary,
+                                size: 18,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Tombol Cancel
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      // Reset search saat cancel
+                      widget.onSearch('');
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      AppLocalizations.of(context)!.cancel,
+                      style: TextStyle(
+                        color: AppColors.systemBlue,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _AnimatedDropdownState extends State<_AnimatedDropdown>

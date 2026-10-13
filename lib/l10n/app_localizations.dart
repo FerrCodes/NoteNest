@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchHint.
   ///
   /// In en, this message translates to:
-  /// **'Search journals...'**
+  /// **'Search journals'**
   String get searchHint;
 
   /// No description provided for @filterAll.
@@ -1141,6 +1141,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap for menu'**
   String get dropdownHint;
+
+  /// No description provided for @headerSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize the header'**
+  String get headerSection;
+
+  /// No description provided for @headerScreenDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your home screen header. Turn on or off what you need.'**
+  String get headerScreenDesc;
+
+  /// No description provided for @displaySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Display'**
+  String get displaySection;
+
+  /// No description provided for @userName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name'**
+  String get userName;
+
+  /// No description provided for @userNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get userNameHint;
+
+  /// No description provided for @showDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Date'**
+  String get showDate;
+
+  /// No description provided for @showDateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display today\'s date'**
+  String get showDateDesc;
+
+  /// No description provided for @showTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Time'**
+  String get showTime;
+
+  /// No description provided for @showTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display current time'**
+  String get showTimeDesc;
+
+  /// No description provided for @showWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Weather'**
+  String get showWeather;
+
+  /// No description provided for @showWeatherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Display weather (requires internet)'**
+  String get showWeatherDesc;
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning,'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon,'**
+  String get greetingAfternoon;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening,'**
+  String get greetingEvening;
+
+  /// No description provided for @greetingNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Good night'**
+  String get greetingNight;
 
   /// No description provided for @readingTime.
   ///

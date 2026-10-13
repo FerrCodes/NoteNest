@@ -57,7 +57,29 @@ class JournalCard extends StatelessWidget {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(24),
               ),
-              child: _buildImage(entry.imageUrl, height: 160),
+              child: Stack(
+                children: [
+                  _buildImage(entry.primaryImageUrl, height: 160),
+                  // Badge kalau ada lebih dari 1 foto
+                  if (entry.hasMultiplePhotos)
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.7),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.collections,
+                          color: Colors.white,
+                          size: 14,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(20),

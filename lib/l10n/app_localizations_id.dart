@@ -15,7 +15,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get reflect => 'Refleksi';
 
   @override
-  String get searchHint => 'Cari jurnal...';
+  String get searchHint => 'Cari jurnal';
 
   @override
   String get filterAll => 'Semua';
@@ -554,6 +554,52 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get dropdownHint => 'Lihat menu';
+
+  @override
+  String get headerSection => 'Sesuaikan header';
+
+  @override
+  String get headerScreenDesc =>
+      'Atur tampilan header di halaman beranda. Nyalakan atau matikan sesuai kebutuhanmu.';
+
+  @override
+  String get displaySection => 'Tampilkan';
+
+  @override
+  String get userName => 'Nama Kamu';
+
+  @override
+  String get userNameHint => 'Masukkan namamu';
+
+  @override
+  String get showDate => 'Tampilkan Tanggal';
+
+  @override
+  String get showDateDesc => 'Tampilkan tanggal hari ini';
+
+  @override
+  String get showTime => 'Tampilkan Jam';
+
+  @override
+  String get showTimeDesc => 'Tampilkan jam saat ini';
+
+  @override
+  String get showWeather => 'Tampilkan Cuaca';
+
+  @override
+  String get showWeatherDesc => 'Tampilkan cuaca (butuh internet)';
+
+  @override
+  String get greetingMorning => 'Selamat pagi,';
+
+  @override
+  String get greetingAfternoon => 'Selamat siang,';
+
+  @override
+  String get greetingEvening => 'Selamat sore,';
+
+  @override
+  String get greetingNight => 'Selamat malam';
 
   @override
   String readingTime(int count) {

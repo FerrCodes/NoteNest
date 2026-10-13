@@ -22,7 +22,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // State Reminder
+  // State Header Beranda
+  final _userNameController = TextEditingController(); // State Reminder
   bool _reminderEnabled = false;
   TimeOfDay _reminderTime = const TimeOfDay(hour: 20, minute: 0);
   final TextEditingController _reminderMessageController =
@@ -120,6 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void dispose() {
     _reminderMessageController.dispose();
     _feedbackController.dispose();
+    _userNameController.dispose();
     super.dispose();
   }
 

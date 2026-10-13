@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../models/journal_entry.dart';
 import '../utils/preset_images.dart';
 import '../l10n/app_localizations.dart';
-import 'package:image_picker/image_picker.dart';
 import '../widgets/top_banner.dart';
 import '../repositories/journal_repository.dart';
 import '../widgets/mood_selector.dart';
@@ -25,7 +24,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
   String _selectedMood = 'Calm';
-  late String _selectedImage;
+  late List<String> _selectedImages;
   final _repository = JournalRepository();
 
   void _showIncompleteDialog(List<String> missingFields) {
@@ -129,7 +128,9 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
       text: widget.entry?.content ?? '',
     );
     _selectedMood = widget.entry?.mood ?? 'Calm';
-    _selectedImage = widget.entry?.imageUrl ?? PresetImages.getDefault();
+    _selectedImages = widget.entry?.imageUrls.isNotEmpty == true
+        ? List<String>.from(widget.entry!.imageUrls)
+        : [PresetImages.getDefault()];
 
     // Cek draft HANYA kalau mode new (bukan edit)
     if (widget.entry == null) {
@@ -167,7 +168,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     await settingsBox.put('draft_title', _titleController.text);
     await settingsBox.put('draft_content', _contentController.text);
     await settingsBox.put('draft_mood', _selectedMood);
-    await settingsBox.put('draft_image', _selectedImage);
+    await settingsBox.put('draft_images', _selectedImages);
     await settingsBox.put('draft_has_data', true);
   }
 
@@ -176,7 +177,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     await settingsBox.delete('draft_title');
     await settingsBox.delete('draft_content');
     await settingsBox.delete('draft_mood');
-    await settingsBox.delete('draft_image');
+    await settingsBox.delete('draft_images');
     await settingsBox.put('draft_has_data', false);
   }
 
@@ -255,10 +256,13 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                   'draft_mood',
                   defaultValue: 'Calm',
                 );
-                _selectedImage = settingsBox.get(
-                  'draft_image',
-                  defaultValue: PresetImages.getDefault(),
+                final savedImages = settingsBox.get(
+                  'draft_images',
+                  defaultValue: <String>[],
                 );
+                _selectedImages = savedImages.isNotEmpty
+                    ? List<String>.from(savedImages)
+                    : [PresetImages.getDefault()];
               });
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -344,62 +348,6 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _pickImageFromGallery() async {
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-      );
-
-      if (pickedFile != null) {
-        HapticFeedback.mediumImpact();
-        setState(() {
-          _selectedImage = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      HapticFeedback.heavyImpact();
-      if (!mounted) return;
-      TopBanner.show(
-        context,
-        message: 'Gagal memilih gambar',
-        type: BannerType.error,
-      );
-    }
-  }
-
-  Future<void> _pickImageFromCamera() async {
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 80,
-      );
-
-      if (pickedFile != null) {
-        HapticFeedback.mediumImpact();
-        setState(() {
-          _selectedImage = pickedFile.path;
-        });
-      }
-    } catch (e) {
-      HapticFeedback.heavyImpact();
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Gagal membuka kamera'),
-          backgroundColor: AppColors.cardDark,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.only(top: 90, left: 20, right: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.entry != null;
@@ -419,12 +367,10 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                     // === PILIHAN GAMBAR ===
                     // === KATEGORI 1: PRESET GAMBAR ===
                     ImagePickerSection(
-                      selectedImage: _selectedImage,
-                      onPickFromGallery: _pickImageFromGallery,
-                      onPickFromCamera: _pickImageFromCamera,
-                      onImageSelected: (image) {
+                      selectedImages: _selectedImages,
+                      onImagesChanged: (newList) {
                         setState(() {
-                          _selectedImage = image;
+                          _selectedImages = newList;
                         });
                       },
                     ),
@@ -568,7 +514,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                     widget.entry!.title = _titleController.text;
                     widget.entry!.content = _contentController.text;
                     widget.entry!.mood = _selectedMood;
-                    widget.entry!.imageUrl = _selectedImage;
+                    widget.entry!.imageUrls = _selectedImages;
                     widget.entry!.lastEdited = DateTime.now();
                     await _repository.updateJournal(widget.entry!);
                   } else {
@@ -577,7 +523,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       content: _contentController.text,
                       date: today,
                       mood: _selectedMood,
-                      imageUrl: _selectedImage,
+                      imageUrls: _selectedImages,
                       lastEdited: DateTime.now(),
                     );
                     await _repository.addJournal(newEntry);

@@ -15,7 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reflect => 'Reflect';
 
   @override
-  String get searchHint => 'Search journals...';
+  String get searchHint => 'Search journals';
 
   @override
   String get filterAll => 'All';
@@ -553,6 +553,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dropdownHint => 'Tap for menu';
+
+  @override
+  String get headerSection => 'Customize the header';
+
+  @override
+  String get headerScreenDesc =>
+      'Customize your home screen header. Turn on or off what you need.';
+
+  @override
+  String get displaySection => 'Display';
+
+  @override
+  String get userName => 'Your Name';
+
+  @override
+  String get userNameHint => 'Enter your name';
+
+  @override
+  String get showDate => 'Show Date';
+
+  @override
+  String get showDateDesc => 'Display today\'s date';
+
+  @override
+  String get showTime => 'Show Time';
+
+  @override
+  String get showTimeDesc => 'Display current time';
+
+  @override
+  String get showWeather => 'Show Weather';
+
+  @override
+  String get showWeatherDesc => 'Display weather (requires internet)';
+
+  @override
+  String get greetingMorning => 'Good morning,';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon,';
+
+  @override
+  String get greetingEvening => 'Good evening,';
+
+  @override
+  String get greetingNight => 'Good night';
 
   @override
   String readingTime(int count) {

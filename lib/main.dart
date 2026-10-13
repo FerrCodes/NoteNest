@@ -11,16 +11,28 @@ import 'models/custom_mood.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Inisialisasi Hive
   await Hive.initFlutter();
   Intl.defaultLocale = 'id_ID';
+
   // Daftarkan adapter
   Hive.registerAdapter(JournalEntryAdapter());
   Hive.registerAdapter(CustomMoodAdapter());
+
+  // Buka box
   await Hive.openBox<JournalEntry>('journalBox');
   await Hive.openBox('settingsBox');
   await Hive.openBox<CustomMood>('customMoodsBox');
-  // Inisialisasi Notification Service
+
+  // === SET DEFAULT HEADER SETTINGS ===
+  final settingsBox = Hive.box('settingsBox');
+  if (settingsBox.get('headerInitialized') != true) {
+    await settingsBox.put('showDate', true);
+    await settingsBox.put('showTime', true);
+    await settingsBox.put('showWeather', false);
+    await settingsBox.put('userName', 'Feri');
+    await settingsBox.put('headerInitialized', true);
+  }
+
   await NotificationService().initialize();
   // Set status bar untuk dark mode (ikon putih)
   SystemChrome.setSystemUIOverlayStyle(
