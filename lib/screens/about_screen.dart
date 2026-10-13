@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
+import '../widgets/settings_group_card.dart';
 import '../widgets/app_tooltip.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -22,9 +23,14 @@ class _AboutScreenState extends State<AboutScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // === KONTEN UTAMA ===
+            // ==========================================
+            // KONTEN UTAMA
+            // ==========================================
             ListView(
-              padding: const EdgeInsets.fromLTRB(24, 80, 24, 25),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + 85,
+                bottom: 25,
+              ),
               children: [
                 // === HEADER: LOGO, NAMA, VERSI ===
                 Center(
@@ -56,6 +62,7 @@ class _AboutScreenState extends State<AboutScreen> {
                           color: AppColors.textPrimary,
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
+                          fontFamily: 'DMSerifDisplay',
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -69,118 +76,86 @@ class _AboutScreenState extends State<AboutScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // === DESKRIPSI APLIKASI ===
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.appDescription,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      height: 1.6,
-                      fontSize: 13,
+                _buildGroupCard([
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      AppLocalizations.of(context)!.appDescription,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        height: 1.6,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
-                ),
+                ]),
                 const SizedBox(height: 32),
 
                 // === SECTION: FITUR UTAMA ===
-                SectionTitle(
-                  title: AppLocalizations.of(context)!.aboutFeatures,
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark,
-                    borderRadius: BorderRadius.circular(20),
+                _buildSectionTitle(AppLocalizations.of(context)!.aboutFeatures),
+                _buildGroupCard([
+                  _buildFeatureItem(
+                    Icons.edit_note,
+                    AppLocalizations.of(context)!.aboutFeature1,
                   ),
-                  child: Column(
-                    children: [
-                      _buildFeatureItem(
-                        Icons.edit_note,
-                        AppLocalizations.of(context)!.aboutFeature1,
-                      ),
-                      _buildFeatureItem(
-                        Icons.photo_camera_outlined,
-                        AppLocalizations.of(context)!.aboutFeature2,
-                      ),
-                      _buildFeatureItem(
-                        Icons.mood_outlined,
-                        AppLocalizations.of(context)!.aboutFeature3,
-                      ),
-                      _buildFeatureItem(
-                        Icons.bar_chart_outlined,
-                        AppLocalizations.of(context)!.aboutFeature4,
-                      ),
-                      _buildFeatureItem(
-                        Icons.language_outlined,
-                        AppLocalizations.of(context)!.aboutFeature5,
-                        isLast: true,
-                      ),
-                    ],
+                  _buildFeatureItem(
+                    Icons.photo_camera_outlined,
+                    AppLocalizations.of(context)!.aboutFeature2,
                   ),
-                ),
+                  _buildFeatureItem(
+                    Icons.mood_outlined,
+                    AppLocalizations.of(context)!.aboutFeature3,
+                  ),
+                  _buildFeatureItem(
+                    Icons.bar_chart_outlined,
+                    AppLocalizations.of(context)!.aboutFeature4,
+                  ),
+                  _buildFeatureItem(
+                    Icons.language_outlined,
+                    AppLocalizations.of(context)!.aboutFeature5,
+                  ),
+                ]),
                 const SizedBox(height: 32),
 
                 // === SECTION: SOSIAL MEDIA ===
-                SectionTitle(title: AppLocalizations.of(context)!.socialMedia),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      // Instagram
-                      _buildSocialItem(
-                        label: AppLocalizations.of(
-                          context,
-                        )!.aboutInstagramHandle,
-                        icon: const FaIcon(
-                          FontAwesomeIcons.instagram,
-                          color: AppColors.textPrimary,
-                          size: 22,
-                        ),
-                        gradientColors: const [
-                          Color(0xFF833AB4),
-                          Color(0xFFFD1D1D),
-                          Color(0xFFFCB045),
-                        ],
-                        onTap: () => _launchUrl(
-                          'https://www.instagram.com/imnotferrriii/',
-                        ),
-                      ),
-                      const Divider(color: Color(0xFF2C2C2E), height: 20),
-                      // GitHub Profile
-                      _buildSocialItem(
-                        label: AppLocalizations.of(context)!.aboutGithubHandle,
-                        icon: const FaIcon(
-                          FontAwesomeIcons.github,
-                          color: AppColors.textPrimary,
-                          size: 22,
-                        ),
-                        gradientColors: const [
-                          Color(0xFF6E7681),
-                          Color(0xFFC9D1D9),
-                          Color(0xFFF0F6FC),
-                        ],
-                        onTap: () => _launchUrl('https://github.com/FerrCodes'),
-                      ),
+                _buildSectionTitle(AppLocalizations.of(context)!.socialMedia),
+                _buildGroupCard([
+                  _buildSocialItem(
+                    label: AppLocalizations.of(context)!.aboutInstagramHandle,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.instagram,
+                      color: AppColors.textPrimary,
+                      size: 22,
+                    ),
+                    gradientColors: const [
+                      Color(0xFF833AB4),
+                      Color(0xFFFD1D1D),
+                      Color(0xFFFCB045),
                     ],
+                    onTap: () =>
+                        _launchUrl('https://www.instagram.com/imnotferrriii/'),
                   ),
-                ),
-                const SizedBox(height: 8),
-                // === DESKRIPSI ===
+                  _buildSocialItem(
+                    label: AppLocalizations.of(context)!.aboutGithubHandle,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.github,
+                      color: AppColors.textPrimary,
+                      size: 22,
+                    ),
+                    gradientColors: const [
+                      Color(0xFF6E7681),
+                      Color(0xFFC9D1D9),
+                      Color(0xFFF0F6FC),
+                    ],
+                    onTap: () => _launchUrl('https://github.com/FerrCodes'),
+                  ),
+                ]),
+                const SizedBox(height: 10),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     AppLocalizations.of(context)!.socialMediaDesc,
                     style: TextStyle(
@@ -207,81 +182,83 @@ class _AboutScreenState extends State<AboutScreen> {
               ],
             ),
 
-            // === TOMBOL CLOSE (KIRI ATAS) ===
+            // ==========================================
+            // FLOATING HEADER (Back + Pill Judul + GitHub)
+            // ==========================================
             Positioned(
-              top: 12,
-              left: 20,
-              child: _buildCircleButton(
-                icon: Icons.arrow_back_ios_new,
-                onTap: () => Navigator.pop(context),
-              ),
-            ),
+              top: 20,
+              left: 16,
+              right: 16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Tombol Back
+                  _buildCircleButton(
+                    icon: Icons.arrow_back_ios_new,
+                    onTap: () => Navigator.pop(context),
+                  ),
 
-            // === PILL JUDUL (TENGAH ATAS) ===
-            Positioned(
-              top: 12,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.aboutApp,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // === TOMBOL GITHUB (KANAN ATAS) ===
-            Positioned(
-              top: 12,
-              right: 20,
-              child: AppTooltip(
-                message: AppLocalizations.of(context)!.sourceCode,
-                child: GestureDetector(
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    _launchUrl('https://github.com/FerrCodes/Note-Nest');
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardDark.withValues(alpha: 0.9),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
+                  // Pill Judul
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
                         ),
-                      ],
-                    ),
-                    child: const FaIcon(
-                      FontAwesomeIcons.github,
-                      color: AppColors.textPrimary,
-                      size: 20,
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.aboutApp,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                  // Tombol GitHub
+                  AppTooltip(
+                    message: AppLocalizations.of(context)!.sourceCode,
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        _launchUrl('https://github.com/FerrCodes/Note-Nest');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const FaIcon(
+                          FontAwesomeIcons.github,
+                          color: AppColors.textPrimary,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -290,20 +267,49 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  // === WIDGET: FITUR ITEM ===
-  Widget _buildFeatureItem(IconData icon, String text, {bool isLast = false}) {
+  // ==========================================
+  // HELPER: SECTION TITLE (di luar card)
+  // ==========================================
+  Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : 14),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      child: SectionTitle(title: title),
+    );
+  }
+
+  // ==========================================
+  // HELPER: GROUP CARD (gaya ChatGPT)
+  // ==========================================
+  Widget _buildGroupCard(List<Widget> children) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SettingsGroupCard(children: children),
+    );
+  }
+
+  // ==========================================
+  // WIDGET: FITUR ITEM (di dalam group card)
+  // ==========================================
+  Widget _buildFeatureItem(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.textSecondary, size: 18),
-          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.textPrimary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppColors.textPrimary, size: 20),
+          ),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
                 color: AppColors.textPrimary,
-                fontSize: 13,
+                fontSize: 14,
                 height: 1.4,
               ),
             ),
@@ -313,10 +319,12 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  // === WIDGET: SOCIAL MEDIA ITEM (dengan gradient shader) ===
+  // ==========================================
+  // WIDGET: SOCIAL MEDIA ITEM (di dalam group card)
+  // ==========================================
   Widget _buildSocialItem({
     required String label,
-    required Widget icon, // <-- Ganti ke Widget
+    required Widget icon,
     required List<Color> gradientColors,
     required VoidCallback onTap,
   }) {
@@ -325,12 +333,13 @@ class _AboutScreenState extends State<AboutScreen> {
         HapticFeedback.selectionClick();
         onTap();
       },
+      behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Row(
           children: [
-            icon, // <-- Langsung pakai widget icon
-            const SizedBox(width: 14),
+            icon,
+            const SizedBox(width: 16),
             ShaderMask(
               shaderCallback: (bounds) => LinearGradient(
                 colors: gradientColors,
@@ -358,7 +367,9 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  // === TOMBOL BULAT ===
+  // ==========================================
+  // TOMBOL BULAT
+  // ==========================================
   Widget _buildCircleButton({
     required IconData icon,
     required VoidCallback onTap,
@@ -381,12 +392,14 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ],
         ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 18),
+        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }
 
-  // === HELPER: LAUNCH URL ===
+  // ==========================================
+  // HELPER: LAUNCH URL
+  // ==========================================
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     try {

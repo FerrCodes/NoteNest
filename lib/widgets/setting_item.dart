@@ -27,14 +27,12 @@ class SettingItem extends StatelessWidget {
         HapticFeedback.selectionClick();
         onTap();
       },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark,
-          borderRadius: BorderRadius.circular(16),
-        ),
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
+            // Ikon
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -54,6 +52,8 @@ class SettingItem extends StatelessWidget {
                   ),
             ),
             const SizedBox(width: 16),
+
+            // Title + Subtitle
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,8 +69,7 @@ class SettingItem extends StatelessWidget {
                     ),
                   ),
                   if (subtitle != null && subtitle!.isNotEmpty) ...[
-                    // <-- Cek dulu
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       subtitle!,
                       style: TextStyle(
@@ -82,11 +81,14 @@ class SettingItem extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: AppColors.textSecondary.withValues(alpha: 0.5),
-            ),
+
+            // Arrow
+            if (!isDestructive)
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: AppColors.textSecondary.withValues(alpha: 0.5),
+              ),
           ],
         ),
       ),

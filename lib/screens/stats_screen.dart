@@ -144,7 +144,12 @@ class _StatsScreenState extends State<StatsScreen> {
                 }).toList();
 
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
+                  padding: EdgeInsets.fromLTRB(
+                    16, // kiri
+                    MediaQuery.of(context).padding.top + 85,
+                    16,
+                    24,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -476,47 +481,54 @@ class _StatsScreenState extends State<StatsScreen> {
               },
             ),
 
-            // === TOMBOL CLOSE (KIRI ATAS) ===
+            // === FLOATING HEADER (Back + Pill Judul + Spacer) ===
             Positioned(
-              top: 12,
-              left: 20,
-              child: _buildCircleButton(
-                icon: Icons.arrow_back_ios_new,
-                onTap: () => Navigator.pop(context),
-              ),
-            ),
+              top: 20,
+              left: 16,
+              right: 16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Tombol Back (Kiri)
+                  _buildCircleButton(
+                    icon: Icons.arrow_back_ios_new,
+                    onTap: () => Navigator.pop(context),
+                  ),
 
-            // === PILL JUDUL DI TENGAH ATAS ===
-            Positioned(
-              top: 12,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+                  // Pill Judul (Tengah)
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.stats,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.stats,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+
+                  // Spacer Kanan — seukuran tombol back (agar pill tengah center)
+                  const SizedBox(width: 47),
+                ],
               ),
             ),
           ],
@@ -527,28 +539,43 @@ class _StatsScreenState extends State<StatsScreen> {
 
   // === TOMBOL BULAT ===
   Widget _buildCircleButton({
-    required IconData icon,
+    IconData? icon,
     required VoidCallback onTap,
+    String? label,
+    Color? labelColor,
   }) {
+    final isLabeled = label != null;
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
         onTap();
       },
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: isLabeled
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
+            : const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
+          shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
+          borderRadius: isLabeled ? BorderRadius.circular(20) : null,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: Colors.black.withValues(alpha: 0.5),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
           ],
         ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
+        child: isLabeled
+            ? Text(
+                label,
+                style: TextStyle(
+                  color: labelColor ?? AppColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            : Icon(icon, color: AppColors.textPrimary, size: 19),
       ),
     );
   }

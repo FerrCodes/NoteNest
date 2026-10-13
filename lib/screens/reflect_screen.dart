@@ -123,7 +123,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
           children: [
             // === ITEM BARU: HEADER BERANDA ===
             _buildDropdownItem(
-              icon: Icons.tune,
+              icon: Icons.dashboard_customize_outlined,
               label: AppLocalizations.of(context)!.headerSection,
               onTap: () {
                 _closeDropdown();
@@ -225,7 +225,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
 
                     // === QUOTE ===
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 17),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

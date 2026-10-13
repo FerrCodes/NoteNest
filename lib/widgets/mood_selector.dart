@@ -39,12 +39,10 @@ class MoodSelector extends StatelessWidget {
       valueListenable: _moodRepository.listenable,
       builder: (context, box, _) {
         final presetMoods = MoodPresets.all;
-        final activeCustomMoods = _moodRepository.getAllCustomMoods();
-
-        // Mood custom aktif
+        final customMoods = _moodRepository.getAllCustomMoods();
         final allMoods = <Map<String, dynamic>>[
           ...presetMoods,
-          ...activeCustomMoods.map(
+          ...customMoods.map(
             (m) => {
               'icon': Icons.mood_outlined,
               'label': m.label,
@@ -54,89 +52,83 @@ class MoodSelector extends StatelessWidget {
           ),
         ];
 
-        // Cek apakah `currentMood` ada di allMoods
+        // Kalau currentMood tidak ada di allMoods (misal: mood arsip),
+        // tambahkan sebagai legacy mood
         final currentMoodExists = allMoods.any(
           (m) => m['label'] == currentMood,
         );
 
-        // Kalau currentMood ada tapi tidak di allMoods (misal: sudah diarsipkan)
-        // tambahkan sebagai "legacy mood"
         if (currentMood != null &&
             currentMood!.isNotEmpty &&
             !currentMoodExists) {
-          // Cari di arsip untuk dapat warna aslinya
-          final archivedMood = _moodRepository
-              .getArchivedMoods()
-              .where((m) => m.label == currentMood)
-              .firstOrNull;
-
           allMoods.insert(0, {
             'icon': Icons.mood_outlined,
             'label': currentMood,
-            'color': archivedMood != null
-                ? _hexToColor(archivedMood.colorHex)
-                : AppColors.textSecondary,
+            'color': AppColors.textSecondary,
             'isCustom': true,
             'isLegacy': true,
           });
         }
 
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: allMoods.map((mood) {
+        return SizedBox(
+          height: 90, // Tinggi tetap untuk ListView
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16), // kiri & kanan
+            itemCount: allMoods.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 20),
+            itemBuilder: (context, index) {
+              final mood = allMoods[index];
               final isSelected = selectedMood == mood['label'];
               final isCustom = mood['isCustom'] == true;
               final moodColor =
                   mood['color'] as Color? ?? AppColors.textSecondary;
 
-              return Padding(
-                padding: const EdgeInsets.only(right: 33),
-                child: GestureDetector(
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    onMoodSelected(mood['label']);
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: isSelected ? moodColor : AppColors.cardDark,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isSelected
-                                ? moodColor
-                                : moodColor.withValues(alpha: 0.3),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Icon(
-                          mood['icon'],
-                          color: isSelected ? Colors.white : moodColor,
-                          size: 22,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        isCustom
-                            ? mood['label']
-                            : _getLocalizedMood(context, mood['label']),
-                        style: TextStyle(
-                          fontSize: 11,
+              return GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  onMoodSelected(mood['label']);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isSelected ? moodColor : AppColors.cardDark,
+                        shape: BoxShape.circle,
+                        border: Border.all(
                           color: isSelected
-                              ? AppColors.textPrimary
-                              : AppColors.textSecondary,
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
+                              ? moodColor
+                              : moodColor.withValues(alpha: 0.3),
+                          width: 1.5,
                         ),
                       ),
-                    ],
-                  ),
+                      child: Icon(
+                        mood['icon'],
+                        color: isSelected ? Colors.white : moodColor,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      isCustom
+                          ? mood['label']
+                          : _getLocalizedMood(context, mood['label']),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isSelected
+                            ? AppColors.textPrimary
+                            : AppColors.textSecondary,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
                 ),
               );
-            }).toList(),
+            },
           ),
         );
       },

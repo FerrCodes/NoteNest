@@ -75,7 +75,7 @@ class _WeatherHeaderState extends State<WeatherHeader> {
     ).get('userName', defaultValue: 'Feri');
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

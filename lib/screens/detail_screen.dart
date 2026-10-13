@@ -94,9 +94,9 @@ class _DetailScreenState extends State<DetailScreen> {
                 children: [
                   // === 1. JUDUL & TANGGAL DI ATAS ===
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 80, 24, 20),
+                    padding: const EdgeInsets.fromLTRB(16, 85, 16, 20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Tanggal + Badge Mood
                         Row(
@@ -132,19 +132,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        // Judul
-                        Text(
-                          entry.title,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
-                            height: 1.3,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
+                        const SizedBox(height: 6),
                         // === READING TIME & WORD COUNT ===
                         Row(
                           children: [
@@ -189,7 +177,19 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
+                        // Judul
+                        Text(
+                          entry.title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                            height: 1.3,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),
@@ -201,7 +201,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
                   // === 3. ISI JURNAL DI BAWAH GAMBAR ===
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 50),
+                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -253,64 +253,63 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ),
 
-            // === LAPISAN 2: TOMBOL MELAYANG ===
+            // === FLOATING HEADER (Back + Pill Judul + Edit) ===
             Positioned(
               top: 20,
-              left: 20,
-              child: _buildCircleButton(
-                icon: Icons.arrow_back_ios_new,
-                onTap: () => Navigator.pop(context),
-              ),
-            ),
-            Positioned(
-              top: 20,
-              right: 20,
-              child: _buildCircleButton(
-                label: AppLocalizations.of(context)!.edit,
-                onTap: () async {
-                  // Buka halaman edit
-                  await Navigator.push(
-                    context,
-                    SlideRoute(page: WriteScreen(entry: entry)),
-                  );
-                  // Setelah edit selesai, refresh halaman detail
-                  if (mounted) {
-                    setState(() {});
-                  }
-                },
-              ),
-            ),
-            // === PILL JUDUL DI TENGAH ATAS ===
-            Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
+              left: 16,
+              right: 16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Tombol Back
+                  _buildCircleButton(
+                    icon: Icons.arrow_back_ios_new,
+                    onTap: () => Navigator.pop(context),
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+
+                  // Pill Judul (Expanded agar mengisi ruang tengah)
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.journalDetail,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.journalDetail,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+
+                  // Tombol Edit
+                  _buildCircleButton(
+                    label: AppLocalizations.of(context)!.edit,
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        SlideRoute(page: WriteScreen(entry: entry)),
+                      );
+                      if (mounted) setState(() {});
+                    },
+                  ),
+                ],
               ),
             ),
           ],
@@ -350,7 +349,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     // Kalau lebih dari 1 foto, tampilkan sebagai carousel
     return SizedBox(
-      height: 300,
+      height: 370,
       child: PageView.builder(
         controller: PageController(viewportFraction: 0.85),
         pageSnapping: false,
@@ -358,8 +357,8 @@ class _DetailScreenState extends State<DetailScreen> {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-              left: index == 0 ? 1 : 12,
-              right: index == photos.length - 0 ? 1 : 12,
+              left: index == 0 ? 0 : 6,
+              right: index == photos.length - 1 ? 0 : 6,
             ),
             child: GestureDetector(
               onTap: () {
@@ -387,7 +386,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _buildCircleButton({
-    IconData? icon, // <-- opsional
+    IconData? icon,
     required VoidCallback onTap,
     String? label,
   }) {
@@ -400,7 +399,7 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Container(
         padding: isLabeled
             ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
-            : const EdgeInsets.all(12),
+            : const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.cardDark.withValues(alpha: 0.9),
           shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
@@ -418,11 +417,11 @@ class _DetailScreenState extends State<DetailScreen> {
                 label,
                 style: TextStyle(
                   color: AppColors.textPrimary,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               )
-            : Icon(icon, color: AppColors.textPrimary, size: 20),
+            : Icon(icon, color: AppColors.textPrimary, size: 19),
       ),
     );
   }

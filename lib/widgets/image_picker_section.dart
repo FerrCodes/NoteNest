@@ -27,35 +27,42 @@ class ImagePickerSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // === SECTION LABEL: PRESET GAMBAR ===
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.selectImage.toUpperCase(),
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
-                letterSpacing: 1.2,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.selectImage.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                  letterSpacing: 1.2,
+                ),
               ),
-            ),
-            Text(
-              '${selectedImages.length}/$maxPhotos',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
+              Text(
+                '${selectedImages.length}/$maxPhotos',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 12),
 
-        // === PRESET GAMBAR ===
+        // === PRESET GAMBAR (FULL-WIDTH SCROLL) ===
+        // Tidak ada Padding di sini — biar scroll sampai tepi layar
         SizedBox(
           height: 80,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ), // padding di DALAM ListView
             itemCount: PresetImages.images.length,
             separatorBuilder: (_, _) => const SizedBox(width: 10),
             itemBuilder: (context, index) {
@@ -118,60 +125,67 @@ class ImagePickerSection extends StatelessWidget {
         const SizedBox(height: 24),
 
         // === SECTION LABEL: UNGGAH FOTO ===
-        Text(
-          AppLocalizations.of(context)!.uploadPhoto.toUpperCase(),
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textSecondary,
-            letterSpacing: 1.2,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            AppLocalizations.of(context)!.uploadPhoto.toUpperCase(),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+              letterSpacing: 1.2,
+            ),
           ),
         ),
         const SizedBox(height: 12),
 
-        // === TOMBOL UNGGAH (muncul kalau < maxPhotos) ===
+        // === TOMBOL UNGGAH ===
         if (canAddMore)
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              _showImageSourceSheet(context);
-            },
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                color: AppColors.cardDark,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add_photo_alternate_outlined,
-                    color: AppColors.textPrimary,
-                    size: 22,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    AppLocalizations.of(context)!.uploadPhoto,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                _showImageSourceSheet(context);
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                decoration: BoxDecoration(
+                  color: AppColors.cardDark,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add_photo_alternate_outlined,
                       color: AppColors.textPrimary,
+                      size: 22,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    Text(
+                      AppLocalizations.of(context)!.uploadPhoto,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
 
-        // === PREVIEW FOTO TERPILIH (HORIZONTAL SCROLL) ===
+        // === PREVIEW FOTO TERPILIH ===
         if (selectedImages.isNotEmpty) ...[
           const SizedBox(height: 16),
           SizedBox(
             height: 120,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: selectedImages.length,
               separatorBuilder: (_, _) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
@@ -196,7 +210,6 @@ class ImagePickerSection extends StatelessWidget {
                           height: 120,
                           child: _buildImage(imagePath),
                         ),
-                        // Tombol hapus (X) di pojok kanan atas
                         Positioned(
                           top: 4,
                           right: 4,

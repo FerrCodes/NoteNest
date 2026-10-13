@@ -130,7 +130,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     _selectedMood = widget.entry?.mood ?? 'Calm';
     _selectedImages = widget.entry?.imageUrls.isNotEmpty == true
         ? List<String>.from(widget.entry!.imageUrls)
-        : [PresetImages.getDefault()];
+        : [];
 
     // Cek draft HANYA kalau mode new (bukan edit)
     if (widget.entry == null) {
@@ -359,25 +359,28 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
           children: [
             // === KONTEN UTAMA ===
             SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 80, 24, 100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // === PILIHAN GAMBAR ===
-                    // === KATEGORI 1: PRESET GAMBAR ===
-                    ImagePickerSection(
-                      selectedImages: _selectedImages,
-                      onImagesChanged: (newList) {
-                        setState(() {
-                          _selectedImages = newList;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 24),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + 67.0,
+                bottom: 100,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // === 1. IMAGE PICKER SECTION (sudah punya padding internal) ===
+                  ImagePickerSection(
+                    selectedImages: _selectedImages,
+                    onImagesChanged: (newList) {
+                      setState(() {
+                        _selectedImages = newList;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
 
-                    // === MOOD SELECTOR ===
-                    Text(
+                  // === 2. MOOD SELECTOR ===
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
                       AppLocalizations.of(context)!.howFeeling,
                       style: TextStyle(
                         fontSize: 14,
@@ -385,21 +388,28 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    MoodSelector(
-                      selectedMood: _selectedMood,
-                      currentMood: widget.entry?.mood,
-                      onMoodSelected: (mood) {
-                        setState(() {
-                          _selectedMood = mood;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 24),
+                  ),
+                  const SizedBox(height: 12),
+                  // MoodSelector juga butuh padding, tapi karena
+                  // MoodSelector punya SingleChildScrollView sendiri, kita bungkus.
+                  MoodSelector(
+                    selectedMood: _selectedMood,
+                    currentMood: widget.entry?.mood,
+                    onMoodSelected: (mood) {
+                      setState(() {
+                        _selectedMood = mood;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
 
-                    // === JUDUL ===
-                    TextField(
+                  // === 3. JUDUL ===
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextField(
                       controller: _titleController,
+                      textAlign: TextAlign.center,
+                      textCapitalization: TextCapitalization.words,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -416,16 +426,22 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         contentPadding: EdgeInsets.zero,
                       ),
                     ),
+                  ),
 
-                    // Divider pemisah
-                    Container(
+                  // === DIVIDER ===
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Container(
                       height: 1,
                       margin: const EdgeInsets.symmetric(vertical: 16),
                       color: AppColors.dividerDark.withValues(alpha: 0.5),
                     ),
+                  ),
 
-                    // === ISI JURNAL ===
-                    ConstrainedBox(
+                  // === 4. ISI JURNAL ===
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ConstrainedBox(
                       constraints: const BoxConstraints(minHeight: 200),
                       child: TextField(
                         controller: _contentController,
@@ -449,126 +465,123 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
 
-            // === TOMBOL CLOSE (KIRI ATAS) ===
+            // === FLOATING HEADER (Back + Pill Judul + Save) ===
             Positioned(
-              top: 16,
+              top: 20,
               left: 16,
-              child: _buildCircleButton(
-                icon: Icons.arrow_back_ios_new,
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  if (_hasUnsavedContent()) {
-                    _showCloseConfirmDialog();
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ),
-
-            // === TOMBOL SAVE/UPDATE (KANAN ATAS) ===
-            Positioned(
-              top: 16,
               right: 16,
-              child: _buildCircleButton(
-                label: isEditing
-                    ? AppLocalizations.of(context)!.update
-                    : AppLocalizations.of(context)!.save,
-                labelColor: AppColors.systemBlue,
-                onTap: () async {
-                  HapticFeedback.mediumImpact();
-
-                  // === VALIDASI ===
-                  final missingFields = <String>[];
-
-                  if (_titleController.text.trim().isEmpty) {
-                    missingFields.add(
-                      AppLocalizations.of(context)!.missingTitle,
-                    );
-                  }
-                  if (_contentController.text.trim().isEmpty) {
-                    missingFields.add(
-                      AppLocalizations.of(context)!.missingContent,
-                    );
-                  }
-                  // Kalau bukan edit dan belum pilih foto dari galeri
-                  // (foto preset selalu ada, jadi kita cek apakah user pakai default)
-                  // Kita tidak cek foto karena preset selalu ada
-
-                  if (missingFields.isNotEmpty) {
-                    _showIncompleteDialog(missingFields);
-                    return;
-                  }
-
-                  // === SIMPAN ===
-                  final today = DateFormat(
-                    'MMM d, yyyy HH:mm',
-                  ).format(DateTime.now());
-
-                  if (isEditing) {
-                    widget.entry!.title = _titleController.text;
-                    widget.entry!.content = _contentController.text;
-                    widget.entry!.mood = _selectedMood;
-                    widget.entry!.imageUrls = _selectedImages;
-                    widget.entry!.lastEdited = DateTime.now();
-                    await _repository.updateJournal(widget.entry!);
-                  } else {
-                    final newEntry = JournalEntry(
-                      title: _titleController.text,
-                      content: _contentController.text,
-                      date: today,
-                      mood: _selectedMood,
-                      imageUrls: _selectedImages,
-                      lastEdited: DateTime.now(),
-                    );
-                    await _repository.addJournal(newEntry);
-                  }
-
-                  await _clearDraft();
-                  if (!context.mounted) return;
-                  HapticFeedback.lightImpact();
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            // === JUDUL MELAYANG DI TENGAH ATAS (PILL) ===
-            Positioned(
-              top: 16,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Tombol Back (Kiri)
+                  _buildCircleButton(
+                    icon: Icons.arrow_back_ios_new,
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      if (_hasUnsavedContent()) {
+                        _showCloseConfirmDialog();
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    },
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+
+                  // Pill Judul (Tengah)
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          isEditing
+                              ? AppLocalizations.of(context)!.editEntry
+                              : AppLocalizations.of(context)!.newEntry,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    isEditing
-                        ? AppLocalizations.of(context)!.editEntry
-                        : AppLocalizations.of(context)!.newEntry,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+
+                  // Tombol Save/Update (Kanan)
+                  _buildCircleButton(
+                    label: isEditing
+                        ? AppLocalizations.of(context)!.update
+                        : AppLocalizations.of(context)!.save,
+                    labelColor: AppColors.systemBlue,
+                    onTap: () async {
+                      HapticFeedback.mediumImpact();
+
+                      // === VALIDASI ===
+                      final missingFields = <String>[];
+                      if (_titleController.text.trim().isEmpty) {
+                        missingFields.add(
+                          AppLocalizations.of(context)!.missingTitle,
+                        );
+                      }
+                      if (_contentController.text.trim().isEmpty) {
+                        missingFields.add(
+                          AppLocalizations.of(context)!.missingContent,
+                        );
+                      }
+
+                      if (missingFields.isNotEmpty) {
+                        _showIncompleteDialog(missingFields);
+                        return;
+                      }
+
+                      // === SIMPAN ===
+                      final today = DateFormat(
+                        'MMM d, yyyy HH:mm',
+                      ).format(DateTime.now());
+
+                      if (isEditing) {
+                        widget.entry!.title = _titleController.text;
+                        widget.entry!.content = _contentController.text;
+                        widget.entry!.mood = _selectedMood;
+                        widget.entry!.imageUrls = _selectedImages;
+                        widget.entry!.lastEdited = DateTime.now();
+                        await _repository.updateJournal(widget.entry!);
+                      } else {
+                        final newEntry = JournalEntry(
+                          title: _titleController.text,
+                          content: _contentController.text,
+                          date: today,
+                          mood: _selectedMood,
+                          imageUrls: _selectedImages,
+                          lastEdited: DateTime.now(),
+                        );
+                        await _repository.addJournal(newEntry);
+                      }
+
+                      await _clearDraft();
+                      if (!context.mounted) return;
+                      HapticFeedback.lightImpact();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
             ),
           ],
@@ -592,8 +605,8 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
       },
       child: Container(
         padding: isLabeled
-            ? const EdgeInsets.symmetric(horizontal: 18, vertical: 10)
-            : const EdgeInsets.all(12),
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
+            : const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isPrimary
               ? AppColors.textPrimary
@@ -613,11 +626,11 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                 label,
                 style: TextStyle(
                   color: labelColor ?? AppColors.textPrimary,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               )
-            : Icon(icon, color: AppColors.textPrimary, size: 20),
+            : Icon(icon, color: AppColors.textPrimary, size: 19),
       ),
     );
   }

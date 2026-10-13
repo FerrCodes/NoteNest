@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
+import '../widgets/settings_group_card.dart';
 import '../widgets/top_banner.dart';
 
 class HomeHeaderScreen extends StatefulWidget {
@@ -67,13 +68,18 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // === KONTEN UTAMA ===
+            // ==========================================
+            // KONTEN UTAMA
+            // ==========================================
             ListView(
-              padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + 85,
+                bottom: 24,
+              ),
               children: [
                 // === DESKRIPSI ===
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     AppLocalizations.of(context)!.headerScreenDesc,
                     style: TextStyle(
@@ -86,116 +92,123 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                 const SizedBox(height: 24),
 
                 // === SECTION: NAMA KAMU ===
-                SectionTitle(title: AppLocalizations.of(context)!.userName),
-                const SizedBox(height: 12),
-                _buildUserNameField(),
+                _buildSectionTitle(AppLocalizations.of(context)!.userName),
+                _buildGroupCard([_buildUserNameField()]),
                 const SizedBox(height: 32),
 
                 // === SECTION: TAMPILKAN ===
-                SectionTitle(
-                  title: AppLocalizations.of(context)!.displaySection,
+                _buildSectionTitle(
+                  AppLocalizations.of(context)!.displaySection,
                 ),
-                const SizedBox(height: 12),
-                _buildHeaderToggle(
-                  icon: Icons.calendar_today_outlined,
-                  title: AppLocalizations.of(context)!.showDate,
-                  subtitle: AppLocalizations.of(context)!.showDateDesc,
-                  value: _showDate,
-                  onChanged: (value) async {
-                    HapticFeedback.selectionClick();
-                    final settingsBox = Hive.box('settingsBox');
-                    await settingsBox.put('showDate', value);
-                    setState(() => _showDate = value);
-                  },
-                ),
-                const SizedBox(height: 8),
-                _buildHeaderToggle(
-                  icon: Icons.access_time,
-                  title: AppLocalizations.of(context)!.showTime,
-                  subtitle: AppLocalizations.of(context)!.showTimeDesc,
-                  value: _showTime,
-                  onChanged: (value) async {
-                    HapticFeedback.selectionClick();
-                    final settingsBox = Hive.box('settingsBox');
-                    await settingsBox.put('showTime', value);
-                    setState(() => _showTime = value);
-                  },
-                ),
-                const SizedBox(height: 8),
-                _buildHeaderToggle(
-                  icon: Icons.wb_sunny_outlined,
-                  title: AppLocalizations.of(context)!.showWeather,
-                  subtitle: AppLocalizations.of(context)!.showWeatherDesc,
-                  value: _showWeather,
-                  onChanged: (value) async {
-                    HapticFeedback.selectionClick();
+                _buildGroupCard([
+                  _buildHeaderToggle(
+                    icon: Icons.calendar_today_outlined,
+                    title: AppLocalizations.of(context)!.showDate,
+                    subtitle: AppLocalizations.of(context)!.showDateDesc,
+                    value: _showDate,
+                    onChanged: (value) async {
+                      HapticFeedback.selectionClick();
+                      final settingsBox = Hive.box('settingsBox');
+                      await settingsBox.put('showDate', value);
+                      setState(() => _showDate = value);
+                    },
+                  ),
+                  _buildHeaderToggle(
+                    icon: Icons.access_time,
+                    title: AppLocalizations.of(context)!.showTime,
+                    subtitle: AppLocalizations.of(context)!.showTimeDesc,
+                    value: _showTime,
+                    onChanged: (value) async {
+                      HapticFeedback.selectionClick();
+                      final settingsBox = Hive.box('settingsBox');
+                      await settingsBox.put('showTime', value);
+                      setState(() => _showTime = value);
+                    },
+                  ),
+                  _buildHeaderToggle(
+                    icon: Icons.wb_sunny_outlined,
+                    title: AppLocalizations.of(context)!.showWeather,
+                    subtitle: AppLocalizations.of(context)!.showWeatherDesc,
+                    value: _showWeather,
+                    onChanged: (value) async {
+                      HapticFeedback.selectionClick();
 
-                    // Ambil localization SEBELUM await
-                    final l10n = AppLocalizations.of(context)!;
+                      // Ambil localization SEBELUM await
+                      final l10n = AppLocalizations.of(context)!;
 
-                    final settingsBox = Hive.box('settingsBox');
-                    await settingsBox.put('showWeather', value);
-                    setState(() => _showWeather = value);
+                      final settingsBox = Hive.box('settingsBox');
+                      await settingsBox.put('showWeather', value);
+                      setState(() => _showWeather = value);
 
-                    if (value) {
-                      final granted = await _checkLocationPermission();
-                      if (!granted && mounted) {
-                        await settingsBox.put('showWeather', false);
-                        if (!mounted) return;
-                        setState(() => _showWeather = false);
-                        _showSnackBar(
-                          l10n.permissionDenied,
-                          type: BannerType.error,
-                        );
+                      if (value) {
+                        final granted = await _checkLocationPermission();
+                        if (!granted && mounted) {
+                          await settingsBox.put('showWeather', false);
+                          if (!mounted) return;
+                          setState(() => _showWeather = false);
+                          _showSnackBar(
+                            l10n.permissionDenied,
+                            type: BannerType.error,
+                          );
+                        }
                       }
-                    }
-                  },
-                ),
+                    },
+                  ),
+                ]),
                 const SizedBox(height: 40),
               ],
             ),
 
-            // === TOMBOL BACK (KIRI ATAS) ===
+            // ==========================================
+            // FLOATING HEADER (Back + Pill Judul + Spacer)
+            // ==========================================
             Positioned(
-              top: 12,
-              left: 20,
-              child: _buildCircleButton(
-                icon: Icons.arrow_back_ios_new,
-                onTap: () => Navigator.pop(context),
-              ),
-            ),
+              top: 20,
+              left: 16,
+              right: 16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Tombol Back
+                  _buildCircleButton(
+                    icon: Icons.arrow_back_ios_new,
+                    onTap: () => Navigator.pop(context),
+                  ),
 
-            // === PILL JUDUL ===
-            Positioned(
-              top: 12,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+                  // Pill Judul
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.headerSection,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.headerSection,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+
+                  // Spacer Kanan (seukuran tombol back)
+                  const SizedBox(width: 47),
+                ],
               ),
             ),
           ],
@@ -204,6 +217,29 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
     );
   }
 
+  // ==========================================
+  // HELPER: SECTION TITLE
+  // ==========================================
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      child: SectionTitle(title: title),
+    );
+  }
+
+  // ==========================================
+  // HELPER: GROUP CARD
+  // ==========================================
+  Widget _buildGroupCard(List<Widget> children) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SettingsGroupCard(children: children),
+    );
+  }
+
+  // ==========================================
+  // WIDGET: HEADER TOGGLE
+  // ==========================================
   Widget _buildHeaderToggle({
     required IconData icon,
     required String title,
@@ -211,12 +247,8 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
           Container(
@@ -262,13 +294,12 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
     );
   }
 
+  // ==========================================
+  // WIDGET: USER NAME FIELD
+  // ==========================================
   Widget _buildUserNameField() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           Container(
@@ -295,7 +326,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                   color: AppColors.textSecondary.withValues(alpha: 0.5),
                   fontSize: 15,
                 ),
-                counterText: '', // sembunyikan counter
+                counterText: '',
                 border: InputBorder.none,
               ),
               onChanged: (value) async {
@@ -309,6 +340,9 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
     );
   }
 
+  // ==========================================
+  // TOMBOL BULAT
+  // ==========================================
   Widget _buildCircleButton({
     required IconData icon,
     required VoidCallback onTap,
@@ -331,7 +365,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
             ),
           ],
         ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 18),
+        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }

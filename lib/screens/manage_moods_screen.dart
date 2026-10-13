@@ -5,6 +5,7 @@ import '../theme/app_colors.dart';
 import '../repositories/mood_repository.dart';
 import '../models/custom_mood.dart';
 import '../widgets/section_title.dart';
+import '../widgets/settings_group_card.dart';
 import '../widgets/top_banner.dart';
 
 class ManageMoodsScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
   final ValueNotifier<String> _selectedColorNotifier = ValueNotifier<String>(
     '0xFF0A84FF',
   );
-  String? _nameError; // null = tidak ada error
+  String? _nameError;
 
   static const List<String> _colorOptions = [
     '0xFF0A84FF', // Blue
@@ -62,7 +63,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return SafeArea(
-              // <-- TAMBAHKAN SAFEAREA DI SINI
               child: Padding(
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -105,7 +105,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                           ),
                           const SizedBox(height: 16),
 
-                          // === TEXT FIELD dengan ERROR INLINE ===
+                          // TextField dengan error inline
                           TextField(
                             controller: _moodNameController,
                             maxLength: 20,
@@ -115,7 +115,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                               fontSize: 15,
                             ),
                             onChanged: (value) {
-                              // Rebuild bottom sheet supaya border merah hilang
                               if (_nameError != null) {
                                 setSheetState(() => _nameError = null);
                               }
@@ -290,13 +289,11 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
   ) async {
     final trimmed = label.trim();
 
-    // Validasi: nama kosong
     if (trimmed.isEmpty) {
       setSheetState(() => _nameError = 'Nama mood tidak boleh kosong');
       return;
     }
 
-    // Validasi: nama sudah dipakai
     if (_repository.isLabelTaken(trimmed)) {
       HapticFeedback.heavyImpact();
       setSheetState(() {
@@ -305,7 +302,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
       return;
     }
 
-    // Validasi: penuh
     if (_repository.isAtMaxCapacity) {
       HapticFeedback.heavyImpact();
       setSheetState(() {
@@ -314,7 +310,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
       return;
     }
 
-    // Tambahkan
     final success = await _repository.addCustomMood(
       trimmed,
       colorHex: _selectedColorNotifier.value,
@@ -327,7 +322,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
       return;
     }
 
-    // Cek sheetContext masih mounted atau tidak
     if (!sheetContext.mounted) return;
 
     HapticFeedback.mediumImpact();
@@ -378,317 +372,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgDark,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // === KONTEN UTAMA ===
-            ValueListenableBuilder(
-              valueListenable: _repository.listenable,
-              builder: (context, box, _) {
-                final moods = _repository.getAllCustomMoods();
-
-                return ListView(
-                  padding: const EdgeInsets.fromLTRB(24, 80, 24, 100),
-                  children: [
-                    // === DESKRIPSI ===
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Text(
-                        AppLocalizations.of(context)!.manageMoodsDesc,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textSecondary,
-                          height: 1.5,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // === SECTION: CUSTOM MOODS ===
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SectionTitle(
-                          title: AppLocalizations.of(context)!.customMoods,
-                        ),
-                        Text(
-                          '${moods.length}/10',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-
-                    if (moods.isEmpty)
-                      _buildEmptyState()
-                    else
-                      ...moods.map((mood) => _buildMoodItem(mood)),
-                    // === SECTION: ARSIP (kalau ada) ===
-                    if (_repository.getArchivedMoods().isNotEmpty) ...[
-                      const SizedBox(height: 32),
-                      SectionTitle(
-                        title: AppLocalizations.of(context)!.archive,
-                      ),
-                      const SizedBox(height: 12),
-                      ..._repository.getArchivedMoods().map(
-                        (mood) => _buildMoodItem(mood, isArchived: true),
-                      ),
-                    ],
-                  ],
-                );
-              },
-            ),
-
-            // === TOMBOL TAMBAH (KANAN BAWAH) ===
-            Positioned(
-              bottom: 1 + MediaQuery.of(context).padding.bottom,
-              right: 40,
-              child: GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  _showAddMoodSheet();
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.systemBlue,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.systemBlue.withValues(alpha: 0.4),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(Icons.add, color: Colors.white, size: 26),
-                ),
-              ),
-            ),
-
-            // === TOMBOL CLOSE (KIRI ATAS) ===
-            Positioned(
-              top: 12,
-              left: 20,
-              child: _buildCircleButton(
-                icon: Icons.arrow_back_ios_new,
-                onTap: () => Navigator.pop(context),
-              ),
-            ),
-
-            // === PILL JUDUL ===
-            Positioned(
-              top: 12,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.manageMoods,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMoodItem(CustomMood mood, {bool isArchived = false}) {
-    final color = isArchived
-        ? AppColors.textSecondary
-        : _hexToColor(mood.colorHex);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            // === IKON MOOD ===
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(Icons.mood_outlined, color: color, size: 20),
-            ),
-            const SizedBox(width: 16),
-
-            // === NAMA MOOD ===
-            Expanded(
-              child: Text(
-                mood.label,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: isArchived
-                      ? AppColors.textSecondary
-                      : AppColors.textPrimary,
-                ),
-              ),
-            ),
-
-            // === TOMBOL AKSI ===
-            if (isArchived) ...[
-              // Mood diarsipkan: Restore + Hapus Permanen
-              GestureDetector(
-                onTap: () async {
-                  HapticFeedback.selectionClick();
-                  await _repository.restoreCustomMood(mood);
-                  if (!mounted) return;
-                  _showSnackBar(AppLocalizations.of(context)!.moodRestored);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.restore,
-                    color: AppColors.systemBlue,
-                    size: 20,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  _confirmPermanentDelete(mood);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.delete_forever,
-                    color: AppColors.systemRed,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ] else ...[
-              // Mood aktif: Arsip + Hapus
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  _confirmArchiveMood(mood);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.archive_outlined,
-                    color: AppColors.textSecondary,
-                    size: 20,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  _confirmPermanentDelete(mood);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.delete_forever,
-                    color: AppColors.systemRed,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  // === EMPTY STATE ===
-  Widget _buildEmptyState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-      decoration: BoxDecoration(
-        color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          Text(
-            AppLocalizations.of(context)!.noCustomMoods,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
-  // === TOMBOL BULAT ===
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
-      ),
-    );
-  }
-
   void _confirmPermanentDelete(CustomMood mood) {
     showDialog(
       context: context,
@@ -732,13 +415,331 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
     );
   }
 
-  // === SNACKBAR HELPER ===
-  void _showSnackBar(String message, {BannerType type = BannerType.success}) {
-    TopBanner.show(context, message: message, type: type);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgDark,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // ==========================================
+            // KONTEN UTAMA
+            // ==========================================
+            ValueListenableBuilder(
+              valueListenable: _repository.listenable,
+              builder: (context, box, _) {
+                final moods = _repository.getAllCustomMoods();
+                final archivedMoods = _repository.getArchivedMoods();
+
+                return ListView(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 85,
+                    bottom: 100,
+                  ),
+                  children: [
+                    // === DESKRIPSI ===
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        AppLocalizations.of(context)!.manageMoodsDesc,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.textSecondary,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // === SECTION: MOOD KUSTOM ===
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SectionTitle(
+                            title: AppLocalizations.of(context)!.customMoods,
+                          ),
+                          Text(
+                            '${moods.length}/10',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (moods.isEmpty)
+                      _buildEmptyState()
+                    else
+                      _buildGroupCard(
+                        moods.map((m) => _buildMoodItem(m)).toList(),
+                      ),
+                    const SizedBox(height: 32),
+
+                    // === SECTION: ARSIP ===
+                    if (archivedMoods.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                        child: SectionTitle(
+                          title: AppLocalizations.of(context)!.archive,
+                        ),
+                      ),
+                      _buildGroupCard(
+                        archivedMoods
+                            .map((m) => _buildMoodItem(m, isArchived: true))
+                            .toList(),
+                      ),
+                    ],
+                  ],
+                );
+              },
+            ),
+
+            // ==========================================
+            // FLOATING HEADER (Back + Pill Judul + Tombol +)
+            // ==========================================
+            Positioned(
+              top: 20,
+              left: 16,
+              right: 16,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Tombol Back
+                  _buildCircleButton(
+                    icon: Icons.arrow_back_ios_new,
+                    onTap: () => Navigator.pop(context),
+                  ),
+
+                  // Pill Judul
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardDark.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.manageMoods,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Tombol Tambah (+)
+                  _buildCircleButton(icon: Icons.add, onTap: _showAddMoodSheet),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
+  // ==========================================
+  // HELPER: GROUP CARD
+  // ==========================================
+  Widget _buildGroupCard(List<Widget> children) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SettingsGroupCard(children: children),
+    );
+  }
+
+  // ==========================================
+  // ITEM MOOD (di dalam group card)
+  // ==========================================
+  Widget _buildMoodItem(CustomMood mood, {bool isArchived = false}) {
+    final color = isArchived
+        ? AppColors.textSecondary
+        : _hexToColor(mood.colorHex);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
+        children: [
+          // Ikon mood
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.mood_outlined, color: color, size: 20),
+          ),
+          const SizedBox(width: 16),
+
+          // Nama mood
+          Expanded(
+            child: Text(
+              mood.label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: isArchived
+                    ? AppColors.textSecondary
+                    : AppColors.textPrimary,
+              ),
+            ),
+          ),
+
+          // Tombol aksi
+          if (isArchived) ...[
+            GestureDetector(
+              onTap: () async {
+                HapticFeedback.selectionClick();
+                await _repository.restoreCustomMood(mood);
+                if (!mounted) return;
+                _showSnackBar(AppLocalizations.of(context)!.moodRestored);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.restore,
+                  color: AppColors.systemBlue,
+                  size: 20,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                _confirmPermanentDelete(mood);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.delete_forever,
+                  color: AppColors.systemRed,
+                  size: 20,
+                ),
+              ),
+            ),
+          ] else ...[
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                _confirmArchiveMood(mood);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.archive_outlined,
+                  color: AppColors.textSecondary,
+                  size: 20,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                _confirmPermanentDelete(mood);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.delete_forever,
+                  color: AppColors.systemRed,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // EMPTY STATE
+  // ==========================================
+  Widget _buildEmptyState() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SettingsGroupCard(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+            child: Center(
+              child: Text(
+                AppLocalizations.of(context)!.noCustomMoods,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // TOMBOL BULAT
+  // ==========================================
+  Widget _buildCircleButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.cardDark.withValues(alpha: 0.9),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Icon(icon, color: AppColors.textPrimary, size: 20),
+      ),
+    );
+  }
+
+  // ==========================================
+  // HELPER: HEX TO COLOR
+  // ==========================================
   Color _hexToColor(String hex) {
     final cleaned = hex.replaceAll('0x', '').replaceAll('#', '');
     return Color(int.parse('FF$cleaned', radix: 16));
+  }
+
+  // ==========================================
+  // SNACKBAR
+  // ==========================================
+  void _showSnackBar(String message, {BannerType type = BannerType.success}) {
+    TopBanner.show(context, message: message, type: type);
   }
 }
