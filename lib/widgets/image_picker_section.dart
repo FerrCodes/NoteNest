@@ -5,6 +5,8 @@ import '../utils/preset_images.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../screens/photo_viewer_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../utils/permission_helper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerSection extends StatelessWidget {
@@ -331,6 +333,13 @@ class ImagePickerSection extends StatelessWidget {
     BuildContext context, {
     required bool fromCamera,
   }) async {
+    // Cek izin dulu
+    final permission = fromCamera ? Permission.camera : Permission.photos;
+    final granted = await checkPermissionWithDialog(context, permission);
+
+    if (!granted) return;
+    if (!context.mounted) return;
+
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile = await picker.pickImage(

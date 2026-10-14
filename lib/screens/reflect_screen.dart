@@ -112,6 +112,10 @@ class _ReflectScreenState extends State<ReflectScreen> {
         decoration: BoxDecoration(
           color: AppColors.cardDark,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.15),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.4),
@@ -123,7 +127,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // === ITEM BARU: HEADER BERANDA ===
+            // === HEADER BERANDA ===
             _buildDropdownItem(
               icon: Icons.dashboard_customize_outlined,
               label: AppLocalizations.of(context)!.headerSection,
@@ -138,14 +142,8 @@ class _ReflectScreenState extends State<ReflectScreen> {
                 });
               },
             ),
-
             // Divider
-            Container(
-              height: 1,
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              color: AppColors.dividerDark.withValues(alpha: 0.5),
-            ),
-
+            Divider(color: AppColors.dividerLight, height: 1, thickness: 1),
             // === ITEM: KELOLA MOOD ===
             _buildDropdownItem(
               icon: Icons.mood_outlined,

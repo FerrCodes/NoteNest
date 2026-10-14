@@ -237,6 +237,17 @@
   "guidePermissionsTitle": "App Permissions",
   "guidePermissionsDesc": "In Settings → Privacy, manage app permissions like notifications, location, camera, and gallery.",
   "guideFooter": "Have fun exploring NoteNest! ✨",
+  "generalSection": "General",
+  "appSection": "App",
+  "languageSystem": "System (Default)",
+  "permissionBlockedTitle": "Permission Blocked",
+  "permissionBlockedDesc": "The permission request was denied after being rejected twice. To enable it, open the Permissions page.",
+  "openPermissionPage": "See it now",
+  "aboutAppStorySection": "Why was this application created?",
+  "aboutAppStoryPurpose": "Purpose:",
+  "aboutAppStoryPurposeText": "Write your long paragraph here about the purpose of NoteNest.",
+  "aboutAppStoryOutcome": "Outcome:",
+  "aboutAppStoryOutcomeText": "Write your long paragraph here about the outcome you want to achieve.",
   
   "@journalsWithMood": {
     "placeholders": {

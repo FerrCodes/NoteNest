@@ -1385,7 +1385,7 @@ abstract class AppLocalizations {
   /// No description provided for @guideDesc.
   ///
   /// In en, this message translates to:
-  /// **'Some NoteNest features are a bit hidden. Let\'s explore them together! 🚀'**
+  /// **'Some NoteNest features are a bit hidden. Let\'s explore them together!'**
   String get guideDesc;
 
   /// No description provided for @guideHiddenFeatures.
@@ -1519,6 +1519,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Have fun exploring NoteNest! ✨'**
   String get guideFooter;
+
+  /// No description provided for @generalSection.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get generalSection;
+
+  /// No description provided for @appSection.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get appSection;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System (Default)'**
+  String get languageSystem;
+
+  /// No description provided for @permissionBlockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Blocked'**
+  String get permissionBlockedTitle;
+
+  /// No description provided for @permissionBlockedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The permission request was denied after being rejected twice. To enable it, open the Permissions page.'**
+  String get permissionBlockedDesc;
+
+  /// No description provided for @openPermissionPage.
+  ///
+  /// In en, this message translates to:
+  /// **'See it now'**
+  String get openPermissionPage;
+
+  /// No description provided for @aboutAppStorySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Why was this application created?'**
+  String get aboutAppStorySection;
+
+  /// No description provided for @aboutAppStoryPurpose.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose:'**
+  String get aboutAppStoryPurpose;
+
+  /// No description provided for @aboutAppStoryPurposeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your long paragraph here about the purpose of NoteNest.'**
+  String get aboutAppStoryPurposeText;
+
+  /// No description provided for @aboutAppStoryOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Outcome:'**
+  String get aboutAppStoryOutcome;
+
+  /// No description provided for @aboutAppStoryOutcomeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your long paragraph here about the outcome you want to achieve.'**
+  String get aboutAppStoryOutcomeText;
 
   /// No description provided for @readingTime.
   ///

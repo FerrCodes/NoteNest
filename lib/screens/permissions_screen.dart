@@ -5,7 +5,6 @@ import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
-import '../widgets/top_banner.dart';
 
 class PermissionsScreen extends StatefulWidget {
   const PermissionsScreen({super.key});
@@ -63,52 +62,8 @@ class _PermissionsScreenState extends State<PermissionsScreen>
 
   Future<void> _handleTap(String key) async {
     HapticFeedback.selectionClick();
-
-    final currentStatus = _statuses[key] ?? PermissionStatus.denied;
-
-    // Kalau sudah granted, permanen ditolak, atau restricted → buka Settings
-    if (currentStatus.isGranted ||
-        currentStatus.isPermanentlyDenied ||
-        currentStatus.isRestricted) {
-      await openAppSettings();
-      return;
-    }
-
-    // Ambil permission object
-    Permission permission;
-    switch (key) {
-      case 'notification':
-        permission = Permission.notification;
-        break;
-      case 'location':
-        permission = Permission.locationWhenInUse;
-        break;
-      case 'camera':
-        permission = Permission.camera;
-        break;
-      case 'gallery':
-        permission = Permission.photos;
-        break;
-      default:
-        return;
-    }
-
-    // Minta izin
-    final result = await permission.request();
-
-    if (!mounted) return;
-
-    if (result.isGranted) {
-      _showSnackBar(
-        AppLocalizations.of(context)!.permissionGranted,
-        type: BannerType.success,
-      );
-    } else if (result.isPermanentlyDenied) {
-      await openAppSettings();
-    }
-
-    // Refresh status
-    _loadPermissionStatuses();
+    // Semua tap → buka Settings HP (App Info)
+    await openAppSettings();
   }
 
   String _getTitle(BuildContext context, String key) {
@@ -430,9 +385,5 @@ class _PermissionsScreenState extends State<PermissionsScreen>
         child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
-  }
-
-  void _showSnackBar(String message, {BannerType type = BannerType.success}) {
-    TopBanner.show(context, message: message, type: type);
   }
 }

@@ -94,28 +94,61 @@ class _AboutScreenState extends State<AboutScreen> {
                 ]),
                 const SizedBox(height: 32),
 
-                // === SECTION: FITUR UTAMA ===
-                _buildSectionTitle(AppLocalizations.of(context)!.aboutFeatures),
+                // === SECTION: Tujuan:, Hasil yang terjadi: ===
+                _buildSectionTitle(
+                  AppLocalizations.of(context)!.aboutAppStorySection,
+                ),
                 _buildGroupCard([
-                  _buildFeatureItem(
-                    Icons.edit_note,
-                    AppLocalizations.of(context)!.aboutFeature1,
-                  ),
-                  _buildFeatureItem(
-                    Icons.photo_camera_outlined,
-                    AppLocalizations.of(context)!.aboutFeature2,
-                  ),
-                  _buildFeatureItem(
-                    Icons.mood_outlined,
-                    AppLocalizations.of(context)!.aboutFeature3,
-                  ),
-                  _buildFeatureItem(
-                    Icons.bar_chart_outlined,
-                    AppLocalizations.of(context)!.aboutFeature4,
-                  ),
-                  _buildFeatureItem(
-                    Icons.language_outlined,
-                    AppLocalizations.of(context)!.aboutFeature5,
+                  // === KONTEN STORY ===
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // === TUJUAN ===
+                        Text(
+                          AppLocalizations.of(context)!.aboutAppStoryPurpose,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 255, 239, 159),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.aboutAppStoryPurposeText,
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                            height: 1.6,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // === HASIL YANG TERJADI ===
+                        Text(
+                          AppLocalizations.of(context)!.aboutAppStoryOutcome,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 107, 178, 248),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.aboutAppStoryOutcomeText,
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                            height: 1.6,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ]),
                 const SizedBox(height: 32),
@@ -284,38 +317,6 @@ class _AboutScreenState extends State<AboutScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SettingsGroupCard(children: children),
-    );
-  }
-
-  // ==========================================
-  // WIDGET: FITUR ITEM (di dalam group card)
-  // ==========================================
-  Widget _buildFeatureItem(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.textPrimary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: AppColors.textPrimary, size: 20),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 14,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

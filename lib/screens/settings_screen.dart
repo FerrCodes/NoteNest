@@ -13,9 +13,12 @@ import '../widgets/setting_item.dart';
 import '../widgets/settings_group_card.dart';
 import '../theme/app_colors.dart';
 import 'about_screen.dart';
-import '../utils/slide_route.dart';
-import 'permissions_screen.dart';
 import 'guide_screen.dart';
+import 'permissions_screen.dart';
+import '../utils/slide_route.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../utils/permission_helper.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,11 +28,14 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool _isFeedbackOptionsExpanded = false;
   bool _reminderEnabled = false;
+  bool _isLanguageMenuOpen = false;
   TimeOfDay _reminderTime = const TimeOfDay(hour: 20, minute: 0);
   final TextEditingController _reminderMessageController =
       TextEditingController();
   final TextEditingController _feedbackController = TextEditingController();
+  final GlobalKey _languageItemKey = GlobalKey();
 
   @override
   void initState() {
@@ -68,31 +74,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // === KONTEN UTAMA ===
+            // ==========================================
+            // KONTEN UTAMA
+            // ==========================================
             ListView(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).padding.top + 85,
                 bottom: 24,
               ),
               children: [
-                // === SECTION BAHASA ===
-                _buildSectionTitle(AppLocalizations.of(context)!.language),
-                _buildGroupCard([_buildLanguageSelector()]),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
-                  child: Text(
-                    AppLocalizations.of(context)!.languageDesc,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                      height: 1.5,
-                    ),
-                  ),
+                // ==========================================
+                // SECTION: GENERAL
+                // ==========================================
+                _buildSectionTitle(
+                  AppLocalizations.of(context)!.generalSection,
                 ),
-                const SizedBox(height: 32),
-                // === SECTION REMINDER ===
-                _buildSectionTitle(AppLocalizations.of(context)!.reminder),
                 _buildGroupCard([
+                  _buildLanguageSelector(),
                   _buildReminderToggle(),
                   if (_reminderEnabled) ...[
                     _buildReminderTime(),
@@ -100,47 +98,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildTestNotification(),
                   ],
                 ]),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
-                  child: Text(
-                    AppLocalizations.of(context)!.dailyReminderDesc,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 32),
-                // === SECTION DATA ===
-                _buildSectionTitle(AppLocalizations.of(context)!.data),
-                _buildGroupCard([
-                  SettingItem(
-                    icon: Icons.ios_share,
-                    title: AppLocalizations.of(context)!.exportJournals,
-                    onTap: _exportJournals,
-                  ),
-                ]),
-                const SizedBox(height: 32),
-                // === SECTION PRIVASI ===
-                _buildSectionTitle(
-                  AppLocalizations.of(context)!.permissionsSection,
-                ),
-                _buildGroupCard([
-                  SettingItem(
-                    icon: Icons.android,
-                    title: AppLocalizations.of(context)!.permissionsTitle,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        SlideRoute(page: const PermissionsScreen()),
-                      );
-                    },
-                  ),
-                ]),
-                const SizedBox(height: 32),
-                // === SECTION ABOUT ===
-                _buildSectionTitle(AppLocalizations.of(context)!.about),
+
+                // ==========================================
+                // SECTION: APP
+                // ==========================================
+                _buildSectionTitle(AppLocalizations.of(context)!.appSection),
                 _buildGroupCard([
                   SettingItem(
                     icon: Icons.menu_book_outlined,
@@ -153,9 +116,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingItem(
+                    icon: Icons.android,
+                    title: AppLocalizations.of(context)!.permissionsTitle,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        SlideRoute(page: const PermissionsScreen()),
+                      );
+                    },
+                  ),
+                  SettingItem(
                     icon: Icons.info_outline,
                     title: AppLocalizations.of(context)!.aboutApp,
-                    subtitle: AppLocalizations.of(context)!.version,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -171,10 +143,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ]),
-                const SizedBox(height: 40),
-                // === DANGER ZONE ===
+                const SizedBox(height: 32),
+
+                // ==========================================
+                // SECTION: DATA
+                // ==========================================
+                _buildSectionTitle(AppLocalizations.of(context)!.data),
+                _buildGroupCard([
+                  SettingItem(
+                    icon: Icons.ios_share,
+                    title: AppLocalizations.of(context)!.exportJournals,
+                    onTap: _exportJournals,
+                  ),
+                ]),
+                const SizedBox(height: 32),
+
+                // ==========================================
+                // SECTION: DANGER ZONE
+                // ==========================================
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
                   child: Row(
                     children: [
                       Text(
@@ -189,7 +177,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
                 _buildGroupCard([
                   SettingItem(
                     icon: Icons.restore_outlined,
@@ -204,18 +191,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     isDestructive: true,
                   ),
                 ]),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
-                  child: Text(
-                    AppLocalizations.of(context)!.dangerZoneDesc,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // === FOOTER ===
+
+                // ==========================================
+                // FOOTER
+                // ==========================================
+                const SizedBox(height: 32),
                 Center(
                   child: Text(
                     AppLocalizations.of(context)!.madeWith,
@@ -230,7 +210,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
 
-            // === FLOATING HEADER ===
+            // ==========================================
+            // FLOATING HEADER
+            // ==========================================
             Positioned(
               top: 20,
               left: 16,
@@ -281,7 +263,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === HELPER: SECTION TITLE ===
+  // ==========================================
+  // HELPER: SECTION TITLE
+  // ==========================================
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
@@ -289,7 +273,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === HELPER: GROUP CARD ===
+  // ==========================================
+  // HELPER: GROUP CARD
+  // ==========================================
   Widget _buildGroupCard(List<Widget> children) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -297,7 +283,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === TOMBOL BULAT ===
+  // ==========================================
+  // TOMBOL BULAT
+  // ==========================================
   Widget _buildCircleButton({
     required IconData icon,
     required VoidCallback onTap,
@@ -325,52 +313,93 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === LANGUAGE SELECTOR (TANPA CARD) ===
+  // ==========================================
+  // LANGUAGE SELECTOR (COMPACT)
+  // ==========================================
   Widget _buildLanguageSelector() {
     final settingsBox = Hive.box('settingsBox');
-    final currentLang = settingsBox.get('languageCode', defaultValue: 'en');
+    final currentLang = settingsBox.get('languageCode', defaultValue: 'system');
 
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          Expanded(child: _buildLangOption('en', 'English', currentLang)),
-          const SizedBox(width: 8),
-          Expanded(child: _buildLangOption('id', 'Indonesia', currentLang)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLangOption(String code, String label, String currentLang) {
-    final isSelected = currentLang == code;
     return GestureDetector(
-      onTap: () async {
-        HapticFeedback.selectionClick();
-        final settingsBox = Hive.box('settingsBox');
-        await settingsBox.put('languageCode', code);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.textPrimary : AppColors.bgDark,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? AppColors.bgDark : AppColors.textPrimary,
-              fontSize: 14,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      key: _languageItemKey,
+      onTap: () => _showLanguageMenu(context),
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            // Ikon
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.textPrimary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.language_outlined,
+                color: AppColors.textPrimary,
+                size: 20,
+              ),
             ),
-          ),
+            const SizedBox(width: 16),
+
+            // Label + Subtitle
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.language,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _getLanguageLabel(context, currentLang),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Chevron (dengan animasi rotasi)
+            AnimatedRotation(
+              turns: _isLanguageMenuOpen ? 0.5 : 0,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutCubic,
+              child: Icon(
+                Icons.keyboard_arrow_down,
+                size: 27,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // === REMINDER: TOGGLE (TANPA CARD) ===
+  String _getLanguageLabel(BuildContext context, String langCode) {
+    switch (langCode) {
+      case 'system':
+        return AppLocalizations.of(context)!.languageSystem;
+      case 'en':
+        return 'English';
+      case 'id':
+        return 'Indonesia';
+      default:
+        return 'System';
+    }
+  }
+
+  // ==========================================
+  // REMINDER TOGGLE
+  // ==========================================
   Widget _buildReminderToggle() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -390,19 +419,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.dailyReminder,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-              ],
+            child: Text(
+              AppLocalizations.of(context)!.dailyReminder,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
           Switch(
@@ -419,7 +442,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === REMINDER: TIME (TANPA CARD) ===
+  // ==========================================
+  // REMINDER: TIME
+  // ==========================================
   Widget _buildReminderTime() {
     return GestureDetector(
       onTap: () async {
@@ -465,6 +490,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }
         }
       },
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
@@ -512,7 +538,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === REMINDER: MESSAGE (TANPA CARD) ===
+  // ==========================================
+  // REMINDER: MESSAGE
+  // ==========================================
   Widget _buildReminderMessage() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -583,7 +611,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === REMINDER: TEST (TANPA CARD) ===
+  // ==========================================
+  // REMINDER: TEST NOTIFICATION
+  // ==========================================
   Widget _buildTestNotification() {
     return GestureDetector(
       onTap: () async {
@@ -615,26 +645,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.testNotification,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.systemBlue,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    AppLocalizations.of(context)!.testNotificationDesc,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
+              child: Text(
+                AppLocalizations.of(context)!.testNotification,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.systemBlue,
+                ),
               ),
             ),
             Icon(
@@ -648,7 +665,94 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === FUNGSI EXPORT ===
+  Future<void> _showLanguageMenu(BuildContext context) async {
+    HapticFeedback.selectionClick();
+
+    final settingsBox = Hive.box('settingsBox');
+    final currentLang = settingsBox.get('languageCode', defaultValue: 'system');
+
+    // Dapatkan posisi item Bahasa via GlobalKey
+    final RenderBox? button =
+        _languageItemKey.currentContext?.findRenderObject() as RenderBox?;
+    if (button == null) return;
+
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final Offset buttonPosition = button.localToGlobal(
+      Offset.zero,
+      ancestor: overlay,
+    );
+
+    setState(() => _isLanguageMenuOpen = true);
+
+    final result = await showMenu<String>(
+      context: context,
+      color: AppColors.cardDark,
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: AppColors.dividerLight, width: 1),
+      ),
+      position: RelativeRect.fromLTRB(
+        buttonPosition.dx + button.size.width - 200, // popover lebar 200px
+        // Atas popover: tepat di bawah item Bahasa
+        buttonPosition.dy + button.size.height - 8,
+        // Kanan popover
+        25,
+        // Bawah popover
+        0,
+      ),
+      items: [
+        _buildLanguageMenuItem(
+          'system',
+          AppLocalizations.of(context)!.languageSystem,
+          currentLang,
+        ),
+        _buildLanguageMenuItem('en', 'English', currentLang),
+        _buildLanguageMenuItem('id', 'Indonesia', currentLang),
+      ],
+    );
+    if (mounted) {
+      setState(() => _isLanguageMenuOpen = false);
+    }
+    if (result != null && result != currentLang) {
+      await settingsBox.put('languageCode', result);
+      if (!mounted) return;
+      HapticFeedback.mediumImpact();
+    }
+  }
+
+  PopupMenuItem<String> _buildLanguageMenuItem(
+    String value,
+    String label,
+    String currentLang,
+  ) {
+    final isSelected = value == currentLang;
+    return PopupMenuItem<String>(
+      value: value,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ),
+          if (isSelected)
+            Icon(Icons.check, color: AppColors.systemBlue, size: 20),
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // EXPORT JOURNALS
+  // ==========================================
   Future<void> _exportJournals() async {
     final exportService = ExportService();
 
@@ -674,7 +778,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === FUNGSI HAPUS SEMUA ===
+  // ==========================================
+  // DELETE ALL JOURNALS
+  // ==========================================
   void _confirmDeleteAll() {
     showDialog(
       context: context,
@@ -720,26 +826,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === FUNGSI RESET ===
+  // ==========================================
+  // RESET SETTINGS
+  // ==========================================
   void _confirmResetSettings() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.cardDark,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                AppLocalizations.of(context)!.resetSettingsTitle,
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ],
+        title: Text(
+          AppLocalizations.of(context)!.resetSettingsTitle,
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
         ),
         content: Text(
           AppLocalizations.of(context)!.resetSettingsConfirm,
@@ -759,7 +861,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
               await settingsBox.put('languageCode', 'en');
               await settingsBox.put('reminderEnabled', false);
-              await settingsBox.put('hasSeenWeatherBeta', false);
               await settingsBox.put('reminderHour', 20);
               await settingsBox.put('reminderMinute', 0);
               await settingsBox.put(
@@ -784,19 +885,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // === FUNGSI TOGGLE REMINDER ===
+  // ==========================================
+  // TOGGLE REMINDER
+  // ==========================================
   Future<void> _toggleReminder(bool value) async {
-    final service = NotificationService();
-
     if (value) {
-      final granted = await service.requestPermission();
+      // Cek + minta izin (dengan dialog kalau permanently denied)
+      final granted = await checkPermissionWithDialog(
+        context,
+        Permission.notification,
+      );
+
       if (!granted) {
-        if (!mounted) return;
-        _showSnackBar(AppLocalizations.of(context)!.permissionDenied);
+        // Izin tidak diberikan → toggle tetap OFF
         return;
       }
     }
 
+    // Izin granted (atau user mau matikan) → update state
     setState(() {
       _reminderEnabled = value;
     });
@@ -804,6 +910,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final settingsBox = Hive.box('settingsBox');
     await settingsBox.put('reminderEnabled', value);
 
+    final service = NotificationService();
     if (value) {
       await service.scheduleDailyReminder(
         hour: _reminderTime.hour,
@@ -820,8 +927,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _showSnackBar(AppLocalizations.of(context)!.reminderSaved);
   }
 
-  // === FEEDBACK BOTTOM SHEET (TIDAK BERUBAH) ===
+  // ==========================================
+  // FEEDBACK BOTTOM SHEET
+  // ==========================================
   void _showFeedbackBottomSheet() {
+    _isFeedbackOptionsExpanded = false;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -907,6 +1017,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       height: 1.5,
                     ),
                   ),
+                  const SizedBox(height: 16),
+
+                  // === EXPANDABLE: "LIHAT OPSI LAIN" ===
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      setState(() {
+                        _isFeedbackOptionsExpanded =
+                            !_isFeedbackOptionsExpanded;
+                      });
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Lihat opsi lain',
+                              style: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          AnimatedRotation(
+                            turns: _isFeedbackOptionsExpanded ? 0.5 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOutCubic,
+                            child: Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.textPrimary,
+                              size: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // === KONTEN EXPAND ===
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOutCubic,
+                    alignment: Alignment.topCenter,
+                    child: _isFeedbackOptionsExpanded
+                        ? Column(
+                            children: [
+                              const SizedBox(height: 8),
+                              _buildFeedbackOption(
+                                customIcon: const FaIcon(
+                                  FontAwesomeIcons.whatsapp,
+                                  color: Color(0xFF25D366),
+                                  size: 20,
+                                ),
+                                label: 'WhatsApp',
+                                color: const Color(0xFF25D366),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _sendFeedbackViaWhatsApp(
+                                    _feedbackController.text,
+                                  );
+                                },
+                              ),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                   const SizedBox(height: 24),
                   ValueListenableBuilder(
                     valueListenable: _feedbackController,
@@ -953,6 +1132,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _sendFeedbackViaWhatsApp(String feedbackText) async {
+    const String phoneNumber = '6285123644293';
+
+    final String message = feedbackText.isEmpty
+        ? 'Halo Feri, saya ingin memberi feedback tentang NoteNest:\n\n'
+        : feedbackText;
+
+    final Uri whatsappUri = Uri.parse(
+      'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}',
+    );
+
+    try {
+      await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      if (!mounted) return;
+      _showSnackBar('WhatsApp tidak terinstall');
+    }
+  }
+
+  Widget _buildFeedbackOption({
+    IconData? icon,
+    Widget? customIcon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.bgDark,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: customIcon ?? Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: AppColors.textSecondary.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

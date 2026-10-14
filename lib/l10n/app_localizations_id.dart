@@ -684,7 +684,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get guideDesc =>
-      'Beberapa fitur NoteNest agak tersembunyi. Yuk, kita jelajahi bersama! 🚀';
+      'Beberapa fitur NoteNest agak tersembunyi. Yuk, kita jelajahi bersama!';
 
   @override
   String get guideHiddenFeatures => 'FITUR TERSEMBUNYI';
@@ -761,6 +761,42 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get guideFooter => 'Selamat menjelajah NoteNest! ✨';
+
+  @override
+  String get generalSection => 'Umum';
+
+  @override
+  String get appSection => 'Aplikasi';
+
+  @override
+  String get languageSystem => 'Sistem (Default)';
+
+  @override
+  String get permissionBlockedTitle => 'Izin Diblokir';
+
+  @override
+  String get permissionBlockedDesc =>
+      'Permintaan Izin ditolak setelah 2x tidak diizinkan. Untuk mengaktifkannya buka halaman Izin.';
+
+  @override
+  String get openPermissionPage => 'Lihat sekarang';
+
+  @override
+  String get aboutAppStorySection => 'Mengapa Aplikasi ini Dibuat?';
+
+  @override
+  String get aboutAppStoryPurpose => 'Tujuan:';
+
+  @override
+  String get aboutAppStoryPurposeText =>
+      'Tulis paragraf panjangmu di sini tentang tujuan NoteNest.';
+
+  @override
+  String get aboutAppStoryOutcome => 'Hasil yang terjadi:';
+
+  @override
+  String get aboutAppStoryOutcomeText =>
+      'Tulis paragraf panjangmu di sini tentang hasil yang ingin dicapai.';
 
   @override
   String readingTime(int count) {

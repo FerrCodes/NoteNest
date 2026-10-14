@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
-import '../widgets/top_banner.dart';
+import '../utils/permission_helper.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeHeaderScreen extends StatefulWidget {
   const HomeHeaderScreen({super.key});
@@ -44,21 +44,6 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
   void dispose() {
     _userNameController.dispose();
     super.dispose();
-  }
-
-  Future<bool> _checkLocationPermission() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return false;
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return false;
-    }
-
-    if (permission == LocationPermission.deniedForever) return false;
-
-    return true;
   }
 
   @override
@@ -135,35 +120,31 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                       HapticFeedback.selectionClick();
 
                       final settingsBox = Hive.box('settingsBox');
-                      final l10n = AppLocalizations.of(context)!;
 
-                      // === KALAU MAU MENYALAKAN ===
                       if (value) {
-                        // Tampilkan modal beta SETIAP KALI
+                        // Tampilkan modal beta
                         final proceed = await _showBetaDialog();
-                        if (!proceed) {
-                          // User pilih "Batal" → toggle tetap OFF
-                          return;
-                        }
+                        if (!proceed) return;
 
-                        // Cek izin lokasi
-                        final granted = await _checkLocationPermission();
-                        if (!granted) {
-                          if (!mounted) return;
-                          _showSnackBar(
-                            l10n.permissionDenied,
-                            type: BannerType.error,
-                          );
-                          return;
-                        }
+                        // Cek mounted setelah await
+                        if (!context.mounted) return;
 
-                        // Izin OK → aktifkan
+                        // Cek + minta izin lokasi
+                        final granted = await checkPermissionWithDialog(
+                          context,
+                          Permission.locationWhenInUse,
+                        );
+
+                        if (!granted) return;
+                        if (!mounted) return;
+
+                        // Izin granted → aktifkan
                         await settingsBox.put('showWeather', true);
                         if (!mounted) return;
                         setState(() => _showWeather = true);
                       } else {
-                        // User mau mematikan → langsung matikan
                         await settingsBox.put('showWeather', false);
+                        if (!mounted) return;
                         setState(() => _showWeather = false);
                       }
                     },
@@ -474,9 +455,5 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
         child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
-  }
-
-  void _showSnackBar(String message, {BannerType type = BannerType.success}) {
-    TopBanner.show(context, message: message, type: type);
   }
 }

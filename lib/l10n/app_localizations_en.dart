@@ -682,7 +682,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guideDesc =>
-      'Some NoteNest features are a bit hidden. Let\'s explore them together! 🚀';
+      'Some NoteNest features are a bit hidden. Let\'s explore them together!';
 
   @override
   String get guideHiddenFeatures => 'HIDDEN FEATURES';
@@ -759,6 +759,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guideFooter => 'Have fun exploring NoteNest! ✨';
+
+  @override
+  String get generalSection => 'General';
+
+  @override
+  String get appSection => 'App';
+
+  @override
+  String get languageSystem => 'System (Default)';
+
+  @override
+  String get permissionBlockedTitle => 'Permission Blocked';
+
+  @override
+  String get permissionBlockedDesc =>
+      'The permission request was denied after being rejected twice. To enable it, open the Permissions page.';
+
+  @override
+  String get openPermissionPage => 'See it now';
+
+  @override
+  String get aboutAppStorySection => 'Why was this application created?';
+
+  @override
+  String get aboutAppStoryPurpose => 'Purpose:';
+
+  @override
+  String get aboutAppStoryPurposeText =>
+      'Write your long paragraph here about the purpose of NoteNest.';
+
+  @override
+  String get aboutAppStoryOutcome => 'Outcome:';
+
+  @override
+  String get aboutAppStoryOutcomeText =>
+      'Write your long paragraph here about the outcome you want to achieve.';
 
   @override
   String readingTime(int count) {

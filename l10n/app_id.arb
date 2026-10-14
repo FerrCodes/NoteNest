@@ -237,6 +237,17 @@
   "guidePermissionsTitle": "Izin Aplikasi",
   "guidePermissionsDesc": "Di Pengaturan → Privasi, kelola izin aplikasi seperti notifikasi, lokasi, kamera, dan galeri.",
   "guideFooter": "Selamat menjelajah NoteNest! ✨",
+  "generalSection": "Umum",
+  "appSection": "Aplikasi",
+  "languageSystem": "Sistem (Default)",
+  "permissionBlockedTitle": "Izin Diblokir",
+  "permissionBlockedDesc": "Permintaan Izin ditolak setelah 2x tidak diizinkan. Untuk mengaktifkannya buka halaman Izin.",
+  "openPermissionPage": "Lihat sekarang",
+  "aboutAppStorySection": "Mengapa Aplikasi ini Dibuat?",
+  "aboutAppStoryPurpose": "Tujuan:",
+  "aboutAppStoryPurposeText": "Tulis paragraf panjangmu di sini tentang tujuan NoteNest.",
+  "aboutAppStoryOutcome": "Hasil yang terjadi:",
+  "aboutAppStoryOutcomeText": "Tulis paragraf panjangmu di sini tentang hasil yang ingin dicapai.",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

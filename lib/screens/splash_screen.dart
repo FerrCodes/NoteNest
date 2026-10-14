@@ -75,11 +75,11 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 24),
             Text(
               AppLocalizations.of(context)!.appName,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
+              style: TextStyle(
                 color: AppColors.textPrimary,
-                letterSpacing: 0.5,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'DMSerifDisplay',
               ),
             ),
             const SizedBox(height: 8),

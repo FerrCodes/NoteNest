@@ -15,7 +15,7 @@ class AppColors {
 
   /// Warna divider atau garis tipis.
   static const Color dividerDark = Color.fromARGB(255, 66, 66, 68);
-
+  static const Color dividerLight = Color(0xFF3A3A3C);
   // === TEXT ===
   /// Warna teks utama (putih terang).
   static const Color textPrimary = Color(0xFFF2F2F7);
