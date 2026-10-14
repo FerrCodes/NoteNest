@@ -303,7 +303,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get dailyReminder => 'Pengingat Harian';
 
   @override
-  String get dailyReminderDesc => 'Dapatkan notifikasi untuk menulis jurnal';
+  String get dailyReminderDesc =>
+      'Notifikasi akan muncul jika tombol toggle diaktifkan.';
 
   @override
   String get reminderTime => 'Jam Pengingat';
@@ -406,7 +407,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get dangerZone => 'Zona Berbahaya';
 
   @override
-  String get dangerZoneDesc => 'Aksi ini tidak bisa dibatalkan';
+  String get dangerZoneDesc => 'Aksi ini tidak bisa dibatalkan.';
 
   @override
   String get resetSettings => 'Reset Pengaturan';
@@ -560,34 +561,35 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get headerScreenDesc =>
-      'Atur tampilan header di halaman beranda. Nyalakan atau matikan sesuai kebutuhanmu.';
+      'Atur semua tampilan header di halaman beranda.';
 
   @override
   String get displaySection => 'Tampilkan';
 
   @override
-  String get userName => 'Nama Kamu';
+  String get userName => 'Nama';
 
   @override
-  String get userNameHint => 'Masukkan namamu';
+  String get userNameHint => 'Masukkan nama';
 
   @override
-  String get showDate => 'Tampilkan Tanggal';
+  String get showDate => 'Tanggal';
 
   @override
-  String get showDateDesc => 'Tampilkan tanggal hari ini';
+  String get showDateDesc => 'Menampilkan tanggal hari ini.';
 
   @override
-  String get showTime => 'Tampilkan Jam';
+  String get showTime => 'Jam';
 
   @override
-  String get showTimeDesc => 'Tampilkan jam saat ini';
+  String get showTimeDesc => 'Menampilkan jam saat ini.';
 
   @override
-  String get showWeather => 'Tampilkan Cuaca';
+  String get showWeather => 'Cuaca';
 
   @override
-  String get showWeatherDesc => 'Tampilkan cuaca (butuh internet)';
+  String get showWeatherDesc =>
+      'Menampilkan cuaca saat ini. (Membutuhkan koneksi internet)';
 
   @override
   String get greetingMorning => 'Selamat pagi,';
@@ -600,6 +602,165 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get greetingNight => 'Selamat malam';
+
+  @override
+  String get filterExcited => 'Bersemangat';
+
+  @override
+  String get betaFeatureTitle => 'Fitur Beta';
+
+  @override
+  String get betaFeatureDesc =>
+      'Fitur cuaca saat ini masih dalam tahap beta. Mungkin tidak selalu berjalan sesuai harapan.';
+
+  @override
+  String get continueAction => 'Lanjutkan';
+
+  @override
+  String get permissionsSection => 'Privasi';
+
+  @override
+  String get permissionsTitle => 'Izin Perangkat';
+
+  @override
+  String get permissionsDesc =>
+      'Kelola izin yang dibutuhkan aplikasi untuk berfungsi optimal.';
+
+  @override
+  String get permissionsListSection => 'IZIN APLIKASI';
+
+  @override
+  String get permissionStatusGranted => 'DIIZINKAN';
+
+  @override
+  String get permissionStatusDenied => 'DITOLAK';
+
+  @override
+  String get permissionStatusNotRequested => 'BELUM DIMINTA';
+
+  @override
+  String get permissionStatusRestricted => 'DIBATASI';
+
+  @override
+  String get permissionNotification => 'Notifikasi';
+
+  @override
+  String get permissionNotificationDesc => 'Untuk pengingat harian';
+
+  @override
+  String get permissionLocation => 'Lokasi';
+
+  @override
+  String get permissionLocationDesc => 'Untuk fitur cuaca';
+
+  @override
+  String get permissionCamera => 'Kamera';
+
+  @override
+  String get permissionCameraDesc => 'Untuk foto jurnal';
+
+  @override
+  String get permissionGallery => 'Galeri';
+
+  @override
+  String get permissionGalleryDesc => 'Untuk foto jurnal';
+
+  @override
+  String get permissionTapToOpen =>
+      'Tap untuk membuka pengaturan izin di HP-mu.';
+
+  @override
+  String get permissionGranted => 'Izin diberikan!';
+
+  @override
+  String get permissionSamsungHint =>
+      'Di perangkat Samsung, kamu perlu tap \"Permissions\" di halaman berikut untuk mengatur izin.';
+
+  @override
+  String get guideSection => 'Bantuan';
+
+  @override
+  String get guideTitle => 'Panduan';
+
+  @override
+  String get guideDesc =>
+      'Beberapa fitur NoteNest agak tersembunyi. Yuk, kita jelajahi bersama! 🚀';
+
+  @override
+  String get guideHiddenFeatures => 'FITUR TERSEMBUNYI';
+
+  @override
+  String get guideDropdownTitle => 'Dropdown Tersembunyi';
+
+  @override
+  String get guideDropdownDesc =>
+      'Tap tulisan \"Reflect\" di atas halaman beranda untuk membuka menu tersembunyi. Di dalamnya ada Kelola Mood dan pengaturan Header Beranda.';
+
+  @override
+  String get guideMultiPhotoTitle => 'Multi-Foto (Maksimal 4)';
+
+  @override
+  String get guideMultiPhotoDesc =>
+      'Saat menulis jurnal, tap tombol \"Unggah Foto\" untuk menambahkan hingga 4 foto. Geser ke kiri dan kanan untuk melihat semuanya.';
+
+  @override
+  String get guideCarouselTitle => 'Carousel Foto';
+
+  @override
+  String get guideCarouselDesc =>
+      'Buka jurnal dengan beberapa foto dan geser untuk melihat satu per satu. Tap foto untuk melihatnya full-screen dengan zoom.';
+
+  @override
+  String get guideMoodFilterTitle => 'Filter Mood';
+
+  @override
+  String get guideMoodFilterDesc =>
+      'Di beranda, gunakan chip mood di bawah kolom pencarian untuk filter jurnal berdasarkan mood. Tap \"Favorit\" untuk lihat jurnal yang di-bookmark saja.';
+
+  @override
+  String get guideWeatherTitle => 'Fitur Cuaca (Beta)';
+
+  @override
+  String get guideWeatherDesc =>
+      'Aktifkan cuaca di pengaturan Header Beranda untuk lihat cuaca real-time di beranda. Fitur ini masih beta!';
+
+  @override
+  String get guideCustomMoodTitle => 'Mood Kustom';
+
+  @override
+  String get guideCustomMoodDesc =>
+      'Mood-mu tidak ada? Tap menu dropdown, lalu Kelola Mood, untuk membuat hingga 10 mood kustom dengan warna pilihanmu.';
+
+  @override
+  String get guideStatsTitle => 'Statistik & Streak';
+
+  @override
+  String get guideStatsDesc =>
+      'Tap ikon chart di bottom bar untuk melihat statistik jurnalmu, streak, dan distribusi mood.';
+
+  @override
+  String get guideFavoriteTitle => 'Bookmark Jurnal';
+
+  @override
+  String get guideFavoriteDesc =>
+      'Tap ikon bookmark di kartu jurnal untuk menandainya sebagai favorit. Cari semua favorit pakai filter \"Favorit\".';
+
+  @override
+  String get guideExportTitle => 'Export Data';
+
+  @override
+  String get guideExportDesc =>
+      'Di Pengaturan → Data, kamu bisa export semua jurnal ke file teks. Cocok untuk backup!';
+
+  @override
+  String get guidePermissionsTitle => 'Izin Aplikasi';
+
+  @override
+  String get guidePermissionsDesc =>
+      'Di Pengaturan → Privasi, kelola izin aplikasi seperti notifikasi, lokasi, kamera, dan galeri.';
+
+  @override
+  String get guideFooter => 'Selamat menjelajah NoteNest! ✨';
 
   @override
   String readingTime(int count) {

@@ -61,6 +61,8 @@ class _ReflectScreenState extends State<ReflectScreen> {
         return l10n.filterPeaceful;
       case 'Focused':
         return l10n.filterFocused;
+      case 'Excited':
+        return l10n.filterExcited;
       default:
         return mood;
     }
@@ -215,14 +217,11 @@ class _ReflectScreenState extends State<ReflectScreen> {
             child: SafeArea(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 37.0,
+                  top: MediaQuery.of(context).padding.top + 67.0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header
-                    const SizedBox(height: 20),
-
                     // === QUOTE ===
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -253,15 +252,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 47),
-
-                    // === DIVIDER ===
-                    Container(
-                      height: 1,
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      color: AppColors.dividerDark.withValues(alpha: 0.5),
-                    ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 67),
 
                     // === WEATHER HEADER (Tanggal + Jam + Cuaca) ===
                     ValueListenableBuilder(
@@ -287,6 +278,14 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       },
                     ),
                     const SizedBox(height: 20),
+
+                    // === DIVIDER ===
+                    Container(
+                      height: 1,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      color: AppColors.dividerDark.withValues(alpha: 0.5),
+                    ),
+                    const SizedBox(height: 10),
 
                     // === FILTER CHIP ===
                     ValueListenableBuilder(
@@ -339,14 +338,6 @@ class _ReflectScreenState extends State<ReflectScreen> {
                       },
                     ),
                     const SizedBox(height: 15),
-
-                    // === DIVIDER ===
-                    Container(
-                      height: 1,
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      color: AppColors.dividerDark.withValues(alpha: 0.5),
-                    ),
-                    const SizedBox(height: 16),
 
                     // === JOURNAL LIST ===
                     Padding(

@@ -5,22 +5,27 @@ class MoodPresets {
     {
       'icon': Icons.wb_sunny_outlined,
       'label': 'Calm',
-      'color': Color(0xFFFFD60A), // System Yellow
+      'color': Color(0xFFFFD60A),
     },
     {
       'icon': Icons.favorite_border,
       'label': 'Grateful',
-      'color': Color(0xFFFF375F), // System Pink
+      'color': Color(0xFFFF375F),
     },
     {
       'icon': Icons.cloud_outlined,
       'label': 'Peaceful',
-      'color': Color(0xFF0A84FF), // System Blue
+      'color': Color(0xFF0A84FF),
     },
     {
       'icon': Icons.eco_outlined,
       'label': 'Focused',
-      'color': Color(0xFF30D158), // System Green
+      'color': Color(0xFF30D158),
+    },
+    {
+      'icon': Icons.auto_awesome,
+      'label': 'Excited',
+      'color': Color(0xFFFF9F0A),
     },
   ];
 

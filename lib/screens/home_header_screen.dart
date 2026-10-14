@@ -130,27 +130,41 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                     title: AppLocalizations.of(context)!.showWeather,
                     subtitle: AppLocalizations.of(context)!.showWeatherDesc,
                     value: _showWeather,
+                    showBetaBadge: true,
                     onChanged: (value) async {
                       HapticFeedback.selectionClick();
 
-                      // Ambil localization SEBELUM await
+                      final settingsBox = Hive.box('settingsBox');
                       final l10n = AppLocalizations.of(context)!;
 
-                      final settingsBox = Hive.box('settingsBox');
-                      await settingsBox.put('showWeather', value);
-                      setState(() => _showWeather = value);
-
+                      // === KALAU MAU MENYALAKAN ===
                       if (value) {
+                        // Tampilkan modal beta SETIAP KALI
+                        final proceed = await _showBetaDialog();
+                        if (!proceed) {
+                          // User pilih "Batal" → toggle tetap OFF
+                          return;
+                        }
+
+                        // Cek izin lokasi
                         final granted = await _checkLocationPermission();
-                        if (!granted && mounted) {
-                          await settingsBox.put('showWeather', false);
+                        if (!granted) {
                           if (!mounted) return;
-                          setState(() => _showWeather = false);
                           _showSnackBar(
                             l10n.permissionDenied,
                             type: BannerType.error,
                           );
+                          return;
                         }
+
+                        // Izin OK → aktifkan
+                        await settingsBox.put('showWeather', true);
+                        if (!mounted) return;
+                        setState(() => _showWeather = true);
+                      } else {
+                        // User mau mematikan → langsung matikan
+                        await settingsBox.put('showWeather', false);
+                        setState(() => _showWeather = false);
                       }
                     },
                   ),
@@ -246,11 +260,13 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
+    bool showBetaBadge = false, // <-- PARAMETER BARU
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
+          // Ikon
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -260,17 +276,46 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
             child: Icon(icon, color: AppColors.textPrimary, size: 20),
           ),
           const SizedBox(width: 16),
+
+          // Title + Subtitle
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    // Badge BETA
+                    if (showBetaBadge) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.systemYellow.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'BETA',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.systemYellow,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -283,6 +328,8 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
               ],
             ),
           ),
+
+          // Switch
           Switch(
             value: value,
             onChanged: onChanged,
@@ -292,6 +339,65 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
         ],
       ),
     );
+  }
+
+  Future<bool> _showBetaDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.cardDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                AppLocalizations.of(context)!.betaFeatureTitle,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.betaFeatureDesc,
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                height: 1.6,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              AppLocalizations.of(context)!.continueAction,
+              style: TextStyle(
+                color: AppColors.systemBlue,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return result ?? false;
   }
 
   // ==========================================

@@ -30,6 +30,8 @@ class _DetailScreenState extends State<DetailScreen> {
         return l10n.filterPeaceful;
       case 'Focused':
         return l10n.filterFocused;
+      case 'Excited':
+        return l10n.filterExcited;
       default:
         return mood;
     }
@@ -351,14 +353,14 @@ class _DetailScreenState extends State<DetailScreen> {
     return SizedBox(
       height: 370,
       child: PageView.builder(
-        controller: PageController(viewportFraction: 0.85),
+        controller: PageController(viewportFraction: 0.88),
         pageSnapping: false,
         itemCount: photos.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-              left: index == 0 ? 0 : 6,
-              right: index == photos.length - 1 ? 0 : 6,
+              left: index == 0 ? 0 : 7,
+              right: index == photos.length - 0 ? 0 : 7,
             ),
             child: GestureDetector(
               onTap: () {
@@ -375,7 +377,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 );
               },
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(23),
                 child: _buildImage(photos[index], height: 300),
               ),
             ),

@@ -14,6 +14,8 @@ import '../widgets/settings_group_card.dart';
 import '../theme/app_colors.dart';
 import 'about_screen.dart';
 import '../utils/slide_route.dart';
+import 'permissions_screen.dart';
+import 'guide_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -76,8 +78,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // === SECTION BAHASA ===
                 _buildSectionTitle(AppLocalizations.of(context)!.language),
                 _buildGroupCard([_buildLanguageSelector()]),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
+                  child: Text(
+                    AppLocalizations.of(context)!.languageDesc,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 32),
-
                 // === SECTION REMINDER ===
                 _buildSectionTitle(AppLocalizations.of(context)!.reminder),
                 _buildGroupCard([
@@ -88,8 +100,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildTestNotification(),
                   ],
                 ]),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
+                  child: Text(
+                    AppLocalizations.of(context)!.dailyReminderDesc,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 32),
-
                 // === SECTION DATA ===
                 _buildSectionTitle(AppLocalizations.of(context)!.data),
                 _buildGroupCard([
@@ -100,10 +122,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ]),
                 const SizedBox(height: 32),
-
+                // === SECTION PRIVASI ===
+                _buildSectionTitle(
+                  AppLocalizations.of(context)!.permissionsSection,
+                ),
+                _buildGroupCard([
+                  SettingItem(
+                    icon: Icons.android,
+                    title: AppLocalizations.of(context)!.permissionsTitle,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        SlideRoute(page: const PermissionsScreen()),
+                      );
+                    },
+                  ),
+                ]),
+                const SizedBox(height: 32),
                 // === SECTION ABOUT ===
                 _buildSectionTitle(AppLocalizations.of(context)!.about),
                 _buildGroupCard([
+                  SettingItem(
+                    icon: Icons.menu_book_outlined,
+                    title: AppLocalizations.of(context)!.guideTitle,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        SlideRoute(page: const GuideScreen()),
+                      );
+                    },
+                  ),
                   SettingItem(
                     icon: Icons.info_outline,
                     title: AppLocalizations.of(context)!.aboutApp,
@@ -124,18 +172,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ]),
                 const SizedBox(height: 40),
-
                 // === DANGER ZONE ===
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.warning_amber_rounded,
-                        color: AppColors.systemRed,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
                       Text(
                         AppLocalizations.of(context)!.dangerZone.toUpperCase(),
                         style: TextStyle(
@@ -163,9 +204,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     isDestructive: true,
                   ),
                 ]),
-                const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
                   child: Text(
                     AppLocalizations.of(context)!.dangerZoneDesc,
                     style: TextStyle(
@@ -175,7 +215,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-
                 // === FOOTER ===
                 Center(
                   child: Text(
@@ -363,13 +402,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  AppLocalizations.of(context)!.dailyReminderDesc,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
               ],
             ),
           ),
@@ -727,6 +759,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
               await settingsBox.put('languageCode', 'en');
               await settingsBox.put('reminderEnabled', false);
+              await settingsBox.put('hasSeenWeatherBeta', false);
               await settingsBox.put('reminderHour', 20);
               await settingsBox.put('reminderMinute', 0);
               await settingsBox.put(

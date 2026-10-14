@@ -301,7 +301,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyReminder => 'Daily Reminder';
 
   @override
-  String get dailyReminderDesc => 'Get notified to write your journal';
+  String get dailyReminderDesc =>
+      'A notification will appear if the toggle switch is enabled.';
 
   @override
   String get reminderTime => 'Reminder Time';
@@ -559,7 +560,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get headerScreenDesc =>
-      'Customize your home screen header. Turn on or off what you need.';
+      'Configure all header displays on the homepage.';
 
   @override
   String get displaySection => 'Display';
@@ -586,7 +587,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showWeather => 'Show Weather';
 
   @override
-  String get showWeatherDesc => 'Display weather (requires internet)';
+  String get showWeatherDesc => 'Requires an internet connection';
 
   @override
   String get greetingMorning => 'Good morning,';
@@ -599,6 +600,165 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greetingNight => 'Good night';
+
+  @override
+  String get filterExcited => 'Excited';
+
+  @override
+  String get betaFeatureTitle => 'Beta Feature';
+
+  @override
+  String get betaFeatureDesc =>
+      'Weather feature is currently in beta. It may not always work as expected.';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get permissionsSection => 'Privacy';
+
+  @override
+  String get permissionsTitle => 'Devices Permission';
+
+  @override
+  String get permissionsDesc =>
+      'Manage permissions that the app needs to function optimally.';
+
+  @override
+  String get permissionsListSection => 'APP PERMISSIONS';
+
+  @override
+  String get permissionStatusGranted => 'GRANTED';
+
+  @override
+  String get permissionStatusDenied => 'DENIED';
+
+  @override
+  String get permissionStatusNotRequested => 'NOT REQUESTED';
+
+  @override
+  String get permissionStatusRestricted => 'RESTRICTED';
+
+  @override
+  String get permissionNotification => 'Notifications';
+
+  @override
+  String get permissionNotificationDesc => 'For daily reminders';
+
+  @override
+  String get permissionLocation => 'Location';
+
+  @override
+  String get permissionLocationDesc => 'For weather feature';
+
+  @override
+  String get permissionCamera => 'Camera';
+
+  @override
+  String get permissionCameraDesc => 'For journal photos';
+
+  @override
+  String get permissionGallery => 'Gallery';
+
+  @override
+  String get permissionGalleryDesc => 'For journal photos';
+
+  @override
+  String get permissionTapToOpen =>
+      'Tap to open permission settings on your phone.';
+
+  @override
+  String get permissionGranted => 'Permission granted!';
+
+  @override
+  String get permissionSamsungHint =>
+      'On Samsung devices, you need to tap \"Permissions\" on the next page to manage permissions.';
+
+  @override
+  String get guideSection => 'Help';
+
+  @override
+  String get guideTitle => 'Guide';
+
+  @override
+  String get guideDesc =>
+      'Some NoteNest features are a bit hidden. Let\'s explore them together! 🚀';
+
+  @override
+  String get guideHiddenFeatures => 'HIDDEN FEATURES';
+
+  @override
+  String get guideDropdownTitle => 'Hidden Dropdown';
+
+  @override
+  String get guideDropdownDesc =>
+      'Tap the \"Reflect\" text at the top of the home screen to reveal a hidden menu. Inside, you\'ll find options like Manage Moods and Home Header settings.';
+
+  @override
+  String get guideMultiPhotoTitle => 'Multi-Photo (Up to 4)';
+
+  @override
+  String get guideMultiPhotoDesc =>
+      'When writing a journal, tap the \"Upload Photo\" button to add up to 4 photos. Swipe left and right to see them all.';
+
+  @override
+  String get guideCarouselTitle => 'Photo Carousel';
+
+  @override
+  String get guideCarouselDesc =>
+      'Open a journal with multiple photos and swipe to view each one. Tap a photo to see it full-screen with zoom.';
+
+  @override
+  String get guideMoodFilterTitle => 'Filter by Mood';
+
+  @override
+  String get guideMoodFilterDesc =>
+      'On the home screen, use the mood chips below the search bar to filter journals by mood. Tap \"Favorite\" to see only bookmarked journals.';
+
+  @override
+  String get guideWeatherTitle => 'Weather Feature (Beta)';
+
+  @override
+  String get guideWeatherDesc =>
+      'Enable weather in Home Header settings to see real-time weather on your home screen. This feature is still in beta!';
+
+  @override
+  String get guideCustomMoodTitle => 'Custom Moods';
+
+  @override
+  String get guideCustomMoodDesc =>
+      'Don\'t see your mood? Tap the dropdown menu, then Manage Moods, to create up to 10 custom moods with your own colors.';
+
+  @override
+  String get guideStatsTitle => 'Statistics & Streak';
+
+  @override
+  String get guideStatsDesc =>
+      'Tap the chart icon in the bottom bar to see your journaling statistics, streaks, and mood distribution.';
+
+  @override
+  String get guideFavoriteTitle => 'Bookmark Journals';
+
+  @override
+  String get guideFavoriteDesc =>
+      'Tap the bookmark icon on any journal card to mark it as favorite. Find all favorites using the \"Favorite\" filter.';
+
+  @override
+  String get guideExportTitle => 'Export Data';
+
+  @override
+  String get guideExportDesc =>
+      'In Settings → Data, you can export all journals to a text file. Perfect for backup!';
+
+  @override
+  String get guidePermissionsTitle => 'App Permissions';
+
+  @override
+  String get guidePermissionsDesc =>
+      'In Settings → Privacy, manage app permissions like notifications, location, camera, and gallery.';
+
+  @override
+  String get guideFooter => 'Have fun exploring NoteNest! ✨';
 
   @override
   String readingTime(int count) {

@@ -28,6 +28,8 @@ class MoodSelector extends StatelessWidget {
         return l10n.filterPeaceful;
       case 'Focused':
         return l10n.filterFocused;
+      case 'Excited':
+        return l10n.filterExcited;
       default:
         return mood;
     }

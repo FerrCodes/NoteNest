@@ -659,7 +659,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyReminderDesc.
   ///
   /// In en, this message translates to:
-  /// **'Get notified to write your journal'**
+  /// **'A notification will appear if the toggle switch is enabled.'**
   String get dailyReminderDesc;
 
   /// No description provided for @reminderTime.
@@ -1151,7 +1151,7 @@ abstract class AppLocalizations {
   /// No description provided for @headerScreenDesc.
   ///
   /// In en, this message translates to:
-  /// **'Customize your home screen header. Turn on or off what you need.'**
+  /// **'Configure all header displays on the homepage.'**
   String get headerScreenDesc;
 
   /// No description provided for @displaySection.
@@ -1205,7 +1205,7 @@ abstract class AppLocalizations {
   /// No description provided for @showWeatherDesc.
   ///
   /// In en, this message translates to:
-  /// **'Display weather (requires internet)'**
+  /// **'Requires an internet connection'**
   String get showWeatherDesc;
 
   /// No description provided for @greetingMorning.
@@ -1231,6 +1231,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Good night'**
   String get greetingNight;
+
+  /// No description provided for @filterExcited.
+  ///
+  /// In en, this message translates to:
+  /// **'Excited'**
+  String get filterExcited;
+
+  /// No description provided for @betaFeatureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Beta Feature'**
+  String get betaFeatureTitle;
+
+  /// No description provided for @betaFeatureDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather feature is currently in beta. It may not always work as expected.'**
+  String get betaFeatureDesc;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// No description provided for @permissionsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get permissionsSection;
+
+  /// No description provided for @permissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices Permission'**
+  String get permissionsTitle;
+
+  /// No description provided for @permissionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage permissions that the app needs to function optimally.'**
+  String get permissionsDesc;
+
+  /// No description provided for @permissionsListSection.
+  ///
+  /// In en, this message translates to:
+  /// **'APP PERMISSIONS'**
+  String get permissionsListSection;
+
+  /// No description provided for @permissionStatusGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'GRANTED'**
+  String get permissionStatusGranted;
+
+  /// No description provided for @permissionStatusDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'DENIED'**
+  String get permissionStatusDenied;
+
+  /// No description provided for @permissionStatusNotRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT REQUESTED'**
+  String get permissionStatusNotRequested;
+
+  /// No description provided for @permissionStatusRestricted.
+  ///
+  /// In en, this message translates to:
+  /// **'RESTRICTED'**
+  String get permissionStatusRestricted;
+
+  /// No description provided for @permissionNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get permissionNotification;
+
+  /// No description provided for @permissionNotificationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'For daily reminders'**
+  String get permissionNotificationDesc;
+
+  /// No description provided for @permissionLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get permissionLocation;
+
+  /// No description provided for @permissionLocationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'For weather feature'**
+  String get permissionLocationDesc;
+
+  /// No description provided for @permissionCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get permissionCamera;
+
+  /// No description provided for @permissionCameraDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'For journal photos'**
+  String get permissionCameraDesc;
+
+  /// No description provided for @permissionGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get permissionGallery;
+
+  /// No description provided for @permissionGalleryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'For journal photos'**
+  String get permissionGalleryDesc;
+
+  /// No description provided for @permissionTapToOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to open permission settings on your phone.'**
+  String get permissionTapToOpen;
+
+  /// No description provided for @permissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission granted!'**
+  String get permissionGranted;
+
+  /// No description provided for @permissionSamsungHint.
+  ///
+  /// In en, this message translates to:
+  /// **'On Samsung devices, you need to tap \"Permissions\" on the next page to manage permissions.'**
+  String get permissionSamsungHint;
+
+  /// No description provided for @guideSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get guideSection;
+
+  /// No description provided for @guideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Guide'**
+  String get guideTitle;
+
+  /// No description provided for @guideDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Some NoteNest features are a bit hidden. Let\'s explore them together! 🚀'**
+  String get guideDesc;
+
+  /// No description provided for @guideHiddenFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'HIDDEN FEATURES'**
+  String get guideHiddenFeatures;
+
+  /// No description provided for @guideDropdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden Dropdown'**
+  String get guideDropdownTitle;
+
+  /// No description provided for @guideDropdownDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the \"Reflect\" text at the top of the home screen to reveal a hidden menu. Inside, you\'ll find options like Manage Moods and Home Header settings.'**
+  String get guideDropdownDesc;
+
+  /// No description provided for @guideMultiPhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-Photo (Up to 4)'**
+  String get guideMultiPhotoTitle;
+
+  /// No description provided for @guideMultiPhotoDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'When writing a journal, tap the \"Upload Photo\" button to add up to 4 photos. Swipe left and right to see them all.'**
+  String get guideMultiPhotoDesc;
+
+  /// No description provided for @guideCarouselTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Carousel'**
+  String get guideCarouselTitle;
+
+  /// No description provided for @guideCarouselDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a journal with multiple photos and swipe to view each one. Tap a photo to see it full-screen with zoom.'**
+  String get guideCarouselDesc;
+
+  /// No description provided for @guideMoodFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Mood'**
+  String get guideMoodFilterTitle;
+
+  /// No description provided for @guideMoodFilterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'On the home screen, use the mood chips below the search bar to filter journals by mood. Tap \"Favorite\" to see only bookmarked journals.'**
+  String get guideMoodFilterDesc;
+
+  /// No description provided for @guideWeatherTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather Feature (Beta)'**
+  String get guideWeatherTitle;
+
+  /// No description provided for @guideWeatherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable weather in Home Header settings to see real-time weather on your home screen. This feature is still in beta!'**
+  String get guideWeatherDesc;
+
+  /// No description provided for @guideCustomMoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Moods'**
+  String get guideCustomMoodTitle;
+
+  /// No description provided for @guideCustomMoodDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t see your mood? Tap the dropdown menu, then Manage Moods, to create up to 10 custom moods with your own colors.'**
+  String get guideCustomMoodDesc;
+
+  /// No description provided for @guideStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics & Streak'**
+  String get guideStatsTitle;
+
+  /// No description provided for @guideStatsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the chart icon in the bottom bar to see your journaling statistics, streaks, and mood distribution.'**
+  String get guideStatsDesc;
+
+  /// No description provided for @guideFavoriteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark Journals'**
+  String get guideFavoriteTitle;
+
+  /// No description provided for @guideFavoriteDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the bookmark icon on any journal card to mark it as favorite. Find all favorites using the \"Favorite\" filter.'**
+  String get guideFavoriteDesc;
+
+  /// No description provided for @guideExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get guideExportTitle;
+
+  /// No description provided for @guideExportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'In Settings → Data, you can export all journals to a text file. Perfect for backup!'**
+  String get guideExportDesc;
+
+  /// No description provided for @guidePermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Permissions'**
+  String get guidePermissionsTitle;
+
+  /// No description provided for @guidePermissionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'In Settings → Privacy, manage app permissions like notifications, location, camera, and gallery.'**
+  String get guidePermissionsDesc;
+
+  /// No description provided for @guideFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Have fun exploring NoteNest! ✨'**
+  String get guideFooter;
 
   /// No description provided for @readingTime.
   ///
