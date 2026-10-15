@@ -383,7 +383,7 @@ abstract class AppLocalizations {
   /// No description provided for @version.
   ///
   /// In en, this message translates to:
-  /// **'v1.1.0'**
+  /// **'v2.0.0'**
   String get version;
 
   /// No description provided for @sendFeedback.

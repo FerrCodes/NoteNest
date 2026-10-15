@@ -38,24 +38,16 @@ class _AboutScreenState extends State<AboutScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white.withValues(alpha: 0.05),
-                              blurRadius: 30,
-                              spreadRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.auto_stories_outlined,
-                          color: AppColors.textPrimary,
-                          size: 40,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(17),
+                          child: Image.asset(
+                            'assets/icon/icon.png',
+                            width: 70,
+                            height: 70,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 16),
                       Text(
                         AppLocalizations.of(context)!.appName,
                         style: TextStyle(

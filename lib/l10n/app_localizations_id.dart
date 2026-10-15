@@ -159,7 +159,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get aboutApp => 'Tentang Aplikasi';
 
   @override
-  String get version => 'v1.1.0';
+  String get version => 'v2.0.0';
 
   @override
   String get sendFeedback => 'Kirim Feedback';

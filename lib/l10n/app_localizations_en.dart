@@ -159,7 +159,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutApp => 'About App';
 
   @override
-  String get version => 'v1.1.0';
+  String get version => 'v2.0.0';
 
   @override
   String get sendFeedback => 'Send Feedback';
