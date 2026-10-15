@@ -27,7 +27,7 @@ class NotificationService {
 
     // Setup Android
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
     // Setup iOS
     const DarwinInitializationSettings iosSettings =
