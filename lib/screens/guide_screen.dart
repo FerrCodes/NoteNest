@@ -25,7 +25,7 @@ class _GuideScreenState extends State<GuideScreen> {
             // ==========================================
             ListView(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 85,
+                top: MediaQuery.of(context).padding.top + 60,
                 bottom: 24,
               ),
               children: [

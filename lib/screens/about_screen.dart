@@ -28,7 +28,7 @@ class _AboutScreenState extends State<AboutScreen> {
             // ==========================================
             ListView(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 85,
+                top: MediaQuery.of(context).padding.top + 60,
                 bottom: 25,
               ),
               children: [

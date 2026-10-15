@@ -495,7 +495,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get newMood => 'Mood Baru';
 
   @override
-  String get moodNameHint => 'Contoh: Cemas, Semangat, Lelah...';
+  String get moodNameHint => 'Contoh: Cemas, Lelah, dll.';
 
   @override
   String get moodLimitReached => 'Maksimal 10 mood kustom tercapai';
@@ -673,7 +673,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get permissionSamsungHint =>
-      'Di perangkat Samsung, perlu tap \"Permissions\" di halaman berikut untuk mengatur izin.';
+      'Di perangkat Samsung, perlu tap \"Izin\" di halaman Aplikasi Info untuk mengatur izin.';
 
   @override
   String get guideSection => 'Bantuan';

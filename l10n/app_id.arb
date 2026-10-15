@@ -155,7 +155,7 @@
   "customMoods": "Mood Kustom",
   "addMood": "Tambah Mood",
   "newMood": "Mood Baru",
-  "moodNameHint": "Contoh: Cemas, Semangat, Lelah...",
+  "moodNameHint": "Contoh: Cemas, Lelah, dll.",
   "moodLimitReached": "Maksimal 10 mood kustom tercapai",
   "moodAlreadyExists": "Nama mood ini sudah dipakai",
   "moodAdded": "Mood berhasil ditambahkan",
