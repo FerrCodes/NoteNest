@@ -684,38 +684,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ancestor: overlay,
     );
 
+    // Set state: popover terbuka
     setState(() => _isLanguageMenuOpen = true);
 
-    final result = await showMenu<String>(
+    final result = await showGeneralDialog<String>(
       context: context,
-      color: AppColors.cardDark,
-      elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.dividerLight, width: 1),
-      ),
-      position: RelativeRect.fromLTRB(
-        buttonPosition.dx + button.size.width - 200, // popover lebar 200px
-        // Atas popover: tepat di bawah item Bahasa
-        buttonPosition.dy + button.size.height - 8,
-        // Kanan popover
-        25,
-        // Bawah popover
-        0,
-      ),
-      items: [
-        _buildLanguageMenuItem(
-          'system',
-          AppLocalizations.of(context)!.languageSystem,
-          currentLang,
-        ),
-        _buildLanguageMenuItem('en', 'English', currentLang),
-        _buildLanguageMenuItem('id', 'Indonesia', currentLang),
-      ],
+      barrierDismissible: true,
+      barrierLabel: 'Language Menu',
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 150),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Stack(
+          children: [
+            // Posisi popover: di bawah item Bahasa, rata kanan dengan chevron
+            Positioned(
+              top: buttonPosition.dy + button.size.height + 4,
+              right:
+                  overlay.size.width -
+                  buttonPosition.dx -
+                  button.size.width +
+                  8,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  width: 200,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildLanguageMenuItem(
+                        'system',
+                        AppLocalizations.of(context)!.languageSystem,
+                        currentLang,
+                      ),
+                      Divider(
+                        color: AppColors.dividerLight,
+                        height: 1,
+                        thickness: 1,
+                      ),
+                      _buildLanguageMenuItem('en', 'English', currentLang),
+                      Divider(
+                        color: AppColors.dividerLight,
+                        height: 1,
+                        thickness: 1,
+                      ),
+                      _buildLanguageMenuItem('id', 'Indonesia', currentLang),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
+
     if (mounted) {
       setState(() => _isLanguageMenuOpen = false);
     }
+
     if (result != null && result != currentLang) {
       await settingsBox.put('languageCode', result);
       if (!mounted) return;
@@ -723,29 +765,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  PopupMenuItem<String> _buildLanguageMenuItem(
+  Widget _buildLanguageMenuItem(
     String value,
     String label,
     String currentLang,
   ) {
     final isSelected = value == currentLang;
-    return PopupMenuItem<String>(
-      value: value,
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+    return InkWell(
+      onTap: () => Navigator.pop(context, value),
+      borderRadius: BorderRadius.circular(12),
+      splashColor: Colors.transparent,
+      highlightColor: AppColors.textPrimary.withValues(alpha: 0.05),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 15,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          if (isSelected)
-            Icon(Icons.check, color: AppColors.systemBlue, size: 20),
-        ],
+            if (isSelected)
+              Icon(Icons.check, color: AppColors.systemBlue, size: 20),
+          ],
+        ),
       ),
     );
   }

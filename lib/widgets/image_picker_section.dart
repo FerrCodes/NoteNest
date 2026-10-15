@@ -265,7 +265,7 @@ class ImagePickerSection extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) {
+      builder: (sheetContext) {
         return SafeArea(
           child: Container(
             decoration: BoxDecoration(
@@ -305,7 +305,7 @@ class ImagePickerSection extends StatelessWidget {
                   label: AppLocalizations.of(context)!.cameraOption,
                   subtitle: AppLocalizations.of(context)!.cameraOptionDesc,
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(sheetContext);
                     _pickImage(context, fromCamera: true);
                   },
                 ),
@@ -316,7 +316,7 @@ class ImagePickerSection extends StatelessWidget {
                   label: AppLocalizations.of(context)!.galleryOption,
                   subtitle: AppLocalizations.of(context)!.galleryOptionDesc,
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(sheetContext);
                     _pickImage(context, fromCamera: false);
                   },
                 ),
