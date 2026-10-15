@@ -155,25 +155,25 @@ abstract class AppLocalizations {
   /// No description provided for @quoteMorning.
   ///
   /// In en, this message translates to:
-  /// **'\"Every morning brings new potential. Start today with intention.\"'**
+  /// **'\"Start each day with a positive mind and a grateful heart.\"'**
   String get quoteMorning;
 
   /// No description provided for @quoteAfternoon.
   ///
   /// In en, this message translates to:
-  /// **'\"Gratitude turns what we have into enough.\"'**
+  /// **'\"The small things you are grateful for today can blossom into a great source of happiness.\"'**
   String get quoteAfternoon;
 
   /// No description provided for @quoteEvening.
   ///
   /// In en, this message translates to:
-  /// **'\"Small shifts in perspective can open the door to profound inner stillness.\"'**
+  /// **'\"Not everything has to be finished today. Give yourself time to rest.\"'**
   String get quoteEvening;
 
   /// No description provided for @quoteNight.
   ///
   /// In en, this message translates to:
-  /// **'\"The quiet of night is where the soul finds its rest.\"'**
+  /// **'\"Bring your day to a peaceful close, and let tomorrow unfold a new story.\"'**
   String get quoteNight;
 
   /// No description provided for @todaysEntry.
@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @contentHint.
   ///
   /// In en, this message translates to:
-  /// **'Start writing your thoughts...'**
+  /// **'Start writing down your thoughts and feelings....'**
   String get contentHint;
 
   /// No description provided for @selectImage.
@@ -713,7 +713,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageDesc.
   ///
   /// In en, this message translates to:
-  /// **'Choose the most suitable language, it can be changed at any time.'**
+  /// **'Choose the language that suits you; change it at any time.'**
   String get languageDesc;
 
   /// No description provided for @calendarTitle.
@@ -767,7 +767,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutFollowMe.
   ///
   /// In en, this message translates to:
-  /// **'Follow me on Instagram'**
+  /// **'Follow on Instagram'**
   String get aboutFollowMe;
 
   /// No description provided for @aboutInstagramHandle.
@@ -911,13 +911,13 @@ abstract class AppLocalizations {
   /// No description provided for @missingTitle.
   ///
   /// In en, this message translates to:
-  /// **'Journal title is empty'**
+  /// **'Title is empty'**
   String get missingTitle;
 
   /// No description provided for @missingContent.
   ///
   /// In en, this message translates to:
-  /// **'Journal content is empty'**
+  /// **'Content is empty'**
   String get missingContent;
 
   /// No description provided for @missingImage.
@@ -941,7 +941,7 @@ abstract class AppLocalizations {
   /// No description provided for @draftFoundDesc.
   ///
   /// In en, this message translates to:
-  /// **'Unfinished journal. Continue?'**
+  /// **'There is an unfinished journal entry. Continue?'**
   String get draftFoundDesc;
 
   /// No description provided for @continueDraft.
@@ -1007,7 +1007,7 @@ abstract class AppLocalizations {
   /// No description provided for @manageMoodsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Create your own custom moods'**
+  /// **'Create your own custom mood'**
   String get manageMoodsDesc;
 
   /// No description provided for @customMoods.
@@ -1031,7 +1031,7 @@ abstract class AppLocalizations {
   /// No description provided for @moodNameHint.
   ///
   /// In en, this message translates to:
-  /// **'e.g. Anxious, Excited, Tired...'**
+  /// **'Example: Anxious, Excited, Tired...'**
   String get moodNameHint;
 
   /// No description provided for @moodLimitReached.
@@ -1097,7 +1097,7 @@ abstract class AppLocalizations {
   /// No description provided for @archiveMoodDesc.
   ///
   /// In en, this message translates to:
-  /// **'This mood will be hidden. You can restore it later from the Archive section.'**
+  /// **'This mood will be hidden from the new journal page. It can be restored later.'**
   String get archiveMoodDesc;
 
   /// No description provided for @moodArchived.
@@ -1121,7 +1121,7 @@ abstract class AppLocalizations {
   /// No description provided for @deletePermanentDesc.
   ///
   /// In en, this message translates to:
-  /// **'This mood will be permanently deleted. This action cannot be undone.'**
+  /// **'This mood will be permanently deleted.'**
   String get deletePermanentDesc;
 
   /// No description provided for @moodDeletedPermanent.
@@ -1271,13 +1271,13 @@ abstract class AppLocalizations {
   /// No description provided for @permissionsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Manage permissions that the app needs to function optimally.'**
+  /// **'Manage and view all the permissions an app needs to function optimally here.'**
   String get permissionsDesc;
 
   /// No description provided for @permissionsListSection.
   ///
   /// In en, this message translates to:
-  /// **'APP PERMISSIONS'**
+  /// **'REQUIRED PERMITS'**
   String get permissionsListSection;
 
   /// No description provided for @permissionStatusGranted.
@@ -1355,7 +1355,7 @@ abstract class AppLocalizations {
   /// No description provided for @permissionTapToOpen.
   ///
   /// In en, this message translates to:
-  /// **'Tap to open permission settings on your phone.'**
+  /// **'Tap to open the phone\'s built-in permission settings.'**
   String get permissionTapToOpen;
 
   /// No description provided for @permissionGranted.
@@ -1367,7 +1367,7 @@ abstract class AppLocalizations {
   /// No description provided for @permissionSamsungHint.
   ///
   /// In en, this message translates to:
-  /// **'On Samsung devices, you need to tap \"Permissions\" on the next page to manage permissions.'**
+  /// **'On Samsung devices, need to tap \"Permissions\" on the next page to manage permissions.'**
   String get permissionSamsungHint;
 
   /// No description provided for @guideSection.
@@ -1385,7 +1385,7 @@ abstract class AppLocalizations {
   /// No description provided for @guideDesc.
   ///
   /// In en, this message translates to:
-  /// **'Some NoteNest features are a bit hidden. Let\'s explore them together!'**
+  /// **'Some features of this app are somewhat hidden; see them all here.'**
   String get guideDesc;
 
   /// No description provided for @guideHiddenFeatures.
@@ -1517,7 +1517,7 @@ abstract class AppLocalizations {
   /// No description provided for @guideFooter.
   ///
   /// In en, this message translates to:
-  /// **'Have fun exploring NoteNest! ✨'**
+  /// **'Thank you for trying out all the available features!'**
   String get guideFooter;
 
   /// No description provided for @generalSection.
@@ -1555,36 +1555,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See it now'**
   String get openPermissionPage;
-
-  /// No description provided for @aboutAppStorySection.
-  ///
-  /// In en, this message translates to:
-  /// **'Why was this application created?'**
-  String get aboutAppStorySection;
-
-  /// No description provided for @aboutAppStoryPurpose.
-  ///
-  /// In en, this message translates to:
-  /// **'Purpose:'**
-  String get aboutAppStoryPurpose;
-
-  /// No description provided for @aboutAppStoryPurposeText.
-  ///
-  /// In en, this message translates to:
-  /// **'Write your long paragraph here about the purpose of NoteNest.'**
-  String get aboutAppStoryPurposeText;
-
-  /// No description provided for @aboutAppStoryOutcome.
-  ///
-  /// In en, this message translates to:
-  /// **'Outcome:'**
-  String get aboutAppStoryOutcome;
-
-  /// No description provided for @aboutAppStoryOutcomeText.
-  ///
-  /// In en, this message translates to:
-  /// **'Write your long paragraph here about the outcome you want to achieve.'**
-  String get aboutAppStoryOutcomeText;
 
   /// No description provided for @readingTime.
   ///

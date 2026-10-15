@@ -64,12 +64,6 @@ class _StatsScreenState extends State<StatsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.bar_chart_outlined,
-                          size: 64,
-                          color: AppColors.textSecondary.withValues(alpha: 0.4),
-                        ),
-                        const SizedBox(height: 16),
                         Text(
                           AppLocalizations.of(context)!.noDataTitle,
                           style: TextStyle(

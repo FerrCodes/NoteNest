@@ -35,36 +35,34 @@ class JournalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.cardDark,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        foregroundDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.dividerLight, width: 1),
-        ),
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
-              ),
-              child: Stack(
+    return Material(
+      color: AppColors.cardDark,
+      borderRadius: BorderRadius.circular(24),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: AppColors.dividerLight, width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
                 children: [
-                  _buildImage(entry.primaryImageUrl, height: 160),
-                  // Badge kalau ada lebih dari 1 foto
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: _buildImage(entry.primaryImageUrl),
+                  ),
                   if (entry.hasMultiplePhotos)
                     Positioned(
-                      top: 12,
-                      right: 12,
+                      bottom: 10,
+                      right: 10,
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
+                          color: Colors.black.withValues(alpha: 0.6),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -76,88 +74,94 @@ class JournalCard extends StatelessWidget {
                     ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            entry.date,
+                            entry.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 12,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.textSecondary.withValues(
-                                alpha: 0.2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _getLocalizedMood(context, entry.mood),
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
+                          const SizedBox(height: 6),
+                          Text(
+                            entry.content,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              height: 1.4,
+                              color: AppColors.textPrimary.withValues(
+                                alpha: 0.6,
                               ),
                             ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Text(
+                                entry.date,
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.textSecondary.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  _getLocalizedMood(context, entry.mood),
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          HapticFeedback.selectionClick();
-                          onToggleFavorite();
-                        },
-                        child: Icon(
-                          entry.isFavorite
-                              ? Icons.bookmark
-                              : Icons.bookmark_border,
-                          size: 20,
-                          color: entry.isFavorite
-                              ? const Color(0xFFFFD60A)
-                              : AppColors.textSecondary,
-                        ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        HapticFeedback.selectionClick();
+                        onToggleFavorite();
+                      },
+                      icon: Icon(
+                        entry.isFavorite
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        size: 22,
+                        color: entry.isFavorite
+                            ? const Color(0xFFFFD60A)
+                            : AppColors.textSecondary,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    entry.title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    entry.content.length > 80
-                        ? '${entry.content.substring(0, 80)}...'
-                        : entry.content,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textPrimary.withValues(alpha: 0.6),
-                      height: 1.4,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -207,6 +211,7 @@ class JournalCard extends StatelessWidget {
         height: height,
         width: double.infinity,
         fit: fit,
+        cacheWidth: 900,
       );
     } else {
       return Image.file(
@@ -214,6 +219,7 @@ class JournalCard extends StatelessWidget {
         height: height,
         width: double.infinity,
         fit: fit,
+        cacheWidth: 900,
       );
     }
   }

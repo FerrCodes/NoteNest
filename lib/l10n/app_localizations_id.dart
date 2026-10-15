@@ -37,19 +37,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get quoteMorning =>
-      '\"Setiap pagi membawa potensi baru. Mulailah hari ini dengan niat yang baik.\"';
+      '\"Mulai setiap harimu dengan pikiran positif dan hati yang bersyukur.\"';
 
   @override
   String get quoteAfternoon =>
-      '\"Rasa syukur mengubah apa yang kita miliki menjadi cukup.\"';
+      '\"Hal-hal kecil yang kamu syukuri hari ini bisa menjadi kebahagiaan yang besar.\"';
 
   @override
   String get quoteEvening =>
-      '\"Perubahan kecil dalam cara pandang dapat membuka pintu menuju ketenangan batin yang mendalam.\"';
+      '\"Tak semua hal harus selesai hari ini. Beri dirimu waktu untuk beristirahat.\"';
 
   @override
   String get quoteNight =>
-      '\"Ketenangan malam adalah tempat jiwa menemukan istirahatnya.\"';
+      '\"Pejamkan hari dengan tenang, dan biarkan esok membawa cerita yang baru.\"';
 
   @override
   String get todaysEntry => 'Jurnal Hari Ini';
@@ -118,7 +118,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get titleHint => 'Judul';
 
   @override
-  String get contentHint => 'Mulai tulis pikiranmu...';
+  String get contentHint => 'Mulai tulis pikiranmu dan perasaanmu...';
 
   @override
   String get selectImage => 'Preset Gambar';
@@ -332,8 +332,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get reminderSaved => 'Pengingat berhasil disimpan!';
 
   @override
-  String get languageDesc =>
-      'Pilih bahasa yang paling cocok, dan bisa diubah kapan saja.';
+  String get languageDesc => 'Pilih bahasa yang paling cocok, ubah kapan saja.';
 
   @override
   String get calendarTitle => 'Kalender';
@@ -360,7 +359,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get aboutDeveloper => 'Pengembang';
 
   @override
-  String get aboutFollowMe => 'Follow akunku di Instagram';
+  String get aboutFollowMe => 'Follow di Instagram';
 
   @override
   String get aboutInstagramHandle => 'imnotferrriii';
@@ -435,10 +434,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get incompleteDesc => 'Lengkapi hal berikut sebelum menyimpan:';
 
   @override
-  String get missingTitle => 'Judul jurnal masih kosong';
+  String get missingTitle => 'Judul masih kosong';
 
   @override
-  String get missingContent => 'Isi jurnal masih kosong';
+  String get missingContent => 'Isi masih kosong';
 
   @override
   String get missingImage => 'Pilih foto terlebih dahulu';
@@ -450,7 +449,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get draftFoundTitle => 'Draft Belum Selesai';
 
   @override
-  String get draftFoundDesc => 'Jurnal yang belum selesai. Lanjutkan?';
+  String get draftFoundDesc => 'Ada jurnal yang belum selesai. Lanjutkan?';
 
   @override
   String get continueDraft => 'Lanjutkan';
@@ -484,7 +483,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get manageMoods => 'Kelola Mood';
 
   @override
-  String get manageMoodsDesc => 'Buat mood kustom kamu sendiri';
+  String get manageMoodsDesc => 'Buat mood kustom mu sendiri';
 
   @override
   String get customMoods => 'Mood Kustom';
@@ -496,7 +495,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get newMood => 'Mood Baru';
 
   @override
-  String get moodNameHint => 'mis. Cemas, Semangat, Lelah...';
+  String get moodNameHint => 'Contoh: Cemas, Semangat, Lelah...';
 
   @override
   String get moodLimitReached => 'Maksimal 10 mood kustom tercapai';
@@ -532,20 +531,20 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get archiveMoodDesc =>
-      'Mood ini akan disembunyikan. Kamu bisa memulihkannya nanti dari section Arsip.';
+      'Mood ini akan disembunyikan dari halaman jurnal baru. Bisa dikembalikan lagi.';
 
   @override
   String get moodArchived => 'Mood diarsipkan';
 
   @override
-  String get moodRestored => 'Mood dipulihkan';
+  String get moodRestored => 'Mood dikembalikan';
 
   @override
   String get deletePermanentTitle => 'Hapus Permanen?';
 
   @override
   String get deletePermanentDesc =>
-      'Mood ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.';
+      'Mood ini akan dihapus permanen. Tidak bisa dikembalikan lagi.';
 
   @override
   String get moodDeletedPermanent => 'Mood dihapus permanen';
@@ -624,10 +623,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get permissionsDesc =>
-      'Kelola izin yang dibutuhkan aplikasi untuk berfungsi optimal.';
+      'Kelola dan lihat semua izin yang dibutuhkan aplikasi untuk berfungsi optimal disini.';
 
   @override
-  String get permissionsListSection => 'IZIN APLIKASI';
+  String get permissionsListSection => 'IZIN YANG DIBUTUHKAN';
 
   @override
   String get permissionStatusGranted => 'DIIZINKAN';
@@ -667,14 +666,14 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get permissionTapToOpen =>
-      'Tap untuk membuka pengaturan izin di HP-mu.';
+      'Tap untuk membuka pengaturan izin bawaan hp.';
 
   @override
   String get permissionGranted => 'Izin diberikan!';
 
   @override
   String get permissionSamsungHint =>
-      'Di perangkat Samsung, kamu perlu tap \"Permissions\" di halaman berikut untuk mengatur izin.';
+      'Di perangkat Samsung, perlu tap \"Permissions\" di halaman berikut untuk mengatur izin.';
 
   @override
   String get guideSection => 'Bantuan';
@@ -684,7 +683,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get guideDesc =>
-      'Beberapa fitur NoteNest agak tersembunyi. Yuk, kita jelajahi bersama!';
+      'Beberapa fitur aplikasi ini agak tersembunyi, lihat semua disini.';
 
   @override
   String get guideHiddenFeatures => 'FITUR TERSEMBUNYI';
@@ -760,7 +759,8 @@ class AppLocalizationsId extends AppLocalizations {
       'Di Pengaturan → Privasi, kelola izin aplikasi seperti notifikasi, lokasi, kamera, dan galeri.';
 
   @override
-  String get guideFooter => 'Selamat menjelajah NoteNest! ✨';
+  String get guideFooter =>
+      'Terima Kasih telah mencoba fitur fitur semua yang telah ada!';
 
   @override
   String get generalSection => 'Umum';
@@ -780,23 +780,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get openPermissionPage => 'Lihat sekarang';
-
-  @override
-  String get aboutAppStorySection => 'Mengapa Aplikasi ini Dibuat?';
-
-  @override
-  String get aboutAppStoryPurpose => 'Tujuan:';
-
-  @override
-  String get aboutAppStoryPurposeText =>
-      'Tulis paragraf panjangmu di sini tentang tujuan NoteNest.';
-
-  @override
-  String get aboutAppStoryOutcome => 'Hasil yang terjadi:';
-
-  @override
-  String get aboutAppStoryOutcomeText =>
-      'Tulis paragraf panjangmu di sini tentang hasil yang ingin dicapai.';
 
   @override
   String readingTime(int count) {

@@ -37,18 +37,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quoteMorning =>
-      '\"Every morning brings new potential. Start today with intention.\"';
+      '\"Start each day with a positive mind and a grateful heart.\"';
 
   @override
-  String get quoteAfternoon => '\"Gratitude turns what we have into enough.\"';
+  String get quoteAfternoon =>
+      '\"The small things you are grateful for today can blossom into a great source of happiness.\"';
 
   @override
   String get quoteEvening =>
-      '\"Small shifts in perspective can open the door to profound inner stillness.\"';
+      '\"Not everything has to be finished today. Give yourself time to rest.\"';
 
   @override
   String get quoteNight =>
-      '\"The quiet of night is where the soul finds its rest.\"';
+      '\"Bring your day to a peaceful close, and let tomorrow unfold a new story.\"';
 
   @override
   String get todaysEntry => 'Today\'s Entry';
@@ -117,7 +118,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get titleHint => 'Title';
 
   @override
-  String get contentHint => 'Start writing your thoughts...';
+  String get contentHint => 'Start writing down your thoughts and feelings....';
 
   @override
   String get selectImage => 'Preset images';
@@ -331,7 +332,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageDesc =>
-      'Choose the most suitable language, it can be changed at any time.';
+      'Choose the language that suits you; change it at any time.';
 
   @override
   String get calendarTitle => 'Calendar';
@@ -358,7 +359,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutDeveloper => 'Developer';
 
   @override
-  String get aboutFollowMe => 'Follow me on Instagram';
+  String get aboutFollowMe => 'Follow on Instagram';
 
   @override
   String get aboutInstagramHandle => 'imnotferrriii';
@@ -434,10 +435,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get incompleteDesc => 'Please complete the following before saving:';
 
   @override
-  String get missingTitle => 'Journal title is empty';
+  String get missingTitle => 'Title is empty';
 
   @override
-  String get missingContent => 'Journal content is empty';
+  String get missingContent => 'Content is empty';
 
   @override
   String get missingImage => 'Please select a photo';
@@ -449,7 +450,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get draftFoundTitle => 'Unsaved Draft Found';
 
   @override
-  String get draftFoundDesc => 'Unfinished journal. Continue?';
+  String get draftFoundDesc =>
+      'There is an unfinished journal entry. Continue?';
 
   @override
   String get continueDraft => 'Continue';
@@ -483,7 +485,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageMoods => 'Manage Moods';
 
   @override
-  String get manageMoodsDesc => 'Create your own custom moods';
+  String get manageMoodsDesc => 'Create your own custom mood';
 
   @override
   String get customMoods => 'Custom Moods';
@@ -495,7 +497,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newMood => 'New Mood';
 
   @override
-  String get moodNameHint => 'e.g. Anxious, Excited, Tired...';
+  String get moodNameHint => 'Example: Anxious, Excited, Tired...';
 
   @override
   String get moodLimitReached => 'Maximum 10 custom moods reached';
@@ -531,7 +533,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get archiveMoodDesc =>
-      'This mood will be hidden. You can restore it later from the Archive section.';
+      'This mood will be hidden from the new journal page. It can be restored later.';
 
   @override
   String get moodArchived => 'Mood archived';
@@ -543,8 +545,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deletePermanentTitle => 'Delete Permanently?';
 
   @override
-  String get deletePermanentDesc =>
-      'This mood will be permanently deleted. This action cannot be undone.';
+  String get deletePermanentDesc => 'This mood will be permanently deleted.';
 
   @override
   String get moodDeletedPermanent => 'Mood deleted permanently';
@@ -622,10 +623,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permissionsDesc =>
-      'Manage permissions that the app needs to function optimally.';
+      'Manage and view all the permissions an app needs to function optimally here.';
 
   @override
-  String get permissionsListSection => 'APP PERMISSIONS';
+  String get permissionsListSection => 'REQUIRED PERMITS';
 
   @override
   String get permissionStatusGranted => 'GRANTED';
@@ -665,14 +666,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permissionTapToOpen =>
-      'Tap to open permission settings on your phone.';
+      'Tap to open the phone\'s built-in permission settings.';
 
   @override
   String get permissionGranted => 'Permission granted!';
 
   @override
   String get permissionSamsungHint =>
-      'On Samsung devices, you need to tap \"Permissions\" on the next page to manage permissions.';
+      'On Samsung devices, need to tap \"Permissions\" on the next page to manage permissions.';
 
   @override
   String get guideSection => 'Help';
@@ -682,7 +683,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guideDesc =>
-      'Some NoteNest features are a bit hidden. Let\'s explore them together!';
+      'Some features of this app are somewhat hidden; see them all here.';
 
   @override
   String get guideHiddenFeatures => 'HIDDEN FEATURES';
@@ -758,7 +759,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'In Settings → Privacy, manage app permissions like notifications, location, camera, and gallery.';
 
   @override
-  String get guideFooter => 'Have fun exploring NoteNest! ✨';
+  String get guideFooter =>
+      'Thank you for trying out all the available features!';
 
   @override
   String get generalSection => 'General';
@@ -778,23 +780,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openPermissionPage => 'See it now';
-
-  @override
-  String get aboutAppStorySection => 'Why was this application created?';
-
-  @override
-  String get aboutAppStoryPurpose => 'Purpose:';
-
-  @override
-  String get aboutAppStoryPurposeText =>
-      'Write your long paragraph here about the purpose of NoteNest.';
-
-  @override
-  String get aboutAppStoryOutcome => 'Outcome:';
-
-  @override
-  String get aboutAppStoryOutcomeText =>
-      'Write your long paragraph here about the outcome you want to achieve.';
 
   @override
   String readingTime(int count) {

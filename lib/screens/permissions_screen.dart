@@ -127,12 +127,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
     return AppColors.systemRed;
   }
 
-  IconData _statusIcon(PermissionStatus status) {
-    if (status.isGranted) return Icons.check_circle;
-    if (status.isRestricted) return Icons.warning_amber_rounded;
-    return Icons.cancel_outlined;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -330,12 +324,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      _statusIcon(status),
-                      color: _statusColor(status),
-                      size: 12,
-                    ),
-                    const SizedBox(width: 4),
                     Text(
                       _statusLabel(context, status),
                       style: TextStyle(

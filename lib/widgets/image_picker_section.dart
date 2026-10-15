@@ -251,11 +251,11 @@ class ImagePickerSection extends StatelessWidget {
   // === HELPER: BUILD IMAGE ===
   Widget _buildImage(String imagePath) {
     if (imagePath.startsWith('http')) {
-      return Image.network(imagePath, fit: BoxFit.cover);
+      return Image.network(imagePath, fit: BoxFit.cover, cacheWidth: 360);
     } else if (imagePath.startsWith('assets/')) {
-      return Image.asset(imagePath, fit: BoxFit.cover);
+      return Image.asset(imagePath, fit: BoxFit.cover, cacheWidth: 360);
     } else {
-      return Image.file(File(imagePath), fit: BoxFit.cover);
+      return Image.file(File(imagePath), fit: BoxFit.cover, cacheWidth: 360);
     }
   }
 

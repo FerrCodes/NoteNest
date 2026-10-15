@@ -15,7 +15,7 @@ class SlideRoute extends PageRouteBuilder {
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);
           const end = Offset.zero;
-          const curve = Curves.easeInOutCubic;
+          const curve = Curves.easeOutCubic;
           final tween = Tween(
             begin: begin,
             end: end,
@@ -25,6 +25,7 @@ class SlideRoute extends PageRouteBuilder {
             child: child,
           );
         },
-        transitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 260),
       );
 }

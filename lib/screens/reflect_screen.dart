@@ -19,6 +19,7 @@ import 'manage_moods_screen.dart';
 import '../widgets/app_tooltip.dart';
 import '../widgets/weather_header.dart';
 import 'home_header_screen.dart';
+import '../utils/preset_images.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -195,6 +196,14 @@ class _ReflectScreenState extends State<ReflectScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    for (final img in PresetImages.images) {
+      precacheImage(ResizeImage(AssetImage(img['url']!), width: 200), context);
+    }
   }
 
   final _repository = JournalRepository();
@@ -500,7 +509,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
           // === TOMBOL SEARCH ===
           Positioned(
             top: MediaQuery.of(context).padding.top + 12,
-            right: 20,
+            right: 16,
             child: AppTooltip(
               message: AppLocalizations.of(context)!.searchHint,
               child: GestureDetector(
@@ -619,26 +628,10 @@ class _ReflectScreenState extends State<ReflectScreen> {
           children: filteredEntries.map((entry) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
-              child: Dismissible(
-                key: Key(entry.key.toString()), // Key unik per entry
-                direction:
-                    DismissDirection.endToStart, // Swipe dari kanan ke kiri
-                background: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 24),
-                  decoration: BoxDecoration(
-                    color: AppColors.systemRed.withValues(alpha: 0.8),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: const Icon(
-                    Icons.delete_outline,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
+              child: _SwipeToDeleteItem(
+                dismissKey: Key(entry.key.toString()),
                 confirmDismiss: (direction) async {
-                  // Konfirmasi sebelum hapus
-                  return await showDialog(
+                  return await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
                       backgroundColor: AppColors.cardDark,
@@ -740,6 +733,62 @@ class _ReflectScreenState extends State<ReflectScreen> {
           _selectedMoodFilter = value;
         });
       },
+    );
+  }
+}
+
+class _SwipeToDeleteItem extends StatefulWidget {
+  final Key dismissKey;
+  final Future<bool?> Function(DismissDirection) confirmDismiss;
+  final DismissDirectionCallback onDismissed;
+  final Widget child;
+
+  const _SwipeToDeleteItem({
+    required this.dismissKey,
+    required this.confirmDismiss,
+    required this.onDismissed,
+    required this.child,
+  });
+
+  @override
+  State<_SwipeToDeleteItem> createState() => _SwipeToDeleteItemState();
+}
+
+class _SwipeToDeleteItemState extends State<_SwipeToDeleteItem> {
+  bool _swiping = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        if (_swiping)
+          Positioned.fill(
+            child: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 24),
+              decoration: BoxDecoration(
+                color: AppColors.systemRed.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: const Icon(
+                Icons.delete_outline,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+          ),
+        Dismissible(
+          key: widget.dismissKey,
+          direction: DismissDirection.endToStart,
+          onUpdate: (details) {
+            final swiping = details.progress > 0;
+            if (swiping != _swiping) setState(() => _swiping = swiping);
+          },
+          confirmDismiss: widget.confirmDismiss,
+          onDismissed: widget.onDismissed,
+          child: widget.child,
+        ),
+      ],
     );
   }
 }

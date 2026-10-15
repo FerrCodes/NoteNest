@@ -241,7 +241,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-    bool showBetaBadge = false, // <-- PARAMETER BARU
+    bool showBetaBadge = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

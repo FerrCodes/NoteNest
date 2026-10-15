@@ -94,65 +94,6 @@ class _AboutScreenState extends State<AboutScreen> {
                 ]),
                 const SizedBox(height: 32),
 
-                // === SECTION: Tujuan:, Hasil yang terjadi: ===
-                _buildSectionTitle(
-                  AppLocalizations.of(context)!.aboutAppStorySection,
-                ),
-                _buildGroupCard([
-                  // === KONTEN STORY ===
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // === TUJUAN ===
-                        Text(
-                          AppLocalizations.of(context)!.aboutAppStoryPurpose,
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 255, 239, 159),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.aboutAppStoryPurposeText,
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 13,
-                            height: 1.6,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // === HASIL YANG TERJADI ===
-                        Text(
-                          AppLocalizations.of(context)!.aboutAppStoryOutcome,
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 107, 178, 248),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.aboutAppStoryOutcomeText,
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 13,
-                            height: 1.6,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ]),
-                const SizedBox(height: 32),
-
                 // === SECTION: SOSIAL MEDIA ===
                 _buildSectionTitle(AppLocalizations.of(context)!.socialMedia),
                 _buildGroupCard([
