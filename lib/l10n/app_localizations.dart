@@ -1556,6 +1556,18 @@ abstract class AppLocalizations {
   /// **'See it now'**
   String get openPermissionPage;
 
+  /// No description provided for @hapticFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic Feedback'**
+  String get hapticFeedback;
+
+  /// No description provided for @hapticFeedbackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate on interactions'**
+  String get hapticFeedbackDesc;
+
   /// No description provided for @readingTime.
   ///
   /// In en, this message translates to:

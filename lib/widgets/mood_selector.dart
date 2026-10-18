@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../constants/moods.dart';
 import '../repositories/mood_repository.dart';
+import '../services/haptic_service.dart';
 
 class MoodSelector extends StatelessWidget {
   final String selectedMood;
@@ -88,7 +88,7 @@ class MoodSelector extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () {
-                  HapticFeedback.selectionClick();
+                  HapticService.selectionClick();
                   onMoodSelected(mood['label']);
                 },
                 child: Column(

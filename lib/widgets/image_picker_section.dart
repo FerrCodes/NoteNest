@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:io';
 import '../utils/preset_images.dart';
 import '../l10n/app_localizations.dart';
@@ -8,6 +7,7 @@ import '../screens/photo_viewer_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/permission_helper.dart';
 import 'package:image_picker/image_picker.dart';
+import '../services/haptic_service.dart';
 
 class ImagePickerSection extends StatelessWidget {
   final List<String> selectedImages;
@@ -72,7 +72,7 @@ class ImagePickerSection extends StatelessWidget {
               final isSelected = selectedImages.contains(img['url']);
               return GestureDetector(
                 onTap: () {
-                  HapticFeedback.selectionClick();
+                  HapticService.selectionClick();
                   final url = img['url']!;
                   final newList = List<String>.from(selectedImages);
                   if (isSelected) {
@@ -147,7 +147,7 @@ class ImagePickerSection extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 _showImageSourceSheet(context);
               },
               child: Container(
@@ -194,7 +194,7 @@ class ImagePickerSection extends StatelessWidget {
                 final imagePath = selectedImages[index];
                 return GestureDetector(
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    HapticService.selectionClick();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -217,7 +217,7 @@ class ImagePickerSection extends StatelessWidget {
                           right: 4,
                           child: GestureDetector(
                             onTap: () {
-                              HapticFeedback.selectionClick();
+                              HapticService.selectionClick();
                               final newList = List<String>.from(selectedImages);
                               newList.removeAt(index);
                               onImagesChanged(newList);
@@ -349,7 +349,7 @@ class ImagePickerSection extends StatelessWidget {
 
       if (pickedFile != null) {
         if (!context.mounted) return;
-        HapticFeedback.mediumImpact();
+        HapticService.mediumImpact();
         final newList = List<String>.from(selectedImages);
         if (newList.length >= maxPhotos) {
           _showMaxPhotosSnackBar(context);
@@ -359,7 +359,7 @@ class ImagePickerSection extends StatelessWidget {
         onImagesChanged(newList);
       }
     } catch (e) {
-      HapticFeedback.heavyImpact();
+      HapticService.heavyImpact();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -376,7 +376,7 @@ class ImagePickerSection extends StatelessWidget {
   }
 
   void _showMaxPhotosSnackBar(BuildContext context) {
-    HapticFeedback.heavyImpact();
+    HapticService.heavyImpact();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Maksimal $maxPhotos foto per jurnal'),
@@ -397,7 +397,7 @@ class ImagePickerSection extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

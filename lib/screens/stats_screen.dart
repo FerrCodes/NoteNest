@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../constants/moods.dart';
+import '../services/haptic_service.dart';
 import '../repositories/mood_repository.dart';
 
 class StatsScreen extends StatefulWidget {
@@ -543,7 +543,7 @@ class _StatsScreenState extends State<StatsScreen> {
     final isLabeled = label != null;
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

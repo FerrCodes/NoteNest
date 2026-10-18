@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../l10n/app_localizations.dart';
@@ -7,6 +6,7 @@ import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
 import '../widgets/app_tooltip.dart';
+import '../services/haptic_service.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -200,7 +200,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     message: AppLocalizations.of(context)!.sourceCode,
                     child: GestureDetector(
                       onTap: () {
-                        HapticFeedback.selectionClick();
+                        HapticService.selectionClick();
                         _launchUrl('https://github.com/FerrCodes/Note-Nest');
                       },
                       child: Container(
@@ -264,7 +264,7 @@ class _AboutScreenState extends State<AboutScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       behavior: HitTestBehavior.opaque,
@@ -310,7 +310,7 @@ class _AboutScreenState extends State<AboutScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

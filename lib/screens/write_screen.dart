@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import '../models/journal_entry.dart';
@@ -10,6 +9,7 @@ import '../repositories/journal_repository.dart';
 import '../widgets/mood_selector.dart';
 import '../widgets/image_picker_section.dart';
 import '../theme/app_colors.dart';
+import '../services/haptic_service.dart';
 
 class WriteScreen extends StatefulWidget {
   final JournalEntry? entry;
@@ -28,7 +28,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
   final _repository = JournalRepository();
 
   void _showIncompleteDialog(List<String> missingFields) {
-    HapticFeedback.heavyImpact();
+    HapticService.heavyImpact();
 
     showDialog(
       context: context,
@@ -103,7 +103,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
         actions: [
           TextButton(
             onPressed: () {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               Navigator.pop(context);
             },
             child: Text(
@@ -229,7 +229,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
         actions: [
           TextButton(
             onPressed: () async {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               await _clearDraft();
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -241,7 +241,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
           ),
           TextButton(
             onPressed: () async {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               final settingsBox = Hive.box('settingsBox');
               setState(() {
                 _titleController.text = settingsBox.get(
@@ -301,7 +301,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
         actions: [
           TextButton(
             onPressed: () {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               Navigator.pop(context);
             },
             child: Text(
@@ -311,7 +311,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
           ),
           TextButton(
             onPressed: () async {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               await _clearDraft();
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -324,7 +324,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
           ),
           TextButton(
             onPressed: () async {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               await _saveDraft();
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -482,7 +482,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                   _buildCircleButton(
                     icon: Icons.arrow_back_ios_new,
                     onTap: () {
-                      HapticFeedback.selectionClick();
+                      HapticService.selectionClick();
                       if (_hasUnsavedContent()) {
                         _showCloseConfirmDialog();
                       } else {
@@ -531,7 +531,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         : AppLocalizations.of(context)!.save,
                     labelColor: AppColors.systemBlue,
                     onTap: () async {
-                      HapticFeedback.mediumImpact();
+                      HapticService.mediumImpact();
 
                       // === VALIDASI ===
                       final missingFields = <String>[];
@@ -577,7 +577,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
 
                       await _clearDraft();
                       if (!context.mounted) return;
-                      HapticFeedback.lightImpact();
+                      HapticService.lightImpact();
                       Navigator.pop(context);
                     },
                   ),
@@ -600,7 +600,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     final isLabeled = label != null;
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

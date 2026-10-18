@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../repositories/mood_repository.dart';
@@ -7,6 +6,7 @@ import '../models/custom_mood.dart';
 import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
 import '../widgets/top_banner.dart';
+import '../services/haptic_service.dart';
 
 class ManageMoodsScreen extends StatefulWidget {
   const ManageMoodsScreen({super.key});
@@ -196,7 +196,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
                                   final isSelected = selectedHex == hex;
                                   return GestureDetector(
                                     onTap: () {
-                                      HapticFeedback.selectionClick();
+                                      HapticService.selectionClick();
                                       _selectedColorNotifier.value = hex;
                                     },
                                     child: Container(
@@ -295,7 +295,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
     }
 
     if (_repository.isLabelTaken(trimmed)) {
-      HapticFeedback.heavyImpact();
+      HapticService.heavyImpact();
       setSheetState(() {
         _nameError = AppLocalizations.of(context)!.moodAlreadyExists;
       });
@@ -303,7 +303,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
     }
 
     if (_repository.isAtMaxCapacity) {
-      HapticFeedback.heavyImpact();
+      HapticService.heavyImpact();
       setSheetState(() {
         _nameError = AppLocalizations.of(context)!.moodLimitReached;
       });
@@ -324,7 +324,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
 
     if (!sheetContext.mounted) return;
 
-    HapticFeedback.mediumImpact();
+    HapticService.mediumImpact();
     Navigator.pop(sheetContext);
     _showSnackBar(AppLocalizations.of(context)!.moodAdded);
   }
@@ -356,7 +356,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
           ),
           TextButton(
             onPressed: () async {
-              HapticFeedback.heavyImpact();
+              HapticService.heavyImpact();
               await _repository.archiveCustomMood(mood);
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -399,7 +399,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
           ),
           TextButton(
             onPressed: () async {
-              HapticFeedback.heavyImpact();
+              HapticService.heavyImpact();
               await _repository.deleteCustomMood(mood);
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -607,7 +607,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
           if (isArchived) ...[
             GestureDetector(
               onTap: () async {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 await _repository.restoreCustomMood(mood);
                 if (!mounted) return;
                 _showSnackBar(AppLocalizations.of(context)!.moodRestored);
@@ -624,7 +624,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
             const SizedBox(width: 4),
             GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 _confirmPermanentDelete(mood);
               },
               child: Container(
@@ -639,7 +639,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
           ] else ...[
             GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 _confirmArchiveMood(mood);
               },
               child: Container(
@@ -654,7 +654,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
             const SizedBox(width: 4),
             GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 _confirmPermanentDelete(mood);
               },
               child: Container(
@@ -707,7 +707,7 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

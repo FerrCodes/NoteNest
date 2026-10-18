@@ -243,6 +243,8 @@
   "permissionBlockedTitle": "Permission Blocked",
   "permissionBlockedDesc": "The permission request was denied after being rejected twice. To enable it, open the Permissions page.",
   "openPermissionPage": "See it now",
+  "hapticFeedback": "Haptic Feedback",
+  "hapticFeedbackDesc": "Vibrate on interactions",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

@@ -19,6 +19,7 @@ import '../utils/slide_route.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/permission_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../services/haptic_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -91,6 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 _buildGroupCard([
                   _buildLanguageSelector(),
+                  _buildHapticToggle(),
                   _buildReminderToggle(),
                   if (_reminderEnabled) ...[
                     _buildReminderTime(),
@@ -292,7 +294,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(
@@ -431,7 +433,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Switch(
             value: _reminderEnabled,
             onChanged: (value) async {
-              HapticFeedback.selectionClick();
+              HapticService.selectionClick();
               await _toggleReminder(value);
             },
             activeThumbColor: AppColors.systemBlue,
@@ -448,7 +450,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildReminderTime() {
     return GestureDetector(
       onTap: () async {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         final TimeOfDay? picked = await showTimePicker(
           context: context,
           initialTime: _reminderTime,
@@ -617,7 +619,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildTestNotification() {
     return GestureDetector(
       onTap: () async {
-        HapticFeedback.mediumImpact();
+        HapticService.mediumImpact();
         await NotificationService().showTestNotification(
           _reminderMessageController.text.isEmpty
               ? 'Waktunya menulis jurnal hari ini!'
@@ -666,7 +668,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _showLanguageMenu(BuildContext context) async {
-    HapticFeedback.selectionClick();
+    HapticService.selectionClick();
 
     final settingsBox = Hive.box('settingsBox');
     final currentLang = settingsBox.get('languageCode', defaultValue: 'system');
@@ -761,7 +763,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (result != null && result != currentLang) {
       await settingsBox.put('languageCode', result);
       if (!mounted) return;
-      HapticFeedback.mediumImpact();
+      HapticService.mediumImpact();
     }
   }
 
@@ -861,7 +863,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               await box.clear();
               if (!context.mounted) return;
               Navigator.pop(context);
-              HapticFeedback.heavyImpact();
+              HapticService.heavyImpact();
               _showSnackBar(AppLocalizations.of(context)!.allJournalsDeleted);
             },
             child: Text(
@@ -920,7 +922,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
               if (!context.mounted) return;
               Navigator.pop(context);
-              HapticFeedback.heavyImpact();
+              HapticService.heavyImpact();
               _showSnackBar(AppLocalizations.of(context)!.settingsReset);
             },
             child: Text(
@@ -1070,7 +1072,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // === EXPANDABLE: "LIHAT OPSI LAIN" ===
                   GestureDetector(
                     onTap: () {
-                      HapticFeedback.selectionClick();
+                      HapticService.selectionClick();
                       setState(() {
                         _isFeedbackOptionsExpanded =
                             !_isFeedbackOptionsExpanded;
@@ -1142,7 +1144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       return GestureDetector(
                         onTap: hasText
                             ? () {
-                                HapticFeedback.mediumImpact();
+                                HapticService.mediumImpact();
                                 _sendFeedbackViaEmailWithText(value.text);
                                 Navigator.pop(context);
                               }
@@ -1202,6 +1204,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  Widget _buildHapticToggle() {
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('settingsBox').listenable(),
+      builder: (context, box, _) {
+        final hapticEnabled = box.get('hapticEnabled', defaultValue: true);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.textPrimary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.vibration,
+                  color: AppColors.textPrimary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.hapticFeedback,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                  ],
+                ),
+              ),
+              Switch(
+                value: hapticEnabled,
+                onChanged: (value) async {
+                  await box.put('hapticEnabled', value);
+                  // Kasih getar 1x saat baru dinyalakan (pakai HapticService langsung biar tetap getar meski baru dinyalakan)
+                  if (value) {
+                    HapticFeedback.lightImpact();
+                  }
+                },
+                activeThumbColor: AppColors.systemBlue,
+                activeTrackColor: AppColors.systemBlue.withValues(alpha: 0.5),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildFeedbackOption({
     IconData? icon,
     Widget? customIcon,
@@ -1211,7 +1271,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       behavior: HitTestBehavior.opaque,

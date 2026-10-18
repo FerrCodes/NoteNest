@@ -782,6 +782,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get openPermissionPage => 'Lihat sekarang';
 
   @override
+  String get hapticFeedback => 'Getaran (Haptic)';
+
+  @override
+  String get hapticFeedbackDesc => 'Berikan getaran saat berinteraksi';
+
+  @override
   String readingTime(int count) {
     return '$count menit baca';
   }

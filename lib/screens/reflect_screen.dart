@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
@@ -20,6 +19,7 @@ import '../widgets/app_tooltip.dart';
 import '../widgets/weather_header.dart';
 import 'home_header_screen.dart';
 import '../utils/preset_images.dart';
+import '../services/haptic_service.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -70,7 +70,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
   }
 
   void _toggleDropdown() {
-    HapticFeedback.selectionClick();
+    HapticService.selectionClick();
 
     if (_isDropdownOpen) {
       _closeDropdown();
@@ -387,7 +387,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        HapticFeedback.selectionClick();
+                        HapticService.selectionClick();
                         Navigator.push(
                           context,
                           SlideRoute(page: const StatsScreen()),
@@ -424,7 +424,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                     const SizedBox(width: 20),
                     IconButton(
                       onPressed: () {
-                        HapticFeedback.selectionClick();
+                        HapticService.selectionClick();
                         Navigator.push(
                           context,
                           SlideRoute(page: const SettingsScreen()),
@@ -669,7 +669,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
                   );
                 },
                 onDismissed: (direction) {
-                  HapticFeedback.heavyImpact();
+                  HapticService.heavyImpact();
                   _repository.deleteJournal(entry);
                   TopBanner.show(
                     context,
@@ -701,7 +701,7 @@ class _ReflectScreenState extends State<ReflectScreen> {
   }
 
   void _openSearchModal() {
-    HapticFeedback.selectionClick();
+    HapticService.selectionClick();
 
     showModalBottomSheet(
       context: context,
@@ -936,7 +936,7 @@ class _SearchModalState extends State<_SearchModal> {
                   // Tombol Cancel
                   GestureDetector(
                     onTap: () {
-                      HapticFeedback.selectionClick();
+                      HapticService.selectionClick();
                       // Reset search saat cancel
                       widget.onSearch('');
                       Navigator.pop(context);

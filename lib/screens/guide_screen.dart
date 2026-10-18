@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
+import '../services/haptic_service.dart';
 
 class GuideScreen extends StatefulWidget {
   const GuideScreen({super.key});
@@ -245,7 +245,7 @@ class _GuideScreenState extends State<GuideScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../services/haptic_service.dart';
 
 class PhotoViewerScreen extends StatefulWidget {
   final String imagePath;
@@ -102,7 +103,7 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
             left: 20,
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 Navigator.pop(context);
               },
               child: Container(
@@ -150,7 +151,7 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
             right: 20,
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 // Reset zoom di semua page
                 setState(() {
                   _pageController.jumpToPage(_currentIndex);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../models/journal_entry.dart';
 import 'write_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -8,6 +7,7 @@ import 'dart:io';
 import 'photo_viewer_screen.dart';
 import '../utils/slide_route.dart';
 import '../theme/app_colors.dart';
+import '../services/haptic_service.dart';
 
 class DetailScreen extends StatefulWidget {
   final JournalEntry entry;
@@ -329,7 +329,7 @@ class _DetailScreenState extends State<DetailScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: GestureDetector(
           onTap: () {
-            HapticFeedback.selectionClick();
+            HapticService.selectionClick();
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -364,7 +364,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             child: GestureDetector(
               onTap: () {
-                HapticFeedback.selectionClick();
+                HapticService.selectionClick();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -395,7 +395,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final isLabeled = label != null;
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

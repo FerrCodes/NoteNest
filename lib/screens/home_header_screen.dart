@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
@@ -7,6 +6,7 @@ import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
 import '../utils/permission_helper.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../services/haptic_service.dart';
 
 class HomeHeaderScreen extends StatefulWidget {
   const HomeHeaderScreen({super.key});
@@ -92,7 +92,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                     subtitle: AppLocalizations.of(context)!.showDateDesc,
                     value: _showDate,
                     onChanged: (value) async {
-                      HapticFeedback.selectionClick();
+                      HapticService.selectionClick();
                       final settingsBox = Hive.box('settingsBox');
                       await settingsBox.put('showDate', value);
                       setState(() => _showDate = value);
@@ -104,7 +104,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                     subtitle: AppLocalizations.of(context)!.showTimeDesc,
                     value: _showTime,
                     onChanged: (value) async {
-                      HapticFeedback.selectionClick();
+                      HapticService.selectionClick();
                       final settingsBox = Hive.box('settingsBox');
                       await settingsBox.put('showTime', value);
                       setState(() => _showTime = value);
@@ -117,7 +117,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                     value: _showWeather,
                     showBetaBadge: true,
                     onChanged: (value) async {
-                      HapticFeedback.selectionClick();
+                      HapticService.selectionClick();
 
                       final settingsBox = Hive.box('settingsBox');
 
@@ -436,7 +436,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(

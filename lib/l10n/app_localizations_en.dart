@@ -782,6 +782,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openPermissionPage => 'See it now';
 
   @override
+  String get hapticFeedback => 'Haptic Feedback';
+
+  @override
+  String get hapticFeedbackDesc => 'Vibrate on interactions';
+
+  @override
   String readingTime(int count) {
     return '$count min read';
   }

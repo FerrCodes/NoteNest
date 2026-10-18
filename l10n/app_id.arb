@@ -243,6 +243,8 @@
   "permissionBlockedTitle": "Izin Diblokir",
   "permissionBlockedDesc": "Permintaan Izin ditolak setelah 2x tidak diizinkan. Untuk mengaktifkannya buka halaman Izin.",
   "openPermissionPage": "Lihat sekarang",
+  "hapticFeedback": "Getaran (Haptic)",
+  "hapticFeedbackDesc": "Berikan getaran saat berinteraksi",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

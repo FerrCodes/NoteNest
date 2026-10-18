@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
+import '../services/haptic_service.dart';
 
 class PermissionsScreen extends StatefulWidget {
   const PermissionsScreen({super.key});
@@ -61,7 +61,7 @@ class _PermissionsScreenState extends State<PermissionsScreen>
   }
 
   Future<void> _handleTap(String key) async {
-    HapticFeedback.selectionClick();
+    HapticService.selectionClick();
     // Semua tap → buka Settings HP (App Info)
     await openAppSettings();
   }
@@ -354,7 +354,7 @@ class _PermissionsScreenState extends State<PermissionsScreen>
   }) {
     return GestureDetector(
       onTap: () {
-        HapticFeedback.selectionClick();
+        HapticService.selectionClick();
         onTap();
       },
       child: Container(
