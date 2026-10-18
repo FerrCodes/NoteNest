@@ -9,10 +9,13 @@ import 'package:intl/intl.dart';
 import 'services/notification_service.dart';
 import 'models/custom_mood.dart';
 import 'dart:ui' show PlatformDispatcher;
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  await initializeDateFormatting('en_US', null);
+  await initializeDateFormatting('id_ID', null);
   Intl.defaultLocale = 'id_ID';
 
   // Daftarkan adapter
@@ -30,7 +33,7 @@ void main() async {
     await settingsBox.put('showDate', true);
     await settingsBox.put('showTime', true);
     await settingsBox.put('showWeather', false);
-    await settingsBox.put('userName', 'Feri');
+    await settingsBox.put('userName', '');
     await settingsBox.put('headerInitialized', true);
   }
 

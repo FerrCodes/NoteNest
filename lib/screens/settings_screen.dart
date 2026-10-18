@@ -29,7 +29,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isFeedbackOptionsExpanded = false;
   bool _reminderEnabled = false;
   bool _isLanguageMenuOpen = false;
   TimeOfDay _reminderTime = const TimeOfDay(hour: 20, minute: 0);
@@ -981,205 +980,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // FEEDBACK BOTTOM SHEET
   // ==========================================
   void _showFeedbackBottomSheet() {
-    _isFeedbackOptionsExpanded = false;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.cardDark,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
-              ),
-            ),
-            padding: EdgeInsets.only(
-              top: 12,
-              left: 24,
-              right: 24,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: AppColors.textSecondary.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    AppLocalizations.of(context)!.sendFeedback,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    AppLocalizations.of(context)!.feedbackWhatHappened,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _feedbackController,
-                    maxLines: null,
-                    maxLength: 2000,
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.feedbackHint,
-                      hintStyle: TextStyle(
-                        color: AppColors.textSecondary.withValues(alpha: 0.5),
-                      ),
-                      filled: true,
-                      fillColor: AppColors.bgDark,
-                      counterStyle: TextStyle(color: AppColors.textSecondary),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.all(16),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    AppLocalizations.of(context)!.feedbackDisclaimer,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // === EXPANDABLE: "LIHAT OPSI LAIN" ===
-                  GestureDetector(
-                    onTap: () {
-                      HapticService.selectionClick();
-                      setState(() {
-                        _isFeedbackOptionsExpanded =
-                            !_isFeedbackOptionsExpanded;
-                      });
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Lihat opsi lain',
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          AnimatedRotation(
-                            turns: _isFeedbackOptionsExpanded ? 0.5 : 0,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOutCubic,
-                            child: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.textPrimary,
-                              size: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // === KONTEN EXPAND ===
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOutCubic,
-                    alignment: Alignment.topCenter,
-                    child: _isFeedbackOptionsExpanded
-                        ? Column(
-                            children: [
-                              const SizedBox(height: 8),
-                              _buildFeedbackOption(
-                                customIcon: const FaIcon(
-                                  FontAwesomeIcons.whatsapp,
-                                  color: Color(0xFF25D366),
-                                  size: 20,
-                                ),
-                                label: 'WhatsApp',
-                                color: const Color(0xFF25D366),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  _sendFeedbackViaWhatsApp(
-                                    _feedbackController.text,
-                                  );
-                                },
-                              ),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  const SizedBox(height: 24),
-                  ValueListenableBuilder(
-                    valueListenable: _feedbackController,
-                    builder: (context, value, child) {
-                      final hasText = value.text.trim().isNotEmpty;
-                      return GestureDetector(
-                        onTap: hasText
-                            ? () {
-                                HapticService.mediumImpact();
-                                _sendFeedbackViaEmailWithText(value.text);
-                                Navigator.pop(context);
-                              }
-                            : null,
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          decoration: BoxDecoration(
-                            color: hasText
-                                ? AppColors.systemBlue
-                                : AppColors.textSecondary.withValues(
-                                    alpha: 0.2,
-                                  ),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!.send,
-                              style: TextStyle(
-                                color: hasText
-                                    ? Colors.white
-                                    : AppColors.textSecondary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return _FeedbackBottomSheet(
+          controller: _feedbackController,
+          onSendEmail: _sendFeedbackViaEmailWithText,
+          onSendWhatsApp: _sendFeedbackViaWhatsApp,
         );
       },
     );
@@ -1262,58 +1071,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildFeedbackOption({
-    IconData? icon,
-    Widget? customIcon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.bgDark,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: customIcon ?? Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: AppColors.textSecondary.withValues(alpha: 0.5),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> _sendFeedbackViaEmailWithText(String feedbackText) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
@@ -1331,5 +1088,260 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showSnackBar(String message, {BannerType type = BannerType.success}) {
     TopBanner.show(context, message: message, type: type);
+  }
+}
+
+// ==========================================
+// WIDGET: FEEDBACK BOTTOM SHEET
+// ==========================================
+class _FeedbackBottomSheet extends StatefulWidget {
+  final TextEditingController controller;
+  final Future<void> Function(String) onSendEmail;
+  final Future<void> Function(String) onSendWhatsApp;
+
+  const _FeedbackBottomSheet({
+    required this.controller,
+    required this.onSendEmail,
+    required this.onSendWhatsApp,
+  });
+
+  @override
+  State<_FeedbackBottomSheet> createState() => _FeedbackBottomSheetState();
+}
+
+class _FeedbackBottomSheetState extends State<_FeedbackBottomSheet> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.cardDark,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: EdgeInsets.only(
+          top: 12,
+          left: 24,
+          right: 24,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.textSecondary.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context)!.sendFeedback,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(context)!.feedbackWhatHappened,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: widget.controller,
+                maxLines: null,
+                maxLength: 2000,
+                style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.feedbackHint,
+                  hintStyle: TextStyle(
+                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.bgDark,
+                  counterStyle: TextStyle(color: AppColors.textSecondary),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.all(16),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(context)!.feedbackDisclaimer,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // === EXPANDABLE: "LIHAT OPSI LAIN" ===
+              GestureDetector(
+                onTap: () {
+                  HapticService.selectionClick();
+                  // SEKARANG SETSTATE-NYA ADA DI DALAM BOTTOM SHEET!
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Lihat opsi lain',
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      AnimatedRotation(
+                        turns: _isExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOutCubic,
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.textPrimary,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // === KONTEN EXPAND ===
+              AnimatedSize(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.topCenter,
+                child: _isExpanded
+                    ? Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: () {
+                              HapticService.selectionClick();
+                              Navigator.pop(context);
+                              widget.onSendWhatsApp(widget.controller.text);
+                            },
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: AppColors.bgDark,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: const Color(
+                                    0xFF25D366,
+                                  ).withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: const Color(
+                                        0xFF25D366,
+                                      ).withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const FaIcon(
+                                      FontAwesomeIcons.whatsapp,
+                                      color: Color(0xFF25D366),
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  Expanded(
+                                    child: Text(
+                                      'WhatsApp',
+                                      style: TextStyle(
+                                        color: AppColors.textPrimary,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                    color: AppColors.textSecondary.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 24),
+              ValueListenableBuilder(
+                valueListenable: widget.controller,
+                builder: (context, value, child) {
+                  final hasText = value.text.trim().isNotEmpty;
+                  return GestureDetector(
+                    onTap: hasText
+                        ? () {
+                            HapticService.mediumImpact();
+                            Navigator.pop(context);
+                            widget.onSendEmail(value.text);
+                          }
+                        : null,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: hasText
+                            ? AppColors.systemBlue
+                            : AppColors.textSecondary.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.send,
+                          style: TextStyle(
+                            color: hasText
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

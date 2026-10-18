@@ -60,23 +60,39 @@ class _DetailScreenState extends State<DetailScreen> {
     return l10n.yearsAgo((diff.inDays / 365).floor());
   }
 
-  String _formatFullDate(String dateStr) {
-    // Coba parsing dengan format baru (ada jam)
+  String _formatFullDate(BuildContext context, String dateStr) {
+    DateTime? dt;
+
+    // 1. Baca format ISO baru
     try {
-      final dt = DateFormat('MMM d, yyyy HH:mm').parse(dateStr);
-      final formatted = DateFormat('d MMMM yyyy', 'id_ID').format(dt);
+      dt = DateTime.parse(dateStr);
+    } catch (_) {}
+
+    // 2. Fallback baca format lama
+    if (dt == null) {
+      try {
+        dt = DateFormat('MMM d, yyyy HH:mm').parse(dateStr);
+      } catch (_) {}
+    }
+    if (dt == null) {
+      try {
+        dt = DateFormat('MMM d, yyyy').parse(dateStr);
+      } catch (_) {}
+    }
+
+    if (dt != null) {
+      // Ambil bahasa aktif
+      final currentLocale = Localizations.localeOf(context).toString();
+
+      final formatted = DateFormat('d MMMM yyyy', currentLocale).format(dt);
       final time = DateFormat('HH.mm').format(dt);
-      return '$formatted - $time';
-    } catch (_) {}
 
-    // Coba parsing dengan format lama (tanpa jam)
-    try {
-      final dt = DateFormat('MMM d, yyyy').parse(dateStr);
-      final formatted = DateFormat('d MMMM yyyy', 'id_ID').format(dt);
+      // Cek apakah string aslinya punya jam
+      if (dateStr.contains('T') || dateStr.contains(':')) {
+        return '$formatted - $time';
+      }
       return formatted;
-    } catch (_) {}
-
-    // Kalau gagal parsing, kembalikan teks asli
+    }
     return dateStr;
   }
 
@@ -104,7 +120,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         Row(
                           children: [
                             Text(
-                              _formatFullDate(entry.date),
+                              _formatFullDate(context, entry.date),
                               style: TextStyle(
                                 fontSize: 14,
                                 color: AppColors.textSecondary,

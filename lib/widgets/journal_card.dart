@@ -4,6 +4,7 @@ import 'dart:io';
 import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
+import 'package:intl/intl.dart';
 
 class JournalCard extends StatelessWidget {
   final JournalEntry entry;
@@ -110,7 +111,7 @@ class JournalCard extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                entry.date,
+                                _formatCardDate(context, entry.date),
                                 style: TextStyle(
                                   color: AppColors.textSecondary,
                                   fontSize: 12,
@@ -165,6 +166,21 @@ class JournalCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Fungsi untuk mengubah format ISO ke format yang ramah dibaca
+  String _formatCardDate(BuildContext context, String dateStr) {
+    try {
+      final dt = DateTime.parse(dateStr);
+
+      // Ambil locale yang sedang aktif di aplikasi (id, en, dll)
+      final currentLocale = Localizations.localeOf(context).toString();
+
+      // Format tanggal menggunakan locale yang aktif
+      return DateFormat('d MMM yyyy', currentLocale).format(dt);
+    } catch (_) {
+      return dateStr;
+    }
   }
 
   Widget _buildImage(

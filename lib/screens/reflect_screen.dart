@@ -215,251 +215,330 @@ class _ReflectScreenState extends State<ReflectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgDark,
-      body: Stack(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 67.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // === QUOTE ===
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 17),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(width: 4),
-                          // Quote
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: Text(
-                                _getTimeBasedQuote(context),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 27,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.55,
-                                  color: AppColors.textPrimary.withValues(
-                                    alpha: 0.85,
+    return PopScope(
+      canPop: !_isDropdownOpen,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_isDropdownOpen) {
+          _closeDropdown();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.bgDark,
+        body: Stack(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 67.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // === QUOTE ===
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(width: 4),
+                            // Quote
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 12),
+                                child: Text(
+                                  _getTimeBasedQuote(context),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 27,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.55,
+                                    color: AppColors.textPrimary.withValues(
+                                      alpha: 0.85,
+                                    ),
+                                    fontFamily: 'DMSerifDisplay',
+                                    letterSpacing: 0.2,
                                   ),
-                                  fontFamily: 'DMSerifDisplay',
-                                  letterSpacing: 0.2,
                                 ),
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 67),
+
+                      // === WEATHER HEADER (Tanggal + Jam + Cuaca) ===
+                      ValueListenableBuilder(
+                        valueListenable: Hive.box('settingsBox').listenable(),
+                        builder: (context, box, _) {
+                          final showDate = box.get(
+                            'showDate',
+                            defaultValue: true,
+                          );
+                          final showTime = box.get(
+                            'showTime',
+                            defaultValue: true,
+                          );
+                          final showWeather = box.get(
+                            'showWeather',
+                            defaultValue: false,
+                          );
+                          return WeatherHeader(
+                            showDate: showDate,
+                            showTime: showTime,
+                            showWeather: showWeather,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+
+                      // === DIVIDER ===
+                      Container(
+                        height: 1,
+                        margin: const EdgeInsets.symmetric(horizontal: 15),
+                        color: AppColors.dividerDark.withValues(alpha: 0.5),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // === FILTER CHIP ===
+                      ValueListenableBuilder(
+                        valueListenable: _moodRepository.listenable,
+                        builder: (context, box, _) {
+                          final customMoods = _moodRepository
+                              .getAllCustomMoods();
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 8), // Jarak 8px di kiri
+                                _buildFilterChip(
+                                  context,
+                                  label: AppLocalizations.of(
+                                    context,
+                                  )!.filterAll,
+                                  value: null,
+                                ),
+                                const SizedBox(width: 8),
+                                _buildFilterChip(
+                                  context,
+                                  label: AppLocalizations.of(
+                                    context,
+                                  )!.filterFavorite,
+                                  value: 'FAVORITE',
+                                ),
+                                const SizedBox(width: 8),
+                                ...MoodPresets.all.map((mood) {
+                                  final label = mood['label'] as String;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: _buildFilterChip(
+                                      context,
+                                      label: _getLocalizedMood(context, label),
+                                      value: label,
+                                    ),
+                                  );
+                                }),
+                                ...customMoods.map((mood) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: _buildFilterChip(
+                                      context,
+                                      label: mood.label,
+                                      value: mood.label,
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 15),
+
+                      // === JOURNAL LIST ===
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: _buildJournalList(),
+                      ),
+
+                      const SizedBox(height: 120),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // === 2. FLOATING NAVIGATION BAR ===
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 20 + MediaQuery.of(context).padding.bottom,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark.withValues(
+                      alpha: 0.95,
+                    ), // Card color transparan
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          HapticService.selectionClick();
+                          Navigator.push(
+                            context,
+                            SlideRoute(page: const StatsScreen()),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.bar_chart_outlined,
+                          color: AppColors.textSecondary,
+                          size: 26,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      // Tombol Plus (Besar di tengah)
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            SlideRoute(page: const WriteScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: AppColors.textPrimary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            color: AppColors.bgDark,
+                            size: 26,
+                          ), // Ikon hitam di tombol putih
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      IconButton(
+                        onPressed: () {
+                          HapticService.selectionClick();
+                          Navigator.push(
+                            context,
+                            SlideRoute(page: const SettingsScreen()),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.settings_outlined,
+                          color: AppColors.textSecondary,
+                          size: 26,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // === PILL JUDUL ===
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 12,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: AppTooltip(
+                  message: AppLocalizations.of(context)!.dropdownHint,
+                  child: GestureDetector(
+                    onTap: _toggleDropdown,
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        top: 12,
+                        bottom: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardDark.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.reflect,
+                            style: TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          // AnimatedSize: ukuran container menyesuaikan, jadi pill "melebar" saat chevron muncul
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOutCubic,
+                            alignment: Alignment.centerLeft,
+                            child: _isDropdownOpen
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 3,
+                                      right: 8,
+                                    ),
+                                    child: AnimatedRotation(
+                                      turns: 0.5,
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.textPrimary,
+                                        size: 22,
+                                      ),
+                                    ),
+                                  )
+                                : const Padding(
+                                    padding: EdgeInsets.only(right: 20),
+                                    child: SizedBox.shrink(),
+                                  ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 67),
-
-                    // === WEATHER HEADER (Tanggal + Jam + Cuaca) ===
-                    ValueListenableBuilder(
-                      valueListenable: Hive.box('settingsBox').listenable(),
-                      builder: (context, box, _) {
-                        final showDate = box.get(
-                          'showDate',
-                          defaultValue: true,
-                        );
-                        final showTime = box.get(
-                          'showTime',
-                          defaultValue: true,
-                        );
-                        final showWeather = box.get(
-                          'showWeather',
-                          defaultValue: false,
-                        );
-                        return WeatherHeader(
-                          showDate: showDate,
-                          showTime: showTime,
-                          showWeather: showWeather,
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
-
-                    // === DIVIDER ===
-                    Container(
-                      height: 1,
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      color: AppColors.dividerDark.withValues(alpha: 0.5),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // === FILTER CHIP ===
-                    ValueListenableBuilder(
-                      valueListenable: _moodRepository.listenable,
-                      builder: (context, box, _) {
-                        final customMoods = _moodRepository.getAllCustomMoods();
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 8), // Jarak 8px di kiri
-                              _buildFilterChip(
-                                context,
-                                label: AppLocalizations.of(context)!.filterAll,
-                                value: null,
-                              ),
-                              const SizedBox(width: 8),
-                              _buildFilterChip(
-                                context,
-                                label: AppLocalizations.of(
-                                  context,
-                                )!.filterFavorite,
-                                value: 'FAVORITE',
-                              ),
-                              const SizedBox(width: 8),
-                              ...MoodPresets.all.map((mood) {
-                                final label = mood['label'] as String;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: _buildFilterChip(
-                                    context,
-                                    label: _getLocalizedMood(context, label),
-                                    value: label,
-                                  ),
-                                );
-                              }),
-                              ...customMoods.map((mood) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: _buildFilterChip(
-                                    context,
-                                    label: mood.label,
-                                    value: mood.label,
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 15),
-
-                    // === JOURNAL LIST ===
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: _buildJournalList(),
-                    ),
-
-                    const SizedBox(height: 120),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-          // === 2. FLOATING NAVIGATION BAR ===
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 20 + MediaQuery.of(context).padding.bottom,
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.cardDark.withValues(
-                    alpha: 0.95,
-                  ), // Card color transparan
-                  borderRadius: BorderRadius.circular(40),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        HapticService.selectionClick();
-                        Navigator.push(
-                          context,
-                          SlideRoute(page: const StatsScreen()),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.bar_chart_outlined,
-                        color: AppColors.textSecondary,
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    // Tombol Plus (Besar di tengah)
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          SlideRoute(page: const WriteScreen()),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: AppColors.textPrimary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.add,
-                          color: AppColors.bgDark,
-                          size: 26,
-                        ), // Ikon hitam di tombol putih
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    IconButton(
-                      onPressed: () {
-                        HapticService.selectionClick();
-                        Navigator.push(
-                          context,
-                          SlideRoute(page: const SettingsScreen()),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.settings_outlined,
-                        color: AppColors.textSecondary,
-                        size: 26,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // === PILL JUDUL ===
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 12,
-            left: 0,
-            right: 0,
-            child: Center(
+            // === TOMBOL SEARCH ===
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 12,
+              right: 16,
               child: AppTooltip(
-                message: AppLocalizations.of(context)!.dropdownHint,
+                message: AppLocalizations.of(context)!.searchHint,
                 child: GestureDetector(
-                  onTap: _toggleDropdown,
-                  behavior: HitTestBehavior.opaque,
+                  onTap: _openSearchModal,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppColors.cardDark.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(20),
+                      shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.3),
@@ -468,75 +547,17 @@ class _ReflectScreenState extends State<ReflectScreen> {
                         ),
                       ],
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.reflect,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        // AnimatedSize: ukuran container menyesuaikan, jadi pill "melebar" saat chevron muncul
-                        AnimatedSize(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOutCubic,
-                          alignment: Alignment.centerLeft,
-                          child: _isDropdownOpen
-                              ? Padding(
-                                  padding: const EdgeInsets.only(left: 6),
-                                  child: AnimatedRotation(
-                                    turns: 0.5, // chevron menghadap ke atas
-                                    duration: const Duration(milliseconds: 200),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: AppColors.textPrimary,
-                                      size: 22,
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink(), // ukuran 0 saat tertutup
-                        ),
-                      ],
+                    child: Icon(
+                      Icons.search,
+                      color: AppColors.textPrimary,
+                      size: 20,
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          // === TOMBOL SEARCH ===
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 12,
-            right: 16,
-            child: AppTooltip(
-              message: AppLocalizations.of(context)!.searchHint,
-              child: GestureDetector(
-                onTap: _openSearchModal,
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark.withValues(alpha: 0.9),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.search,
-                    color: AppColors.textPrimary,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -25,7 +25,7 @@ class WeatherService {
   /// Ambil data cuaca berdasarkan lokasi user.
   Future<WeatherData?> getCurrentWeather() async {
     try {
-      // 1. Cek izin lokasi
+      // 1. Cek izin lokasi (HANYA CEK, TIDAK MINTA)
       final permission = await _checkLocationPermission();
       if (!permission) return null;
 
@@ -58,17 +58,16 @@ class WeatherService {
     }
   }
 
-  /// Cek dan minta izin lokasi.
+  /// Cek izin lokasi. (TANPA MEMINTA IZIN)
   Future<bool> _checkLocationPermission() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) return false;
 
+    // Hanya cek status permission saat ini
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return false;
-    }
 
+    // Jika belum diizinkan, langsung kembalikan false (jangan minta izin)
+    if (permission == LocationPermission.denied) return false;
     if (permission == LocationPermission.deniedForever) return false;
 
     return true;

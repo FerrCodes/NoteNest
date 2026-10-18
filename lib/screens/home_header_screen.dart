@@ -118,31 +118,45 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                     showBetaBadge: true,
                     onChanged: (value) async {
                       HapticService.selectionClick();
-
                       final settingsBox = Hive.box('settingsBox');
 
                       if (value) {
-                        // Tampilkan modal beta
+                        // 1. Tampilkan dialog peringatan BETA dulu
                         final proceed = await _showBetaDialog();
                         if (!proceed) return;
 
-                        // Cek mounted setelah await
                         if (!context.mounted) return;
 
+                        // 2. Jika setuju, BARU minta izin lokasi
                         // Cek + minta izin lokasi
                         final granted = await checkPermissionWithDialog(
                           context,
                           Permission.locationWhenInUse,
                         );
-
                         if (!granted) return;
+
+                        // 3. Jika user menolak izin, kembalikan switch ke OFF
+                        if (!granted) {
+                          if (!mounted) return;
+                          // Opsional: Tampilkan SnackBar bahwa izin dibutuhkan
+                          ScaffoldMessenger.of(this.context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Izin lokasi dibutuhkan untuk fitur cuaca',
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
                         if (!mounted) return;
 
-                        // Izin granted → aktifkan
+                        // 4. Izin diberikan -> Simpan ke database
                         await settingsBox.put('showWeather', true);
                         if (!mounted) return;
                         setState(() => _showWeather = true);
                       } else {
+                        // Jika dimatikan, matikan tanpa perlu tanya izin
                         await settingsBox.put('showWeather', false);
                         if (!mounted) return;
                         setState(() => _showWeather = false);

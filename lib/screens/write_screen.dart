@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import '../models/journal_entry.dart';
 import '../utils/preset_images.dart';
 import '../l10n/app_localizations.dart';
@@ -10,6 +9,7 @@ import '../widgets/mood_selector.dart';
 import '../widgets/image_picker_section.dart';
 import '../theme/app_colors.dart';
 import '../services/haptic_service.dart';
+import 'dart:io';
 
 class WriteScreen extends StatefulWidget {
   final JournalEntry? entry;
@@ -199,6 +199,31 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     _showDraftDialog();
   }
 
+  // Fungsi untuk memfilter gambar yang sudah tidak ada di storage
+  List<String> _validateAndFilterImages(List<dynamic> savedImages) {
+    final List<String> validImages = [];
+
+    for (var img in savedImages) {
+      final imagePath = img as String;
+
+      // Jika gambar dari internet (http) atau asset bawaan aplikasi,
+      // anggap valid.
+      if (imagePath.startsWith('http') || imagePath.startsWith('assets/')) {
+        validImages.add(imagePath);
+      }
+      // Jika gambar dari storage HP, cek apakah file-nya masih ada
+      else {
+        final file = File(imagePath);
+        if (file.existsSync()) {
+          validImages.add(imagePath);
+        } else {
+          debugPrint('Draft image tidak ditemukan, dibuang: $imagePath');
+        }
+      }
+    }
+    return validImages;
+  }
+
   void _showDraftDialog() {
     showDialog(
       context: context,
@@ -230,6 +255,11 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
           TextButton(
             onPressed: () async {
               HapticService.selectionClick();
+              // === TAMBAHKAN KODE INI ===
+              // Bersihkan cache memori Flutter agar tidak menampilkan gambar hantu
+              PaintingBinding.instance.imageCache.clear();
+              PaintingBinding.instance.imageCache.clearLiveImages();
+              // ============================
               await _clearDraft();
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -256,12 +286,19 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                   'draft_mood',
                   defaultValue: 'Calm',
                 );
+
+                // Ambil data gambar dari draft
                 final savedImages = settingsBox.get(
                   'draft_images',
                   defaultValue: <String>[],
                 );
-                _selectedImages = savedImages.isNotEmpty
-                    ? List<String>.from(savedImages)
+
+                // Jalankan validasi
+                final validImages = _validateAndFilterImages(savedImages);
+
+                // Jika setelah divalidasi ternyata kosong, pakai gambar default
+                _selectedImages = validImages.isNotEmpty
+                    ? validImages
                     : [PresetImages.getDefault()];
               });
               if (!context.mounted) return;
@@ -552,9 +589,8 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       }
 
                       // === SIMPAN ===
-                      final today = DateFormat(
-                        'MMM d, yyyy HH:mm',
-                      ).format(DateTime.now());
+                      // Gunakan ISO8601 agar kebal terhadap perubahan bahasa
+                      final today = DateTime.now().toIso8601String();
 
                       if (isEditing) {
                         widget.entry!.title = _titleController.text;

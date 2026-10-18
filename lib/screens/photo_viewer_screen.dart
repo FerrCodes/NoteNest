@@ -23,6 +23,9 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
   late PageController _pageController;
   late int _currentIndex;
   late List<String> _photos;
+  final TransformationController _transformationController =
+      TransformationController();
+  bool _isZoomed = false;
 
   @override
   void initState() {
@@ -32,6 +35,15 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
     _photos = widget.allPhotos ?? [widget.imagePath];
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
+    _transformationController.addListener(() {
+      final isZoomed =
+          _transformationController.value.getMaxScaleOnAxis() > 1.05;
+      if (isZoomed != _isZoomed) {
+        setState(() {
+          _isZoomed = isZoomed;
+        });
+      }
+    });
 
     // Set style status bar (ikon putih di background hitam)
     SystemChrome.setSystemUIOverlayStyle(
@@ -46,7 +58,7 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
   @override
   void dispose() {
     _pageController.dispose();
-    // Restore system UI
+    _transformationController.dispose();
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,
       overlays: SystemUiOverlay.values,
@@ -72,22 +84,29 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
       body: Stack(
         children: [
           // === CAROUSEL FOTO ===
+          // === CAROUSEL FOTO ===
           PageView.builder(
             controller: _pageController,
+            // Jika sedang zoom, matikan swipe page
+            physics: _isZoomed
+                ? const NeverScrollableScrollPhysics()
+                : const PageScrollPhysics(),
             itemCount: _photos.length,
             onPageChanged: (index) {
               setState(() {
                 _currentIndex = index;
+                _transformationController.value = Matrix4.identity();
               });
             },
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  // Tap untuk keluar (opsional)
                   Navigator.pop(context);
                 },
                 child: Center(
                   child: InteractiveViewer(
+                    // Pasang controller
+                    transformationController: _transformationController,
                     minScale: 0.5,
                     maxScale: 5.0,
                     child: _buildImage(_photos[index]),

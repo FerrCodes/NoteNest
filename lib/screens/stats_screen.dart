@@ -576,17 +576,32 @@ class _StatsScreenState extends State<StatsScreen> {
     );
   }
 
-  // === HELPER: PARSE DATE ===
+  // === HELPER: PARSE DATE (ANTI GAGAL) ===
   DateTime? _parseDate(String dateStr) {
+    // 1. Coba parsing format baru (ISO 8601)
     try {
-      return DateFormat('MMM d, yyyy').parse(dateStr);
-    } catch (_) {
-      try {
-        return DateFormat('MMM d, yyyy HH:mm').parse(dateStr);
-      } catch (_) {
-        return null;
-      }
-    }
+      return DateTime.parse(dateStr);
+    } catch (_) {}
+
+    // 2. Fallback: Coba parsing format lama (bisa jadi locale id atau en)
+    try {
+      return DateFormat('MMM d, yyyy HH:mm', 'id_ID').parse(dateStr);
+    } catch (_) {}
+
+    try {
+      return DateFormat('MMM d, yyyy', 'id_ID').parse(dateStr);
+    } catch (_) {}
+
+    try {
+      return DateFormat('MMM d, yyyy HH:mm', 'en_US').parse(dateStr);
+    } catch (_) {}
+
+    try {
+      return DateFormat('MMM d, yyyy', 'en_US').parse(dateStr);
+    } catch (_) {}
+
+    // Jika semua gagal, kembalikan null
+    return null;
   }
 
   // === HELPER: HITUNG STREAK ===
