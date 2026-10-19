@@ -348,18 +348,27 @@ class _DetailScreenState extends State<DetailScreen> {
             HapticService.selectionClick();
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => PhotoViewerScreen(
-                  imagePath: photos.first,
-                  allPhotos: photos,
-                  initialIndex: 0,
-                ),
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    PhotoViewerScreen(
+                      imagePath: photos.first,
+                      allPhotos: photos,
+                      initialIndex: 0,
+                    ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
               ),
             );
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
-            child: _buildImage(photos.first, height: 300),
+            child: Hero(
+              tag: 'photo_${photos.first}', // Tag unik untuk 1 foto
+              child: _buildImage(photos.first, height: 300),
+            ),
           ),
         ),
       );
@@ -383,18 +392,30 @@ class _DetailScreenState extends State<DetailScreen> {
                 HapticService.selectionClick();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => PhotoViewerScreen(
-                      imagePath: photos[index],
-                      allPhotos: photos,
-                      initialIndex: index,
-                    ),
+                  PageRouteBuilder(
+                    transitionDuration: const Duration(milliseconds: 300),
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        PhotoViewerScreen(
+                          imagePath: photos[index],
+                          allPhotos: photos,
+                          initialIndex: index,
+                        ),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
                   ),
                 );
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(23),
-                child: _buildImage(photos[index], height: 300),
+                child: Hero(
+                  tag: 'photo_${photos[index]}', // Tag unik untuk carousel
+                  child: _buildImage(photos[index], height: 300),
+                ),
               ),
             ),
           );

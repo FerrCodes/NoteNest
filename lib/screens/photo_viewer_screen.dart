@@ -46,11 +46,17 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
     });
 
     // Set style status bar (ikon putih di background hitam)
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
+        // Tambahkan 2 baris ini untuk Navigation Bar:
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarContrastEnforced:
+            false, // Mencegah Android menambahkan bayangan hitam
       ),
     );
   }
@@ -59,6 +65,7 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
   void dispose() {
     _pageController.dispose();
     _transformationController.dispose();
+
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,
       overlays: SystemUiOverlay.values,
@@ -84,7 +91,6 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
       body: Stack(
         children: [
           // === CAROUSEL FOTO ===
-          // === CAROUSEL FOTO ===
           PageView.builder(
             controller: _pageController,
             // Jika sedang zoom, matikan swipe page
@@ -100,15 +106,16 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
             },
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Center(
-                  child: InteractiveViewer(
-                    // Pasang controller
-                    transformationController: _transformationController,
-                    minScale: 0.5,
-                    maxScale: 5.0,
+                onTap: () {},
+                // 1. InteractiveViewer di paling luar agar full screen
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  // UBAH DARI 0.5 MENJADI 1.0
+                  minScale: 1.0,
+                  maxScale: 5.0,
+                  boundaryMargin: const EdgeInsets.all(double.infinity),
+                  child: Hero(
+                    tag: 'photo_${_photos[index]}',
                     child: _buildImage(_photos[index]),
                   ),
                 ),
@@ -171,10 +178,7 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
             child: GestureDetector(
               onTap: () {
                 HapticService.selectionClick();
-                // Reset zoom di semua page
-                setState(() {
-                  _pageController.jumpToPage(_currentIndex);
-                });
+                _transformationController.value = Matrix4.identity();
               },
               child: Container(
                 padding: const EdgeInsets.all(12),
