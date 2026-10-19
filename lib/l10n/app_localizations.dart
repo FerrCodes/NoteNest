@@ -1496,6 +1496,12 @@ abstract class AppLocalizations {
   /// **'Journal Date:'**
   String get journalDate;
 
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
   /// No description provided for @readingTime.
   ///
   /// In en, this message translates to:

@@ -235,6 +235,7 @@
   "hapticFeedbackDesc": "Berikan getaran saat berinteraksi",
   "viewOtherOptions": "Lihat opsi lain",
   "journalDate": "Tanggal Jurnal:",
+  "privacyPolicy": "Kebijakan Privasi",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

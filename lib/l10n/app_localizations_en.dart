@@ -745,6 +745,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get journalDate => 'Journal Date:';
 
   @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
   String readingTime(int count) {
     return '$count min read';
   }

@@ -233,6 +233,7 @@
   "hapticFeedbackDesc": "Vibrate on interactions",
   "viewOtherOptions": "View other options",
   "journalDate": "Journal Date:",
+  "privacyPolicy": "Privacy Policy",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

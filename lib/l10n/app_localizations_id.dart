@@ -745,6 +745,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get journalDate => 'Tanggal Jurnal:';
 
   @override
+  String get privacyPolicy => 'Kebijakan Privasi';
+
+  @override
   String readingTime(int count) {
     return '$count menit baca';
   }

@@ -119,7 +119,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     onTap: () => _launchUrl('https://github.com/FerrCodes'),
                   ),
                   _buildSocialItem(
-                    label: 'Privacy Policy',
+                    label: AppLocalizations.of(context)!.privacyPolicy,
                     icon: Icon(
                       Icons.privacy_tip_outlined,
                       color: AppColors.textPrimary,
