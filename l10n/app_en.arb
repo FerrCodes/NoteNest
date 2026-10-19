@@ -147,7 +147,7 @@
   "feedbackTitle": "Send Feedback",
   "feedbackWhatHappened": "What happened?",
   "feedbackHint": "Tell us about the issue you encountered",
-  "feedbackDisclaimer": "Your feedback can be used to improve NoteNest.",
+  "feedbackDisclaimer": "This feedback will provide improvements and enhance the experience for this application.",
   "send": "Send",
   "personalization": "Personalization",
   "manageMoods": "Manage Moods",
@@ -231,6 +231,8 @@
   "openPermissionPage": "See it now",
   "hapticFeedback": "Haptic Feedback",
   "hapticFeedbackDesc": "Vibrate on interactions",
+  "viewOtherOptions": "View other options",
+  "journalDate": "Journal Date:",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

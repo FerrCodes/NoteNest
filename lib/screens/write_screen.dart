@@ -524,7 +524,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Tanggal Jurnal:',
+                          AppLocalizations.of(context)!.journalDate,
                           style: TextStyle(
                             fontSize: 14,
                             color: AppColors.textSecondary,
@@ -574,7 +574,31 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 27),
+                  // === 3. JUDUL ===
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextField(
+                      controller: _titleController,
+                      textAlign: TextAlign.center,
+                      textCapitalization: TextCapitalization.words,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.titleHint,
+                        hintStyle: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textSecondary.withValues(alpha: 0.5),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ),
 
                   // === DIVIDER ===
                   Padding(

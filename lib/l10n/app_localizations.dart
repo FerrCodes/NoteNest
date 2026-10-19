@@ -983,7 +983,7 @@ abstract class AppLocalizations {
   /// No description provided for @feedbackDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Your feedback can be used to improve NoteNest.'**
+  /// **'This feedback will provide improvements and enhance the experience for this application.'**
   String get feedbackDisclaimer;
 
   /// No description provided for @send.
@@ -1483,6 +1483,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Vibrate on interactions'**
   String get hapticFeedbackDesc;
+
+  /// No description provided for @viewOtherOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'View other options'**
+  String get viewOtherOptions;
+
+  /// No description provided for @journalDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Journal Date:'**
+  String get journalDate;
 
   /// No description provided for @readingTime.
   ///

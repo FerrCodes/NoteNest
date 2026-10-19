@@ -739,6 +739,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get hapticFeedbackDesc => 'Berikan getaran saat berinteraksi';
 
   @override
+  String get viewOtherOptions => 'Lihat opsi lain';
+
+  @override
+  String get journalDate => 'Tanggal Jurnal:';
+
+  @override
   String readingTime(int count) {
     return '$count menit baca';
   }

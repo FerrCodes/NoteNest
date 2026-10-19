@@ -233,6 +233,8 @@
   "openPermissionPage": "Lihat sekarang",
   "hapticFeedback": "Getaran (Haptic)",
   "hapticFeedbackDesc": "Berikan getaran saat berinteraksi",
+  "viewOtherOptions": "Lihat opsi lain",
+  "journalDate": "Tanggal Jurnal:",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

@@ -1207,7 +1207,7 @@ class _FeedbackBottomSheetState extends State<_FeedbackBottomSheet> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Lihat opsi lain',
+                          AppLocalizations.of(context)!.viewOtherOptions,
                           style: TextStyle(
                             color: AppColors.textPrimary,
                             fontSize: 13,

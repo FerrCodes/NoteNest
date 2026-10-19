@@ -473,7 +473,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedbackDisclaimer =>
-      'Your feedback can be used to improve NoteNest.';
+      'This feedback will provide improvements and enhance the experience for this application.';
 
   @override
   String get send => 'Send';
@@ -737,6 +737,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hapticFeedbackDesc => 'Vibrate on interactions';
+
+  @override
+  String get viewOtherOptions => 'View other options';
+
+  @override
+  String get journalDate => 'Journal Date:';
 
   @override
   String readingTime(int count) {
