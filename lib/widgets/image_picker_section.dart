@@ -255,7 +255,20 @@ class ImagePickerSection extends StatelessWidget {
     } else if (imagePath.startsWith('assets/')) {
       return Image.asset(imagePath, fit: BoxFit.cover, cacheWidth: 360);
     } else {
-      return Image.file(File(imagePath), fit: BoxFit.cover, cacheWidth: 360);
+      return Image.file(
+        File(imagePath),
+        fit: BoxFit.cover,
+        cacheWidth: 360,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) return child;
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            child: child,
+          );
+        },
+      );
     }
   }
 
@@ -342,22 +355,55 @@ class ImagePickerSection extends StatelessWidget {
 
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(
-        source: fromCamera ? ImageSource.camera : ImageSource.gallery,
-        imageQuality: 80,
-      );
 
-      if (pickedFile != null) {
-        if (!context.mounted) return;
-        HapticService.mediumImpact();
-        final newList = List<String>.from(selectedImages);
-        if (newList.length >= maxPhotos) {
-          _showMaxPhotosSnackBar(context);
-          return;
+      // === LOGIKA BARU ===
+      if (fromCamera) {
+        // Jika dari Kamera, tetap satu foto
+        final XFile? pickedFile = await picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 80,
+          maxWidth: 1080,
+          maxHeight: 1920,
+        );
+
+        if (pickedFile != null) {
+          if (!context.mounted) return;
+          HapticService.mediumImpact();
+          final newList = List<String>.from(selectedImages);
+          if (newList.length >= maxPhotos) {
+            _showMaxPhotosSnackBar(context);
+            return;
+          }
+          newList.add(pickedFile.path);
+          onImagesChanged(newList);
         }
-        newList.add(pickedFile.path);
-        onImagesChanged(newList);
+      } else {
+        // Jika dari Galeri, gunakan pickMultiImage (Pilih Banyak)
+        final List<XFile> pickedFiles = await picker.pickMultiImage(
+          imageQuality: 80,
+          maxWidth: 1080,
+          maxHeight: 1920,
+        );
+
+        if (pickedFiles.isNotEmpty) {
+          if (!context.mounted) return;
+          HapticService.mediumImpact();
+
+          final newList = List<String>.from(selectedImages);
+
+          for (var file in pickedFiles) {
+            // Cek apakah kuota foto sudah penuh (maksimal 4)
+            if (newList.length >= maxPhotos) {
+              _showMaxPhotosSnackBar(context);
+              break; // Hentikan perulangan jika sudah penuh
+            }
+            newList.add(file.path);
+          }
+
+          onImagesChanged(newList);
+        }
       }
+      // ===================
     } catch (e) {
       HapticService.heavyImpact();
       if (!context.mounted) return;

@@ -7,6 +7,7 @@ import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
 import '../widgets/app_tooltip.dart';
 import '../services/haptic_service.dart';
+import '../widgets/setting_item.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -118,25 +119,8 @@ class _AboutScreenState extends State<AboutScreen> {
                     ],
                     onTap: () => _launchUrl('https://github.com/FerrCodes'),
                   ),
-                  _buildSocialItem(
-                    label: AppLocalizations.of(context)!.privacyPolicy,
-                    icon: Icon(
-                      Icons.privacy_tip_outlined,
-                      color: AppColors.textPrimary,
-                      size: 22,
-                    ),
-                    gradientColors: const [
-                      Color.fromARGB(255, 148, 190, 248),
-                      Color.fromARGB(255, 148, 190, 248),
-                      Color(0xFFF0F6FC),
-                    ],
-                    // GANTI URL DI BAWAH DENGAN LINK GOOGLE DOCS-MU
-                    onTap: () => _launchUrl(
-                      'https://docs.google.com/document/d/1d673w4V73Iu48MYh7QFRYJvkbkB-n0jIDuE5c5I7TlM/edit?usp=sharing',
-                    ),
-                  ),
                 ]),
-                const SizedBox(height: 10),
+                const SizedBox(height: 9),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
@@ -149,7 +133,24 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-
+                // === SECTION: LEGAL / PRIVACY ===
+                _buildSectionTitle(
+                  AppLocalizations.of(
+                    context,
+                  )!.legalSection, // Atau 'Legal & Privacy'
+                ),
+                _buildGroupCard([
+                  SettingItem(
+                    icon: Icons.privacy_tip_outlined,
+                    title: AppLocalizations.of(
+                      context,
+                    )!.privacyPolicy, // Atau 'Privacy Policy'
+                    onTap: () => _launchUrl(
+                      'https://docs.google.com/document/d/1d673w4V73Iu48MYh7QFRYJvkbkB-n0jIDuE5c5I7TlM/edit?usp=sharing',
+                    ),
+                  ),
+                ]),
+                const SizedBox(height: 32),
                 // === FOOTER ===
                 Center(
                   child: Text(

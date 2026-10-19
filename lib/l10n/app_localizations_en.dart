@@ -748,6 +748,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicy => 'Privacy Policy';
 
   @override
+  String get pressBackAgainToExit => 'Press back again to exit';
+
+  @override
+  String get legalSection => 'Legal & Privacy';
+
+  @override
   String readingTime(int count) {
     return '$count min read';
   }

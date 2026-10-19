@@ -20,6 +20,8 @@ import '../widgets/weather_header.dart';
 import 'home_header_screen.dart';
 import '../utils/preset_images.dart';
 import '../services/haptic_service.dart';
+import 'package:flutter/services.dart';
+import '../widgets/bottom_banner.dart';
 
 class ReflectScreen extends StatefulWidget {
   const ReflectScreen({super.key});
@@ -28,13 +30,13 @@ class ReflectScreen extends StatefulWidget {
 }
 
 class _ReflectScreenState extends State<ReflectScreen> {
-  // State untuk pencarian & filter
   String _searchQuery = '';
   final _moodRepository = MoodRepository();
   final GlobalKey<_AnimatedDropdownState> _dropdownKey = GlobalKey();
   String? _selectedMoodFilter;
   OverlayEntry? _dropdownOverlay;
   bool _isDropdownOpen = false;
+  DateTime? _lastBackPressed;
 
   String _getTimeBasedQuote(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -216,11 +218,33 @@ class _ReflectScreenState extends State<ReflectScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: !_isDropdownOpen,
+      // Jangan izinkan pop otomatis (kita tangani manual)
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
+
+        // 1. Jika dropdown sedang terbuka, tutup dropdown dulu
         if (_isDropdownOpen) {
           _closeDropdown();
+          return;
+        }
+
+        // 2. Logika Double Back to Exit
+        final now = DateTime.now();
+        if (_lastBackPressed == null ||
+            now.difference(_lastBackPressed!) > const Duration(seconds: 2)) {
+          // Jika baru tekan sekali (atau sudah lewat 2 detik)
+          _lastBackPressed = now;
+
+          // Tampilkan pesan (SnackBar/TopBanner)
+          BottomBanner.show(
+            context,
+            message: AppLocalizations.of(context)!.pressBackAgainToExit,
+            type: BannerType.info,
+          );
+        } else {
+          // Jika ditekan dua kali dalam waktu kurang dari 2 detik
+          SystemNavigator.pop(); // Keluar dari aplikasi
         }
       },
       child: Scaffold(

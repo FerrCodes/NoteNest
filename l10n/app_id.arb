@@ -236,6 +236,8 @@
   "viewOtherOptions": "Lihat opsi lain",
   "journalDate": "Tanggal Jurnal:",
   "privacyPolicy": "Kebijakan Privasi",
+  "pressBackAgainToExit": "Tekan sekali lagi untuk keluar",
+  "legalSection": "Legal & Privasi",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

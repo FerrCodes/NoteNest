@@ -234,6 +234,8 @@
   "viewOtherOptions": "View other options",
   "journalDate": "Journal Date:",
   "privacyPolicy": "Privacy Policy",
+  "pressBackAgainToExit": "Press back again to exit",
+  "legalSection": "Legal & Privacy",
   "@journalsWithMood": {
     "placeholders": {
       "count": {

@@ -748,6 +748,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get privacyPolicy => 'Kebijakan Privasi';
 
   @override
+  String get pressBackAgainToExit => 'Tekan sekali lagi untuk keluar';
+
+  @override
+  String get legalSection => 'Legal & Privasi';
+
+  @override
   String readingTime(int count) {
     return '$count menit baca';
   }

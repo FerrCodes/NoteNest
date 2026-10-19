@@ -619,6 +619,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                         controller: _contentController,
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
                         style: TextStyle(
                           fontSize: 16,
                           color: AppColors.textPrimary.withValues(alpha: 0.85),
