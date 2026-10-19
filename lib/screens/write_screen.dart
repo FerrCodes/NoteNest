@@ -227,8 +227,6 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
         final file = File(imagePath);
         if (file.existsSync()) {
           validImages.add(imagePath);
-        } else {
-          debugPrint('Draft image tidak ditemukan, dibuang: $imagePath');
         }
       }
     }
@@ -517,12 +515,6 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.calendar_today_outlined,
-                          size: 16,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context)!.journalDate,
                           style: TextStyle(

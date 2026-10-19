@@ -336,85 +336,68 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
+  void _openPhotoViewer(BuildContext context, List<String> photos, int index) {
+    HapticService.selectionClick();
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            PhotoViewerScreen(
+              imagePath: photos[index],
+              allPhotos: photos,
+              initialIndex: index,
+            ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
+  }
+
   Widget _buildPhotoCarousel(BuildContext context, JournalEntry entry) {
     final photos = entry.imageUrls;
+    const double photoHeight = 375;
+    const double radius = 24;
 
-    // Kalau cuma 1 foto, tampilkan seperti biasa (tanpa carousel)
+    // Satu foto: tampil penuh, sejajar dengan teks
     if (photos.length == 1) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: GestureDetector(
-          onTap: () {
-            HapticService.selectionClick();
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                transitionDuration: const Duration(milliseconds: 300),
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    PhotoViewerScreen(
-                      imagePath: photos.first,
-                      allPhotos: photos,
-                      initialIndex: 0,
-                    ),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
-              ),
-            );
-          },
+          onTap: () => _openPhotoViewer(context, photos, 0),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(radius),
             child: Hero(
-              tag: 'photo_${photos.first}', // Tag unik untuk 1 foto
-              child: _buildImage(photos.first, height: 300),
+              tag: 'photo_${photos.first}',
+              child: _buildImage(photos.first, height: photoHeight),
             ),
           ),
         ),
       );
     }
 
-    // Kalau lebih dari 1 foto, tampilkan sebagai carousel
+    // Lebih dari satu foto: scroll bebas, foto berikutnya mengintip di kanan
+    final itemWidth = MediaQuery.of(context).size.width * 0.78;
+
     return SizedBox(
-      height: 370,
-      child: PageView.builder(
-        controller: PageController(viewportFraction: 0.88),
-        pageSnapping: false,
+      height: photoHeight,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: photos.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 7),
         itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              left: index == 0 ? 0 : 7,
-              right: index == photos.length - 0 ? 0 : 7,
-            ),
-            child: GestureDetector(
-              onTap: () {
-                HapticService.selectionClick();
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    transitionDuration: const Duration(milliseconds: 300),
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        PhotoViewerScreen(
-                          imagePath: photos[index],
-                          allPhotos: photos,
-                          initialIndex: index,
-                        ),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                  ),
-                );
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(23),
+          return GestureDetector(
+            onTap: () => _openPhotoViewer(context, photos, index),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(radius),
+              child: SizedBox(
+                width: itemWidth,
                 child: Hero(
-                  tag: 'photo_${photos[index]}', // Tag unik untuk carousel
-                  child: _buildImage(photos[index], height: 300),
+                  tag: 'photo_${photos[index]}',
+                  child: _buildImage(photos[index], height: photoHeight),
                 ),
               ),
             ),

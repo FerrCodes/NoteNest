@@ -8,6 +8,8 @@ import 'package:permission_handler/permission_handler.dart';
 import '../utils/permission_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/haptic_service.dart';
+import 'bottom_banner.dart';
+import '../widgets/top_banner.dart';
 
 class ImagePickerSection extends StatelessWidget {
   final List<String> selectedImages;
@@ -403,34 +405,25 @@ class ImagePickerSection extends StatelessWidget {
           onImagesChanged(newList);
         }
       }
-      // ===================
     } catch (e) {
       HapticService.heavyImpact();
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal mengambil gambar: $e'),
-          backgroundColor: AppColors.cardDark,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.only(top: 90, left: 20, right: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
+      BottomBanner.show(
+        context,
+        message: 'Gagal mengambil gambar: $e',
+        type: BannerType.error,
       );
     }
   }
 
   void _showMaxPhotosSnackBar(BuildContext context) {
     HapticService.heavyImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Maksimal $maxPhotos foto per jurnal'),
-        backgroundColor: AppColors.cardDark,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.only(top: 90, left: 20, right: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
+
+    // Ganti SnackBar dengan BottomBanner
+    BottomBanner.show(
+      context,
+      message: 'Maksimal $maxPhotos foto per jurnal',
+      type: BannerType.error,
     );
   }
 

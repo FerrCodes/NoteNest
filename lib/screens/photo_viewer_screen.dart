@@ -56,19 +56,29 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
         systemNavigationBarContrastEnforced: false,
       ),
     );
+
+    // Jaga agar tombol selalu sejalan dengan status bar dan navigation bar
+    SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+      if (!mounted) return;
+      if (systemOverlaysAreVisible != _showControls) {
+        setState(() => _showControls = systemOverlaysAreVisible);
+      }
+    });
   }
 
   @override
   void dispose() {
+    SystemChrome.setSystemUIChangeCallback(null);
     _pageController.dispose();
     for (final c in _scaleControllers.values) {
       c.dispose();
     }
 
     SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
+      SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
     );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -81,13 +91,39 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
     super.dispose();
   }
 
+  // Tap sekali: sembunyikan atau tampilkan tombol + status bar + navigation bar
+  void _toggleControls() {
+    final show = !_showControls;
+    setState(() => _showControls = show);
+
+    if (show) {
+      // Mode manual: satu-satunya mode yang benar-benar memakai parameter overlays
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: SystemUiOverlay.values,
+      );
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: Brightness.light,
+          systemNavigationBarContrastEnforced: false,
+        ),
+      );
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    }
+  }
+
   ImageProvider _providerFor(String path) {
     if (path.startsWith('http')) return NetworkImage(path);
     if (path.startsWith('assets/')) return AssetImage(path);
     return FileImage(File(path));
   }
 
-  // Double tap: normal -> zoom in, zoom in -> normal (seperti Galeri Samsung)
+  // Double tap: normal -> memenuhi layar, memenuhi layar -> normal
   PhotoViewScaleState _cycle(PhotoViewScaleState actual) {
     return actual == PhotoViewScaleState.initial
         ? PhotoViewScaleState.covering
@@ -130,9 +166,8 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
                 heroAttributes: PhotoViewHeroAttributes(
                   tag: 'photo_${_photos[index]}',
                 ),
-                // Tap sekali: tampil/sembunyikan tombol, seperti Galeri Samsung
                 onTapUp: (context, details, controllerValue) {
-                  setState(() => _showControls = !_showControls);
+                  _toggleControls();
                 },
               );
             },
