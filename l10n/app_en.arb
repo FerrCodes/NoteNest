@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "appName": "NoteNest",
+  "version": "v2.0.1",
   "reflect": "Reflect",
   "searchHint": "Search journals",
   "filterAll": "All",
@@ -47,7 +48,6 @@
   "aboutDesc": "A minimalist journal app to capture daily moments, self-reflection, and track your mood.",
   "copyright": "This application is currently under development; please report any bugs immediately.",
   "aboutApp": "About App",
-  "version": "v2.0.0",
   "sendFeedback": "Send Feedback",
   "feedbackDesc": "Suggestions or bug reports",
   "madeWith": "© 2026 . All rights reserved.",

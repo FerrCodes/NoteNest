@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'NoteNest';
 
   @override
+  String get version => 'v2.0.1';
+
+  @override
   String get reflect => 'Reflect';
 
   @override
@@ -157,9 +160,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutApp => 'About App';
-
-  @override
-  String get version => 'v2.0.0';
 
   @override
   String get sendFeedback => 'Send Feedback';

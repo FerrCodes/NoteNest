@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'NoteNest'**
   String get appName;
 
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'v2.0.1'**
+  String get version;
+
   /// No description provided for @reflect.
   ///
   /// In en, this message translates to:
@@ -379,12 +385,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About App'**
   String get aboutApp;
-
-  /// No description provided for @version.
-  ///
-  /// In en, this message translates to:
-  /// **'v2.0.0'**
-  String get version;
 
   /// No description provided for @sendFeedback.
   ///
