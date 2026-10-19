@@ -218,8 +218,6 @@
   "guideHiddenFeatures": "FITUR TERSEMBUNYI",
   "guideDropdownTitle": "Dropdown Tersembunyi",
   "guideDropdownDesc": "Tap tulisan \"Reflect\" di atas halaman beranda untuk membuka menu tersembunyi. Di dalamnya ada Kelola Mood dan pengaturan Header Beranda.",
-  "guideMultiPhotoTitle": "Multi-Foto (Maksimal 4)",
-  "guideMultiPhotoDesc": "Saat menulis jurnal, tap tombol \"Unggah Foto\" untuk menambahkan hingga 4 foto. Geser ke kiri dan kanan untuk melihat semuanya.",
   "guideCarouselTitle": "Carousel Foto",
   "guideCarouselDesc": "Buka jurnal dengan beberapa foto dan geser untuk melihat satu per satu. Tap foto untuk melihatnya full-screen dengan zoom.",
   "guidePermissionsTitle": "Izin Aplikasi",

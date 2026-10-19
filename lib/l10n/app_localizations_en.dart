@@ -696,13 +696,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap the \"Reflect\" text at the top of the home screen to reveal a hidden menu. Inside, you\'ll find options like Manage Moods and Home Header settings.';
 
   @override
-  String get guideMultiPhotoTitle => 'Multi-Photo (Up to 4)';
-
-  @override
-  String get guideMultiPhotoDesc =>
-      'When writing a journal, tap the \"Upload Photo\" button to add up to 4 photos. Swipe left and right to see them all.';
-
-  @override
   String get guideCarouselTitle => 'Photo Carousel';
 
   @override

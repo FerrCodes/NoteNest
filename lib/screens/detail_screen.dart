@@ -8,6 +8,7 @@ import 'photo_viewer_screen.dart';
 import '../utils/slide_route.dart';
 import '../theme/app_colors.dart';
 import '../services/haptic_service.dart';
+import '../widgets/custom_floating_header.dart';
 
 class DetailScreen extends StatefulWidget {
   final JournalEntry entry;
@@ -272,62 +273,27 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
 
             // === FLOATING HEADER (Back + Pill Judul + Edit) ===
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Tombol Back
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
+            CustomFloatingHeader(
+              onBack: () => Navigator.pop(context),
+              title: HeaderTitlePill(
+                child: Text(
+                  AppLocalizations.of(context)!.journalDetail,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-
-                  // Pill Judul (Expanded agar mengisi ruang tengah)
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.journalDetail,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Tombol Edit
-                  _buildCircleButton(
-                    label: AppLocalizations.of(context)!.edit,
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        SlideRoute(page: WriteScreen(entry: entry)),
-                      );
-                      if (mounted) setState(() {});
-                    },
-                  ),
-                ],
+                ),
+              ),
+              rightWidget: FloatingHeaderAction(
+                label: AppLocalizations.of(context)!.edit,
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    SlideRoute(page: WriteScreen(entry: entry)),
+                  );
+                  if (mounted) setState(() {});
+                },
               ),
             ),
           ],
@@ -403,47 +369,6 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildCircleButton({
-    IconData? icon,
-    required VoidCallback onTap,
-    String? label,
-  }) {
-    final isLabeled = label != null;
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: isLabeled
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
-            : const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
-          borderRadius: isLabeled ? BorderRadius.circular(20) : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: isLabeled
-            ? Text(
-                label,
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            : Icon(icon, color: AppColors.textPrimary, size: 19),
       ),
     );
   }

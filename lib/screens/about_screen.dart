@@ -8,6 +8,7 @@ import '../widgets/settings_group_card.dart';
 import '../widgets/app_tooltip.dart';
 import '../services/haptic_service.dart';
 import '../widgets/setting_item.dart';
+import '../widgets/custom_floating_header.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -169,80 +170,34 @@ class _AboutScreenState extends State<AboutScreen> {
             // ==========================================
             // FLOATING HEADER (Back + Pill Judul + GitHub)
             // ==========================================
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Tombol Back
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
+            // ==========================================
+            // FLOATING HEADER (Back + Pill Judul + GitHub)
+            // ==========================================
+            CustomFloatingHeader(
+              onBack: () => Navigator.pop(context),
+              title: HeaderTitlePill(
+                child: Text(
+                  AppLocalizations.of(context)!.aboutApp,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-
-                  // Pill Judul
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.aboutApp,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
+                ),
+              ),
+              rightWidget: AppTooltip(
+                message: AppLocalizations.of(context)!.sourceCode,
+                child: FloatingHeaderAction(
+                  customIcon: const FaIcon(
+                    FontAwesomeIcons.github,
+                    color: AppColors.textPrimary,
+                    size: 20,
                   ),
-
-                  // Tombol GitHub
-                  AppTooltip(
-                    message: AppLocalizations.of(context)!.sourceCode,
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticService.selectionClick();
-                        _launchUrl('https://github.com/FerrCodes/Note-Nest');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: const FaIcon(
-                          FontAwesomeIcons.github,
-                          color: AppColors.textPrimary,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  onTap: () {
+                    HapticService.selectionClick();
+                    _launchUrl('https://github.com/FerrCodes/Note-Nest');
+                  },
+                ),
               ),
             ),
           ],
@@ -315,36 +270,6 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // ==========================================
-  // TOMBOL BULAT
-  // ==========================================
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }

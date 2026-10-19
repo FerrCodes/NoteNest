@@ -20,6 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../utils/permission_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../services/haptic_service.dart';
+import '../widgets/custom_floating_header.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -214,48 +215,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // ==========================================
             // FLOATING HEADER
             // ==========================================
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
+            CustomFloatingHeader(
+              onBack: () => Navigator.pop(context),
+              title: HeaderTitlePill(
+                child: Text(
+                  AppLocalizations.of(context)!.settings,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.settings,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 47),
-                ],
+                ),
               ),
             ),
           ],
@@ -281,36 +251,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SettingsGroupCard(children: children),
-    );
-  }
-
-  // ==========================================
-  // TOMBOL BULAT
-  // ==========================================
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
-      ),
     );
   }
 

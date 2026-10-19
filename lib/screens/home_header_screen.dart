@@ -7,6 +7,7 @@ import '../widgets/settings_group_card.dart';
 import '../utils/permission_helper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../services/haptic_service.dart';
+import '../widgets/custom_floating_header.dart';
 
 class HomeHeaderScreen extends StatefulWidget {
   const HomeHeaderScreen({super.key});
@@ -172,54 +173,20 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
             // ==========================================
             // FLOATING HEADER (Back + Pill Judul + Spacer)
             // ==========================================
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Tombol Back
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
+            CustomFloatingHeader(
+              onBack: () => Navigator.pop(context),
+              title: HeaderTitlePill(
+                child: Text(
+                  AppLocalizations.of(context)!.headerSection,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-
-                  // Pill Judul
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.headerSection,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Spacer Kanan (seukuran tombol back)
-                  const SizedBox(width: 47),
-                ],
+                ),
               ),
+              // rightWidget tidak perlu diisi karena memang tidak ada tombol kanan.
+              // CustomFloatingHeader akan otomatis menambahkan spacer di kanan.
             ),
           ],
         ),
@@ -438,36 +405,6 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // ==========================================
-  // TOMBOL BULAT
-  // ==========================================
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }

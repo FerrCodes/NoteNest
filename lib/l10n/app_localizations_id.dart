@@ -696,13 +696,6 @@ class AppLocalizationsId extends AppLocalizations {
       'Tap tulisan \"Reflect\" di atas halaman beranda untuk membuka menu tersembunyi. Di dalamnya ada Kelola Mood dan pengaturan Header Beranda.';
 
   @override
-  String get guideMultiPhotoTitle => 'Multi-Foto (Maksimal 4)';
-
-  @override
-  String get guideMultiPhotoDesc =>
-      'Saat menulis jurnal, tap tombol \"Unggah Foto\" untuk menambahkan hingga 4 foto. Geser ke kiri dan kanan untuk melihat semuanya.';
-
-  @override
   String get guideCarouselTitle => 'Carousel Foto';
 
   @override

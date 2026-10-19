@@ -1406,18 +1406,6 @@ abstract class AppLocalizations {
   /// **'Tap the \"Reflect\" text at the top of the home screen to reveal a hidden menu. Inside, you\'ll find options like Manage Moods and Home Header settings.'**
   String get guideDropdownDesc;
 
-  /// No description provided for @guideMultiPhotoTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Multi-Photo (Up to 4)'**
-  String get guideMultiPhotoTitle;
-
-  /// No description provided for @guideMultiPhotoDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'When writing a journal, tap the \"Upload Photo\" button to add up to 4 photos. Swipe left and right to see them all.'**
-  String get guideMultiPhotoDesc;
-
   /// No description provided for @guideCarouselTitle.
   ///
   /// In en, this message translates to:

@@ -11,6 +11,7 @@ import '../theme/app_colors.dart';
 import '../services/haptic_service.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
+import '../widgets/custom_floating_header.dart';
 
 class WriteScreen extends StatefulWidget {
   final JournalEntry? entry;
@@ -636,165 +637,85 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
             ),
 
             // === FLOATING HEADER (Back + Pill Judul + Save) ===
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Tombol Back (Kiri)
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () {
-                      HapticService.selectionClick();
-                      if (_hasUnsavedContent()) {
-                        _showCloseConfirmDialog();
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
+            CustomFloatingHeader(
+              onBack: () {
+                HapticService.selectionClick();
+                if (_hasUnsavedContent()) {
+                  _showCloseConfirmDialog();
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              title: HeaderTitlePill(
+                child: Text(
+                  isEditing
+                      ? AppLocalizations.of(context)!.editEntry
+                      : AppLocalizations.of(context)!.newEntry,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
+              ),
+              rightWidget: FloatingHeaderAction(
+                label: isEditing
+                    ? AppLocalizations.of(context)!.update
+                    : AppLocalizations.of(context)!.save,
+                labelColor: AppColors.systemBlue,
+                onTap: () async {
+                  HapticService.mediumImpact();
 
-                  // Pill Judul (Tengah)
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          isEditing
-                              ? AppLocalizations.of(context)!.editEntry
-                              : AppLocalizations.of(context)!.newEntry,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // === VALIDASI ===
+                  final missingFields = <String>[];
+                  if (_titleController.text.trim().isEmpty) {
+                    missingFields.add(
+                      AppLocalizations.of(context)!.missingTitle,
+                    );
+                  }
+                  if (_contentController.text.trim().isEmpty) {
+                    missingFields.add(
+                      AppLocalizations.of(context)!.missingContent,
+                    );
+                  }
 
-                  // Tombol Save/Update (Kanan)
-                  _buildCircleButton(
-                    label: isEditing
-                        ? AppLocalizations.of(context)!.update
-                        : AppLocalizations.of(context)!.save,
-                    labelColor: AppColors.systemBlue,
-                    onTap: () async {
-                      HapticService.mediumImpact();
+                  if (missingFields.isNotEmpty) {
+                    _showIncompleteDialog(missingFields);
+                    return;
+                  }
 
-                      // === VALIDASI ===
-                      final missingFields = <String>[];
-                      if (_titleController.text.trim().isEmpty) {
-                        missingFields.add(
-                          AppLocalizations.of(context)!.missingTitle,
-                        );
-                      }
-                      if (_contentController.text.trim().isEmpty) {
-                        missingFields.add(
-                          AppLocalizations.of(context)!.missingContent,
-                        );
-                      }
+                  // === SIMPAN ===
+                  final today = _entryDate.toIso8601String();
 
-                      if (missingFields.isNotEmpty) {
-                        _showIncompleteDialog(missingFields);
-                        return;
-                      }
+                  if (isEditing) {
+                    widget.entry!.title = _titleController.text;
+                    widget.entry!.content = _contentController.text;
+                    widget.entry!.mood = _selectedMood;
+                    widget.entry!.imageUrls = _selectedImages;
+                    widget.entry!.date = today;
+                    widget.entry!.lastEdited = DateTime.now();
+                    await _repository.updateJournal(widget.entry!);
+                  } else {
+                    final newEntry = JournalEntry(
+                      title: _titleController.text,
+                      content: _contentController.text,
+                      date: today,
+                      mood: _selectedMood,
+                      imageUrls: _selectedImages,
+                      lastEdited: DateTime.now(),
+                    );
+                    await _repository.addJournal(newEntry);
+                  }
 
-                      // === SIMPAN ===
-                      final today = _entryDate.toIso8601String();
-
-                      if (isEditing) {
-                        widget.entry!.title = _titleController.text;
-                        widget.entry!.content = _contentController.text;
-                        widget.entry!.mood = _selectedMood;
-                        widget.entry!.imageUrls = _selectedImages;
-                        widget.entry!.date = today;
-                        widget.entry!.lastEdited = DateTime.now();
-                        await _repository.updateJournal(widget.entry!);
-                      } else {
-                        final newEntry = JournalEntry(
-                          title: _titleController.text,
-                          content: _contentController.text,
-                          date: today,
-                          mood: _selectedMood,
-                          imageUrls: _selectedImages,
-                          lastEdited: DateTime.now(),
-                        );
-                        await _repository.addJournal(newEntry);
-                      }
-
-                      await _clearDraft();
-                      if (!context.mounted) return;
-                      HapticService.lightImpact();
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+                  await _clearDraft();
+                  if (!context.mounted) return;
+                  HapticService.lightImpact();
+                  Navigator.pop(context);
+                },
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildCircleButton({
-    IconData? icon,
-    String? label,
-    required VoidCallback onTap,
-    Color? labelColor,
-    bool isPrimary = false,
-  }) {
-    final isLabeled = label != null;
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: isLabeled
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
-            : const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isPrimary
-              ? AppColors.textPrimary
-              : AppColors.cardDark.withValues(alpha: 0.9),
-          shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
-          borderRadius: isLabeled ? BorderRadius.circular(20) : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: isLabeled
-            ? Text(
-                label,
-                style: TextStyle(
-                  color: labelColor ?? AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            : Icon(icon, color: AppColors.textPrimary, size: 19),
       ),
     );
   }

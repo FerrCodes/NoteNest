@@ -7,6 +7,7 @@ import '../widgets/section_title.dart';
 import '../widgets/settings_group_card.dart';
 import '../widgets/top_banner.dart';
 import '../services/haptic_service.dart';
+import '../widgets/custom_floating_header.dart';
 
 class ManageMoodsScreen extends StatefulWidget {
   const ManageMoodsScreen({super.key});
@@ -501,53 +502,21 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
             // ==========================================
             // FLOATING HEADER (Back + Pill Judul + Tombol +)
             // ==========================================
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Tombol Back
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
+            CustomFloatingHeader(
+              onBack: () => Navigator.pop(context),
+              title: HeaderTitlePill(
+                child: Text(
+                  AppLocalizations.of(context)!.manageMoods,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-
-                  // Pill Judul
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.manageMoods,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Tombol Tambah (+)
-                  _buildCircleButton(icon: Icons.add, onTap: _showAddMoodSheet),
-                ],
+                ),
+              ),
+              rightWidget: FloatingHeaderAction(
+                icon: Icons.add,
+                onTap: _showAddMoodSheet,
               ),
             ),
           ],
@@ -694,36 +663,6 @@ class _ManageMoodsScreenState extends State<ManageMoodsScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // ==========================================
-  // TOMBOL BULAT
-  // ==========================================
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 20),
       ),
     );
   }

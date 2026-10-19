@@ -6,8 +6,8 @@ import '../models/journal_entry.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../constants/moods.dart';
-import '../services/haptic_service.dart';
 import '../repositories/mood_repository.dart';
+import '../widgets/custom_floating_header.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -477,101 +477,22 @@ class _StatsScreenState extends State<StatsScreen> {
               },
             ),
 
-            // === FLOATING HEADER (Back + Pill Judul + Spacer) ===
-            Positioned(
-              top: 20,
-              left: 16,
-              right: 16,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Tombol Back (Kiri)
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
+            // === FLOATING HEADER (Back + Pill Judul) ===
+            CustomFloatingHeader(
+              onBack: () => Navigator.pop(context),
+              title: HeaderTitlePill(
+                child: Text(
+                  AppLocalizations.of(context)!.stats,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-
-                  // Pill Judul (Tengah)
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardDark.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.stats,
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Spacer Kanan — seukuran tombol back (agar pill tengah center)
-                  const SizedBox(width: 47),
-                ],
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // === TOMBOL BULAT ===
-  Widget _buildCircleButton({
-    IconData? icon,
-    required VoidCallback onTap,
-    String? label,
-    Color? labelColor,
-  }) {
-    final isLabeled = label != null;
-    return GestureDetector(
-      onTap: () {
-        HapticService.selectionClick();
-        onTap();
-      },
-      child: Container(
-        padding: isLabeled
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10)
-            : const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.cardDark.withValues(alpha: 0.9),
-          shape: isLabeled ? BoxShape.rectangle : BoxShape.circle,
-          borderRadius: isLabeled ? BorderRadius.circular(20) : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: isLabeled
-            ? Text(
-                label,
-                style: TextStyle(
-                  color: labelColor ?? AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            : Icon(icon, color: AppColors.textPrimary, size: 19),
       ),
     );
   }

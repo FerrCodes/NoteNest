@@ -218,8 +218,6 @@
   "guideHiddenFeatures": "HIDDEN FEATURES",
   "guideDropdownTitle": "Hidden Dropdown",
   "guideDropdownDesc": "Tap the \"Reflect\" text at the top of the home screen to reveal a hidden menu. Inside, you'll find options like Manage Moods and Home Header settings.",
-  "guideMultiPhotoTitle": "Multi-Photo (Up to 4)",
-  "guideMultiPhotoDesc": "When writing a journal, tap the \"Upload Photo\" button to add up to 4 photos. Swipe left and right to see them all.",
   "guideCarouselTitle": "Photo Carousel",
   "guideCarouselDesc": "Open a journal with multiple photos and swipe to view each one. Tap a photo to see it full-screen with zoom.",
   "guideFooter": "Thank you for trying out all the available features!",
