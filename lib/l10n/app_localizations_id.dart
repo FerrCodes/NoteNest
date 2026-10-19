@@ -12,7 +12,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get appName => 'NoteNest';
 
   @override
-  String get version => 'v2.0.1';
+  String get version => 'v2.1.0';
 
   @override
   String get reflect => 'Refleksi';

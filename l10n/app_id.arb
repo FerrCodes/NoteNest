@@ -1,7 +1,7 @@
 {
   "@@locale": "id",
   "appName": "NoteNest",
-  "version": "v2.0.1",
+  "version": "v2.1.0",
   "reflect": "Refleksi",
   "searchHint": "Cari jurnal",
   "filterAll": "Semua",
