@@ -118,6 +118,23 @@ class _AboutScreenState extends State<AboutScreen> {
                     ],
                     onTap: () => _launchUrl('https://github.com/FerrCodes'),
                   ),
+                  _buildSocialItem(
+                    label: 'Privacy Policy',
+                    icon: Icon(
+                      Icons.privacy_tip_outlined,
+                      color: AppColors.textPrimary,
+                      size: 22,
+                    ),
+                    gradientColors: const [
+                      Color.fromARGB(255, 148, 190, 248),
+                      Color.fromARGB(255, 148, 190, 248),
+                      Color(0xFFF0F6FC),
+                    ],
+                    // GANTI URL DI BAWAH DENGAN LINK GOOGLE DOCS-MU
+                    onTap: () => _launchUrl(
+                      'https://docs.google.com/document/d/1d673w4V73Iu48MYh7QFRYJvkbkB-n0jIDuE5c5I7TlM/edit?usp=sharing',
+                    ),
+                  ),
                 ]),
                 const SizedBox(height: 10),
                 Padding(
