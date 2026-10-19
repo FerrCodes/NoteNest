@@ -37,7 +37,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get quoteMorning =>
-      '\"Mulai setiap harimu dengan pikiran positif dan hati yang bersyukur.\"';
+      '\"Mulai setiap hari dengan pikiran positif dan hati yang bersyukur.\"';
 
   @override
   String get quoteAfternoon =>
@@ -708,55 +708,6 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get guideCarouselDesc =>
       'Buka jurnal dengan beberapa foto dan geser untuk melihat satu per satu. Tap foto untuk melihatnya full-screen dengan zoom.';
-
-  @override
-  String get guideMoodFilterTitle => 'Filter Mood';
-
-  @override
-  String get guideMoodFilterDesc =>
-      'Di beranda, gunakan chip mood di bawah kolom pencarian untuk filter jurnal berdasarkan mood. Tap \"Favorit\" untuk lihat jurnal yang di-bookmark saja.';
-
-  @override
-  String get guideWeatherTitle => 'Fitur Cuaca (Beta)';
-
-  @override
-  String get guideWeatherDesc =>
-      'Aktifkan cuaca di pengaturan Header Beranda untuk lihat cuaca real-time di beranda. Fitur ini masih beta!';
-
-  @override
-  String get guideCustomMoodTitle => 'Mood Kustom';
-
-  @override
-  String get guideCustomMoodDesc =>
-      'Mood-mu tidak ada? Tap menu dropdown, lalu Kelola Mood, untuk membuat hingga 10 mood kustom dengan warna pilihanmu.';
-
-  @override
-  String get guideStatsTitle => 'Statistik & Streak';
-
-  @override
-  String get guideStatsDesc =>
-      'Tap ikon chart di bottom bar untuk melihat statistik jurnalmu, streak, dan distribusi mood.';
-
-  @override
-  String get guideFavoriteTitle => 'Bookmark Jurnal';
-
-  @override
-  String get guideFavoriteDesc =>
-      'Tap ikon bookmark di kartu jurnal untuk menandainya sebagai favorit. Cari semua favorit pakai filter \"Favorit\".';
-
-  @override
-  String get guideExportTitle => 'Export Data';
-
-  @override
-  String get guideExportDesc =>
-      'Di Pengaturan → Data, kamu bisa export semua jurnal ke file teks. Cocok untuk backup!';
-
-  @override
-  String get guidePermissionsTitle => 'Izin Aplikasi';
-
-  @override
-  String get guidePermissionsDesc =>
-      'Di Pengaturan → Privasi, kelola izin aplikasi seperti notifikasi, lokasi, kamera, dan galeri.';
 
   @override
   String get guideFooter =>

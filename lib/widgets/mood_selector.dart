@@ -78,7 +78,7 @@ class MoodSelector extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16), // kiri & kanan
             itemCount: allMoods.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 20),
+            separatorBuilder: (_, _) => const SizedBox(width: 27),
             itemBuilder: (context, index) {
               final mood = allMoods[index];
               final isSelected = selectedMood == mood['label'];

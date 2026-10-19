@@ -4,6 +4,7 @@ import '../services/weather_service.dart';
 import '../theme/app_colors.dart';
 import '../l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:async';
 
 class WeatherHeader extends StatefulWidget {
   final bool showDate;
@@ -24,13 +25,28 @@ class WeatherHeader extends StatefulWidget {
 class _WeatherHeaderState extends State<WeatherHeader> {
   final _weatherService = WeatherService();
   WeatherData? _weather;
+  late Timer _timer;
+  DateTime _currentTime = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentTime = DateTime.now();
+        });
+      }
+    });
     if (widget.showWeather) {
       _loadWeather();
     }
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -62,7 +78,7 @@ class _WeatherHeaderState extends State<WeatherHeader> {
       return const SizedBox.shrink();
     }
 
-    final now = DateTime.now();
+    final now = _currentTime;
     final currentLocale = Localizations.localeOf(context).toString();
 
     final dayStr = DateFormat('EEEE', currentLocale).format(now).toUpperCase();
@@ -119,12 +135,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                 if (widget.showTime)
                   Row(
                     children: [
-                      Icon(
-                        Icons.access_time,
-                        color: AppColors.textSecondary,
-                        size: 12,
-                      ),
-                      const SizedBox(width: 4),
                       Text(
                         timeStr,
                         style: TextStyle(

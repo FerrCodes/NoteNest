@@ -107,6 +107,7 @@ class _HomeHeaderScreenState extends State<HomeHeaderScreen> {
                       HapticService.selectionClick();
                       final settingsBox = Hive.box('settingsBox');
                       await settingsBox.put('showTime', value);
+                      if (!mounted) return;
                       setState(() => _showTime = value);
                     },
                   ),

@@ -710,55 +710,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Open a journal with multiple photos and swipe to view each one. Tap a photo to see it full-screen with zoom.';
 
   @override
-  String get guideMoodFilterTitle => 'Filter by Mood';
-
-  @override
-  String get guideMoodFilterDesc =>
-      'On the home screen, use the mood chips below the search bar to filter journals by mood. Tap \"Favorite\" to see only bookmarked journals.';
-
-  @override
-  String get guideWeatherTitle => 'Weather Feature (Beta)';
-
-  @override
-  String get guideWeatherDesc =>
-      'Enable weather in Home Header settings to see real-time weather on your home screen. This feature is still in beta!';
-
-  @override
-  String get guideCustomMoodTitle => 'Custom Moods';
-
-  @override
-  String get guideCustomMoodDesc =>
-      'Don\'t see your mood? Tap the dropdown menu, then Manage Moods, to create up to 10 custom moods with your own colors.';
-
-  @override
-  String get guideStatsTitle => 'Statistics & Streak';
-
-  @override
-  String get guideStatsDesc =>
-      'Tap the chart icon in the bottom bar to see your journaling statistics, streaks, and mood distribution.';
-
-  @override
-  String get guideFavoriteTitle => 'Bookmark Journals';
-
-  @override
-  String get guideFavoriteDesc =>
-      'Tap the bookmark icon on any journal card to mark it as favorite. Find all favorites using the \"Favorite\" filter.';
-
-  @override
-  String get guideExportTitle => 'Export Data';
-
-  @override
-  String get guideExportDesc =>
-      'In Settings → Data, you can export all journals to a text file. Perfect for backup!';
-
-  @override
-  String get guidePermissionsTitle => 'App Permissions';
-
-  @override
-  String get guidePermissionsDesc =>
-      'In Settings → Privacy, manage app permissions like notifications, location, camera, and gallery.';
-
-  @override
   String get guideFooter =>
       'Thank you for trying out all the available features!';
 

@@ -66,41 +66,6 @@ class _GuideScreenState extends State<GuideScreen> {
                     title: AppLocalizations.of(context)!.guideCarouselTitle,
                     desc: AppLocalizations.of(context)!.guideCarouselDesc,
                   ),
-                  _buildGuideItem(
-                    icon: Icons.filter_list,
-                    title: AppLocalizations.of(context)!.guideMoodFilterTitle,
-                    desc: AppLocalizations.of(context)!.guideMoodFilterDesc,
-                  ),
-                  _buildGuideItem(
-                    icon: Icons.wb_sunny_outlined,
-                    title: AppLocalizations.of(context)!.guideWeatherTitle,
-                    desc: AppLocalizations.of(context)!.guideWeatherDesc,
-                  ),
-                  _buildGuideItem(
-                    icon: Icons.mood_outlined,
-                    title: AppLocalizations.of(context)!.guideCustomMoodTitle,
-                    desc: AppLocalizations.of(context)!.guideCustomMoodDesc,
-                  ),
-                  _buildGuideItem(
-                    icon: Icons.bar_chart_outlined,
-                    title: AppLocalizations.of(context)!.guideStatsTitle,
-                    desc: AppLocalizations.of(context)!.guideStatsDesc,
-                  ),
-                  _buildGuideItem(
-                    icon: Icons.bookmark_border,
-                    title: AppLocalizations.of(context)!.guideFavoriteTitle,
-                    desc: AppLocalizations.of(context)!.guideFavoriteDesc,
-                  ),
-                  _buildGuideItem(
-                    icon: Icons.ios_share,
-                    title: AppLocalizations.of(context)!.guideExportTitle,
-                    desc: AppLocalizations.of(context)!.guideExportDesc,
-                  ),
-                  _buildGuideItem(
-                    icon: Icons.privacy_tip_outlined,
-                    title: AppLocalizations.of(context)!.guidePermissionsTitle,
-                    desc: AppLocalizations.of(context)!.guidePermissionsDesc,
-                  ),
                 ]),
 
                 // === FOOTER ===

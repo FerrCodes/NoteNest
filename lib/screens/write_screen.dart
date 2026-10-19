@@ -10,6 +10,7 @@ import '../widgets/image_picker_section.dart';
 import '../theme/app_colors.dart';
 import '../services/haptic_service.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 class WriteScreen extends StatefulWidget {
   final JournalEntry? entry;
@@ -25,6 +26,7 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
   late TextEditingController _contentController;
   String _selectedMood = 'Calm';
   late List<String> _selectedImages;
+  late DateTime _entryDate;
   final _repository = JournalRepository();
 
   void _showIncompleteDialog(List<String> missingFields) {
@@ -137,6 +139,15 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _checkForDraft();
       });
+    }
+    if (widget.entry != null) {
+      try {
+        _entryDate = DateTime.parse(widget.entry!.date);
+      } catch (_) {
+        _entryDate = DateTime.now();
+      }
+    } else {
+      _entryDate = DateTime.now();
     }
   }
 
@@ -385,6 +396,69 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
     );
   }
 
+  Future<void> _pickDateTime() async {
+    HapticService.selectionClick();
+
+    // 1. Pilih Tanggal
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _entryDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.textPrimary,
+              onPrimary: AppColors.bgDark,
+              surface: AppColors.cardDark,
+              onSurface: AppColors.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate == null) return;
+    if (!mounted) return;
+
+    // 2. Pilih Waktu
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_entryDate),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: AppColors.cardDark,
+              hourMinuteColor: AppColors.textPrimary.withValues(alpha: 0.1),
+              hourMinuteTextColor: AppColors.textPrimary,
+              dialBackgroundColor: AppColors.bgDark,
+              dialHandColor: AppColors.textPrimary,
+              dialTextColor: AppColors.textSecondary,
+              entryModeIconColor: AppColors.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedTime == null) return;
+
+    // 3. Gabungkan dan Simpan ke State
+    setState(() {
+      _entryDate = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.entry != null;
@@ -427,8 +501,6 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  // MoodSelector juga butuh padding, tapi karena
-                  // MoodSelector punya SingleChildScrollView sendiri, kita bungkus.
                   MoodSelector(
                     selectedMood: _selectedMood,
                     currentMood: widget.entry?.mood,
@@ -440,30 +512,69 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                   ),
                   const SizedBox(height: 24),
 
-                  // === 3. JUDUL ===
+                  // === SECTION: TANGGAL & WAKTU ===
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: TextField(
-                      controller: _titleController,
-                      textAlign: TextAlign.center,
-                      textCapitalization: TextCapitalization.words,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.titleHint,
-                        hintStyle: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textSecondary.withValues(alpha: 0.5),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 16,
+                          color: AppColors.textSecondary,
                         ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Tanggal Jurnal:',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: _pickDateTime,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.cardDark,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: AppColors.textSecondary.withValues(
+                                  alpha: 0.2,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  DateFormat(
+                                    'dd MMM yyyy, HH:mm',
+                                    Localizations.localeOf(context).toString(),
+                                  ).format(_entryDate),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.systemBlue,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Icon(
+                                  Icons.edit,
+                                  size: 14,
+                                  color: AppColors.systemBlue,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  const SizedBox(height: 16),
 
                   // === DIVIDER ===
                   Padding(
@@ -589,14 +700,14 @@ class _WriteScreenState extends State<WriteScreen> with WidgetsBindingObserver {
                       }
 
                       // === SIMPAN ===
-                      // Gunakan ISO8601 agar kebal terhadap perubahan bahasa
-                      final today = DateTime.now().toIso8601String();
+                      final today = _entryDate.toIso8601String();
 
                       if (isEditing) {
                         widget.entry!.title = _titleController.text;
                         widget.entry!.content = _contentController.text;
                         widget.entry!.mood = _selectedMood;
                         widget.entry!.imageUrls = _selectedImages;
+                        widget.entry!.date = today;
                         widget.entry!.lastEdited = DateTime.now();
                         await _repository.updateJournal(widget.entry!);
                       } else {
